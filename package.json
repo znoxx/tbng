@@ -1,0 +1,19 @@
+{
+  "name": "webui",
+  "version": "0.2.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.0",
+    "cookie-parser": "~1.4.1",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "pug": "~2.0.0-alpha3",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0",
+    "basic-auth-connect": "~1.0.0",
+    "wifi-control": "~2.0.0"
+  }
+}
