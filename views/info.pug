@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  h1= title
+  h2 System Temperature: #{sysinfo.cpuTemp}C
+  h2 Host
+  
+  table(class="tg")
+    tr
+      th(class="tg-yw41") Name
+      th(class="tg-yw41") Platform
+      th(class="tg-yw41") Release
+      th(class="tg-yw41") Architecture
+    tr
+      td(class="tg-yw41")= sysinfo.hostName
+      td(class="tg-yw41")= sysinfo.platform
+      td(class="tg-yw41")= sysinfo.release
+      td(class="tg-yw41")= sysinfo.arch
+      
+  h2 Resources
+  table(class="tg")
+    tr
+      th(class="tg-yw41") RAM Free (Kb)
+      th(class="tg-yw41") Load 1 minute
+      th(class="tg-yw41") Load 5 minutes
+      th(class="tg-yw41") Load 15 minutes
+    tr
+      td(class="tg-yw41")= sysinfo.ram
+      td(class="tg-yw41")= sysinfo.systemLoad[0]
+      td(class="tg-yw41")= sysinfo.systemLoad[1]
+      td(class="tg-yw41")= sysinfo.systemLoad[2]
+      
+  h2 Network
+  table(class="tg")
+    tr
+      th(class="tg-yw41") Interface
+      th(class="tg-yw41") Address
+      th(class="tg-yw41") Netmask
+      th(class="tg-yw41") Mac 
+    for network in sysinfo.network   
+      tr
+        td(class="tg-yw41")= network.name
+        td(class="tg-yw41")= network.address
+        td(class="tg-yw41")= network.netmask
+        td(class="tg-yw41")= network.mac   
+  
+  br
+  a(href="/") Main page

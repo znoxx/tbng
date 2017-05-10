@@ -1,0 +1,11 @@
+{
+  "strStatusFile": "/run/apmode",
+  "strWrapper": "sudo",
+  "strCommand": "/usr/local/bin/all_tor.sh",
+  "strReboot": "/sbin/shutdown -r now",
+  "strShutdown": "/sbin/shutdown -h now",
+  "strTemperature": "/usr/local/bin/cputemp.sh",
+  "strSystemctl": "/etc/init.d",
+  "strWifiAdaptor": "wlan1",
+  "strMacSpoof": "/usr/local/bin/macspoof.sh"
+}

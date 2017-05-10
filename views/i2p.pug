@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="i2p", action="/i2p", method="post")
+    fieldset
+     label(for="restart")
+       input(type="radio", name="i2p", value="restart" checked=1) 
+       span (re)Start i2p
+     label(for="stop") 
+       input(type="radio", name="i2p", value="stop" checked=0)
+       span Stop i2p
+     fieldset                                           
+       input(type="submit", value="Select")
+  br
+  a(href="/") Main page                                           
+ 

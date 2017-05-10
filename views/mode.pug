@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="modeswitch", action="/mode", method="post")
+    fieldset
+      label(for="TOR")
+       input(type="radio", name="mode", value="TOR" checked=status=="TOR") 
+       span TOR
+      label(for="PRIVOXY") 
+       input(type="radio", name="mode", value="PRIVOXY" checked=status=="PRIVOXY")
+       span Privoxy
+      label(for="DIRECT")
+       input(type="radio", name="mode", value="DIRECT" checked=status=="DIRECT")
+       span  Direct (No TOR/Privoxy)
+      fieldset                                           
+       input(type="submit", value="Select")
+  br
+  a(href="/") Main page                                           
+ 

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p Select an action
+  ul#options
+    li
+      a(href="/system/info") System info 
+    li
+      a(href="/system/access") Change WEBUI password
+    li
+      a(href="/system/reboot") Reboot
+    li
+      a(href="/system/shutdown") Shutdown
+  br
+  a(href="/") Main page                                           
+

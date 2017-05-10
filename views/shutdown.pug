@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="shutdown", action="/system/shutdown", method="post")
+    input(type="submit", value="Shutdown")
+  br
+  a(href="/") Main page                                           

@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+  h2 #{scanned.msg}
+  
+  table(class="tg")
+    tr
+      th(class="tg-yw41") SSID
+      th(class="tg-yw41") Channel
+      th(class="tg-yw41") MAC
+      th(class="tg-yw41") Level 
+      th(class="tg-yw41") Encryption 
+    for network in scanned.networks   
+      tr
+        td(class="tg-yw41") 
+          a(href="/wifi/connect?"+network.url) #{network.ssid}
+        td(class="tg-yw41")= network.channel
+        td(class="tg-yw41")= network.mac
+        td(class="tg-yw41")= network.signal_level
+        td(class="tg-yw41")= network.security
+  
+  br
+  a(href="/") Main page

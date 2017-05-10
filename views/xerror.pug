@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= message
+  if description
+   pre #{description}
+  if !description
+   h2 Reboot the device. If error persists, please fix it via SSH.
+  br 
+  a(href="/") Main page                                           

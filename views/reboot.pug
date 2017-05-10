@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="reboot", action="/system/reboot", method="post")
+    input(type="submit", value="Reboot")
+  br
+  a(href="/") Main page                                           

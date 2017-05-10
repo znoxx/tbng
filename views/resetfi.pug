@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="resetfi", action="/wifi/reset", method="post")
+    input(type="submit", value="Reset WiFi")
+  br
+  a(href="/") Main page                                           

@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="macspoof", action="/wifi/macspoof", method="post")
+    input(type="submit", value="MAC Spoof")
+  br
+  a(href="/") Main page                                           

@@ -1,0 +1,34 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+label, legend {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="submit"] {
+      display: inline-block;
+}
+
+input[type="password"] {
+      display: block;
+}
+
+fieldset {
+    margin-bottom: 20px;
+    border: 0;
+}
+
+li {
+  margin: 1em 0;
+}
+
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-yw4l{vertical-align:top}

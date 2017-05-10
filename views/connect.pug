@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  h2 Connecting to #{settings.ssid}
+  form(name="reboot", action="/wifi/connect", method="post")
+    fieldset
+      label(for="wifi_password")
+        span  Wifi password, if network is encrypted &nbsp;
+        input(type="text", name="wifi_password")
+        input(type="hidden", name="ssid", value=settings.ssid)
+    
+    input(type="submit", value="Connect")
+  br
+  a(href="/") Main page                                           

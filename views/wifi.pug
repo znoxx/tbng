@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= title
+  p WiFi Status - #{state.msg}
+     
+      h3 SSID: #{state.ssid}
+      h3 Connecton: #{state.connection}
+      h3 Power: #{state.power}
+  p
+   ul
+     li 
+       a(href="/wifi/networks") Select network
+     li 
+       a(href="/wifi/macspoof") Spoof MAC address
+     li 
+       a(href="/wifi/reset") Reset WiFi
+
+  br
+  a(href="/") Main page
+                                           
+
