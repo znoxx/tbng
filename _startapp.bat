@@ -1,1 +1,2 @@
-set DEBUG=webui:* & npm start
+set DEBUG=webui:*
+npm start

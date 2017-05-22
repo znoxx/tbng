@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title 
+  p Choose a service to configure
+  ul#options
+    li
+      a(href="/services/tor") TOR configuration
+    li
+      a(href="/services/i2p") I2P settings
+
+  br
+  a(href="/") Main page                                           
+   

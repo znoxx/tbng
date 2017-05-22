@@ -4,7 +4,7 @@ block content
   h1= title
   if message
    h2= message
-  form(name="i2p", action="/i2p", method="post")
+  form(name="i2p", action="/services/i2p", method="post")
     fieldset
      label(for="restart")
        input(type="radio", name="i2p", value="restart" checked=1) 
@@ -15,5 +15,5 @@ block content
      fieldset                                           
        input(type="submit", value="Select")
   br
-  a(href="/") Main page                                           
+  a(href="/services") Back                                           
  
