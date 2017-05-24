@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title 
+  p Select an action
+  ul#options
+    li
+      a(href="/services/tor/restart") Restart TOR
+    li
+      a(href="/services/tor/bridge") Configure bridge usage
+    li
+      a(href="/services/tor/exitnodes") Exclude exit nodes by country
+    li
+      a(href="/services/tor/reset") Reset configuraiton to default
+
+  br
+  a(href="/services") Back                                           
+   

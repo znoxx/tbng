@@ -94,7 +94,7 @@ router.post('/connect', function(req, res, next) {
 
 /* GET macspoof. */
 router.get('/macspoof', function(req, res, next) {
-  res.render('macspoof', { title: 'MAC Spoof', message: 'Press button to randomly change MAC address' });
+  res.render('wifispoof', { title: 'MAC Spoof', message: 'Press button to randomly change wireless MAC address' });
 });
 /* POST macspoof. */
 router.post('/macspoof', function(req, res, next) {

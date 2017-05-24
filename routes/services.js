@@ -6,6 +6,7 @@ router.get('/', function(req, res, next) {
   res.render('services', { title: 'Services configuration' });
 });
 
+router.use('/tor',require('./tor'));
 router.use('/i2p',require('./i2p'));
 
 module.exports = router;

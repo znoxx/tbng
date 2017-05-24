@@ -7,6 +7,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.use('/wifi',require('./wifi'));
-//router.use('/wired', require('./wired'));
+router.use('/wired', require('./wired'));
 
 module.exports = router;

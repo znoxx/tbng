@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="restarttor", action="/services/tor/restart", method="post")
+    input(type="submit", value="Restart TOR")
+  br
+  a(href="/services/tor") Back                                           
