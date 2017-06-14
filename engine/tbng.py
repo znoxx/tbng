@@ -10,25 +10,28 @@ def main(args, loglevel):
 
   #Getting path for config usage
   current_dir = os.path.dirname(os.path.abspath(__file__))
+
+  # TODO
+  # Parse config file here 
   
-  # TODO Replace this with your actual code.
-  print ("We are running in %s" % current_dir)
-  logging.info("You passed an argument.")
-  logging.debug("Your Argument: %s" % args.argument)
+  # Actual code starts here
+  logging.info("We are running in %s" % current_dir)
+  logging.debug("Your Command: %s" % args.command)
+  logging.debug("Options are: %s" % args.options)
 
   choices = {
    'masquerade': masquerade, #do not use ()
    'unknown': unknown, #do not use ()
   }
   
-  runfunc = choices[args.argument] if choices.get(args.argument) else unknown
-  runfunc()  
+  runfunc = choices[args.command] if choices.get(args.command) else unknown
+  runfunc(args.options)  
 
 #function implementation goes here
-def unknown():
+def unknown(options):
  print("Unknown value passed")
 
-def masquerade():
+def masquerade(options):
   print("Masquerading called")
 
  
@@ -43,11 +46,20 @@ if __name__ == '__main__':
                                     description = "Commands executor for TBNG project.",
                                     epilog = "As an alternative to the commandline, params can be placed in a file, one per line, and specified on the commandline like '%(prog)s @params.conf'.",
                                     fromfile_prefix_chars = '@' )
-  # TODO Specify your real parameters here.
+
   parser.add_argument(
-                      "argument",
-                      help = "pass ARG to the program",
-                      metavar = "ARG")
+                      "command",
+                      help = "pass command to the program",
+                      metavar = "command")
+
+  parser.add_argument(
+                      "options",
+                      help = "pass command options to the program (optional)",
+                      metavar = "options",
+                      nargs = '*',
+                      default = [])
+
+ 
   parser.add_argument(
                       "-v",
                       "--verbose",
