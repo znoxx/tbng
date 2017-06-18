@@ -2,7 +2,10 @@
 #
 
 # import modules used here -- sys is a very standard one
-import sys, argparse, logging, os, utility
+import sys, argparse, logging, os, utility,json
+from string import Template
+
+configuration=None
 
 # Gather our code in a main() function
 def main(args, loglevel):
@@ -13,6 +16,11 @@ def main(args, loglevel):
 
   # TODO
   # Parse config file here 
+  config_path = current_dir+"/../config/tbng.json"
+  with open(config_path) as data_file:    
+    configuration = json.load(data_file)
+ 
+ 
   
   # Actual code starts here
   logging.info("We are running in %s" % current_dir)
@@ -21,6 +29,7 @@ def main(args, loglevel):
 
   choices = {
    'masquerade': masquerade, #do not use ()
+   'clean_firewall': clean_fw, #do not use ()
    'unknown': unknown, #do not use ()
   }
   
@@ -34,12 +43,25 @@ def unknown(options):
 def masquerade(options):
   print("Masquerading called")
 
+def clean_fw(options):
+  print("Clean firewall called")
+  command_template = Template("""echo "$iptables This is the first string"
+                                 echo "$iptables The second"
+                                 echo "$iptables The third..." """)
+  command=command_template.substitute(iptables=configuration["iptables"])
+  utility.run_shell_command(command) 
+  #subprocess.check_output(command, shell=True)
+
+   
  
 # Standard boilerplate to call the main() function to begin
 # the program.
 
 if sys.version_info[0] < 3:
-    raise Exception("Python 3 or a more recent version is required.")
+    raise Exception("Python 3.6 or a more recent version is required.")
+
+if sys.version_info[1] < 6:
+    raise Exception("Python 3.6 or a more recent version is required.")
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser( 
@@ -72,5 +94,7 @@ if __name__ == '__main__':
     loglevel = logging.DEBUG
   else:
     loglevel = logging.INFO
+  # loading configuration
+
   
   main(args, loglevel)
