@@ -29,7 +29,7 @@ def main(args, loglevel):
   logging.debug("Your Command: %s" % args.command)
   logging.debug("Options are: %s" % args.options)
 
-  print ("is wireless") if is_wireless("eth0") else print("is not wireless")
+  #print ("is wireless") if is_wireless("wlan0") else print("is not wireless")
   
   choices = {
    'masquerade': masquerade, #do not use ()
@@ -58,10 +58,14 @@ def clean_fw(options):
   
 
 def is_wireless(name):
+  interface_found=False
   for interface in configuration['wan_interface']:
     if interface['name']==name:
+      interface_found=True                         
       if 'wireless' in interface and interface['wireless']:
         return True
+  if not interface_found:
+    raise Exception("Interface not found.")
   return False   
  
 # Standard boilerplate to call the main() function to begin
