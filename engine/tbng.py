@@ -9,6 +9,8 @@ configuration=None
 
 # Gather our code in a main() function
 def main(args, loglevel):
+  global configuration
+
   logging.basicConfig(format="%(levelname)s: %(message)s", level=loglevel)
 
   #Getting path for config usage
@@ -20,13 +22,15 @@ def main(args, loglevel):
   with open(config_path) as data_file:    
     configuration = json.load(data_file)
  
- 
-  
+  logging.debug("Configuration loaded from file %s" % config_path)
+  logging.debug("Configuration  dump: %s" % configuration)
   # Actual code starts here
-  logging.info("We are running in %s" % current_dir)
+  logging.debug("We are running in %s" % current_dir)
   logging.debug("Your Command: %s" % args.command)
   logging.debug("Options are: %s" % args.options)
 
+  print ("is wireless") if is_wireless("eth0") else print("is not wireless")
+  
   choices = {
    'masquerade': masquerade, #do not use ()
    'clean_firewall': clean_fw, #do not use ()
@@ -35,33 +39,36 @@ def main(args, loglevel):
   
   runfunc = choices[args.command] if choices.get(args.command) else unknown
   runfunc(args.options)  
-
+  
 #function implementation goes here
 def unknown(options):
- print("Unknown value passed")
+ raise Exception("Unknown options passed")
 
 def masquerade(options):
-  print("Masquerading called")
+  logging.info("Masquerading called")
 
 def clean_fw(options):
-  print("Clean firewall called")
   command_template = Template("""echo "$iptables This is the first string"
                                  echo "$iptables The second"
+                                 touch aaa
                                  echo "$iptables The third..." """)
   command=command_template.substitute(iptables=configuration["iptables"])
-  utility.run_shell_command(command) 
-  #subprocess.check_output(command, shell=True)
+  logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+  logging.info("Clean firewall called")
+  
 
-   
+def is_wireless(name):
+  for interface in configuration['wan_interface']:
+    if interface['name']==name:
+      if 'wireless' in interface and interface['wireless']:
+        return True
+  return False   
  
 # Standard boilerplate to call the main() function to begin
 # the program.
 
 if sys.version_info[0] < 3:
-    raise Exception("Python 3.6 or a more recent version is required.")
-
-if sys.version_info[1] < 6:
-    raise Exception("Python 3.6 or a more recent version is required.")
+    raise Exception("Python 3.x is required.")
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser( 
@@ -94,7 +101,6 @@ if __name__ == '__main__':
     loglevel = logging.DEBUG
   else:
     loglevel = logging.INFO
-  # loading configuration
 
   
   main(args, loglevel)

@@ -1,3 +1,13 @@
 {
-  "iptables": "/usr/sbin/iptables"
+  "iptables": "/usr/sbin/iptables",
+  "wan_interface": [
+    {
+      "name": "eth0",
+       "wireless": false
+    },
+    {
+      "name": "wlan0",
+      "wireless": true
+    }
+  ]
 }
