@@ -32,6 +32,7 @@ def main(args, loglevel):
   #print ("is wireless") if is_wireless("wlan0") else print("is not wireless")
   
   choices = {
+   'chkconfig': chkconfig,
    'masquerade': masquerade, #do not use ()
    'clean_firewall': clean_fw, #do not use ()
    'unknown': unknown, #do not use ()
@@ -43,6 +44,9 @@ def main(args, loglevel):
 #function implementation goes here
 def unknown(options):
  raise Exception("Unknown options passed")
+
+def chkconfig(options):
+  logging.info("Check config called")
 
 def masquerade(options):
   logging.info("Masquerading called")
