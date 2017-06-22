@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
 
+
 # import modules used here -- sys is a very standard one
 import sys, argparse, logging, os, utility,json
 from string import Template
@@ -29,41 +30,80 @@ def main(args, loglevel):
   logging.debug("Your Command: %s" % args.command)
   logging.debug("Options are: %s" % args.options)
 
-  #print ("is wireless") if is_wireless("wlan0") else print("is not wireless")
+  print ("is wireless") if is_wireless(configuration['wan_interface'],"wlan0") else print("is not wireless")
   
-  choices = {
-   'chkconfig': chkconfig,
-   'masquerade': masquerade, #do not use ()
-   'clean_firewall': clean_fw, #do not use ()
-   'unknown': unknown, #do not use ()
+  choices = {   #do not use ()
+   'chkconfig': chkconfig,   # checks config
+   'masquerade': masquerade, # enables masquerading on all outbound interfaces
+   'clean_firewall': clean_fw, # cleans firewall
+   'mode': mode, # sets mode -direct,tor,privoxy
+   'unknown': unknown, # stub for unknown option
   }
   
   runfunc = choices[args.command] if choices.get(args.command) else unknown
   runfunc(args.options)  
   
+#options checker
+
+def check_options(options,num):
+  if num!=len(options):
+    raise Exception("Illegal number of options, required number is %d" % num)  
+
 #function implementation goes here
 def unknown(options):
  raise Exception("Unknown options passed")
 
 def chkconfig(options):
+  check_options(options,0)
   logging.info("Check config called")
 
 def masquerade(options):
+  check_options(options,0)
+  # template
+  tmplScript=""
+  # Making list of wan interfaces
+
+  for interface in configuration['wan_interface']:
+    tmplScript = tmplScript + "echo $iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE\n" % interface['name'] 
+  
+  for interface in configuration['lan_interface']:
+    tmplScript = tmplScript + "echo $iptables --append FORWARD --in-interface %s -j ACCEPT\n" % interface['name'] 
+
+  tmplScript = tmplScript + "echo $iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
+  tmplScript = tmplScript + "echo sysctl -w net.ipv4.ip_forward=1\n"
+
+  command_template = Template(tmplScript)
+  command = command_template.substitute(iptables=configuration["iptables"])
+
+  logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
   logging.info("Masquerading called")
 
 def clean_fw(options):
-  command_template = Template("""echo "$iptables This is the first string"
-                                 echo "$iptables The second"
-                                 touch aaa
-                                 echo "$iptables The third..." """)
+  check_options(options,0)
+  command_template = Template("""echo $iptables -F
+                                echo $iptables -X
+                                echo $iptables -t nat -F
+                                echo $iptables -t nat -X
+                                echo $iptables -t mangle -F
+                                echo $iptables -t mangle -X
+                                echo $iptables -t raw -F
+                                echo $iptables -t raw -X
+                                echo $iptables -P INPUT ACCEPT
+                                echo $iptables -P FORWARD ACCEPT
+                                echo $iptables -P OUTPUT ACCEPT """)
+
   command=command_template.substitute(iptables=configuration["iptables"])
   logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
   logging.info("Clean firewall called")
-  
 
-def is_wireless(name):
+def mode(options):
+  check_options(options,1)
+  # TODO: implement mode setting
+  logging.info("Mode setting called")  
+
+def is_wireless(section,name):
   interface_found=False
-  for interface in configuration['wan_interface']:
+  for interface in section:
     if interface['name']==name:
       interface_found=True                         
       if 'wireless' in interface and interface['wireless']:

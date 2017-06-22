@@ -9,5 +9,15 @@
       "name": "wlan0",
       "wireless": true
     }
-  ]
+  ],
+  "lan_interface": [
+    {
+      "name": "eth1",
+      "wireless": false
+    },
+    {
+      "name": "wlan1",
+      "wireless": true
+    }
+  ] 
 }
