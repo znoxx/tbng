@@ -6,25 +6,37 @@
 import sys, argparse, logging, os, utility,json
 from string import Template
 
-configuration=None
+#Getting path for config usage
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+configuration = None
+config_path = current_dir+"/../config/tbng.json"
+runtime= {}
+runtime_path = current_dir+"/../config/runtime.json"
 
 # Gather our code in a main() function
 def main(args, loglevel):
   global configuration
-
+  global runtime
   logging.basicConfig(format="%(levelname)s: %(message)s", level=loglevel)
 
-  #Getting path for config usage
-  current_dir = os.path.dirname(os.path.abspath(__file__))
-
-  # TODO
-  # Parse config file here 
-  config_path = current_dir+"/../config/tbng.json"
   with open(config_path) as data_file:    
     configuration = json.load(data_file)
- 
   logging.debug("Configuration loaded from file %s" % config_path)
+
+    
+  if os.path.isfile(runtime_path):
+    with open(runtime_path) as data_file:    
+      runtime = json.load(data_file)
+    logging.debug("Runtime data loaded from file %s" % runtime_path)
+  else:
+    ### default runtime is here
+    runtime['mode']="direct"
+    logging.debug("Runtime not found, creating default")
+    update_runtime()
+   
   logging.debug("Configuration  dump: %s" % configuration)
+  logging.debug("Runtime dump: %s" % runtime)
   # Actual code starts here
   logging.debug("We are running in %s" % current_dir)
   logging.debug("Your Command: %s" % args.command)
@@ -118,6 +130,8 @@ def mode(options):
   if options[0] in ['tor','privoxy']:
     logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
     
+  runtime['mode']=options[0]
+  update_runtime()
 
   logging.info("Mode setting called")  
 
@@ -140,12 +154,20 @@ def is_wireless(section,name):
   if not interface_found:
     raise Exception("Interface not found.")
   return False   
+
+def update_runtime():
+  with open(runtime_path, 'w') as outfile:
+    json.dump(runtime, outfile)
+  logging.debug("Runtime updated at %s" % runtime_path)
  
 # Standard boilerplate to call the main() function to begin
 # the program.
 
 if sys.version_info[0] < 3:
     raise Exception("Python 3.x is required.")
+
+if not 'SUDO_UID' in os.environ.keys():
+  raise Exception("sudo is required.")
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser( 
