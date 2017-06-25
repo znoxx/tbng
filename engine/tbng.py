@@ -46,7 +46,7 @@ def main(args, loglevel):
    'chkconfig': chkconfig,   # checks config
    'masquerade': masquerade, # enables masquerading on all outbound interfaces
    'clean_firewall': clean_fw, # cleans firewall
-   'mode': mode, # sets mode -direct,tor,privoxy
+   'mode': mode, # sets mode -direct,tor,privoxy, restore
    'reboot': reboot, #reboots
    'shutdown': shutdown, #shutdowns
    'unknown': unknown, # stub for unknown option
@@ -111,7 +111,7 @@ def clean_fw(options):
 def mode(options):
   check_options(options,1)
   # TODO: implement mode setting
-  if options[0] not in  ['direct','tor','privoxy']:
+  if options[0] not in  ['direct','tor','privoxy','restore']:
     raise Exception("Illegal mode")
   
 
@@ -119,6 +119,9 @@ def mode(options):
   for interface in configuration['lan_interface']:
    commandTemplate = "$iptables -t nat -A PREROUTING -i %s -p udp --dport 53 -j REDIRECT --to-ports 9053\n" % interface['name']  
    commandTemplate = commandTemplate + "$iptables -t nat -A PREROUTING -i %s -p tcp --syn -j REDIRECT --to-ports 9040\n" % interface['name']
+
+  if options[0] == 'restore':
+    options[0] = runtime['mode']
 
   if options[0] == 'privoxy':
     for interface in configuration['lan_interface']:
@@ -133,7 +136,7 @@ def mode(options):
   runtime['mode']=options[0]
   update_runtime()
 
-  logging.info("Mode setting called")  
+  logging.info("Mode setting called - mode %s selected" % options[0])  
 
 def reboot(options):
   check_options(options,0)
