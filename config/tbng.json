@@ -1,5 +1,5 @@
 {
-  "iptables": "/usr/sbin/iptables",
+  "iptables": "echo /usr/sbin/iptables",
   "wan_interface": [
     {
       "name": "eth0",

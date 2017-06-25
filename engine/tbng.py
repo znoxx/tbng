@@ -64,13 +64,13 @@ def masquerade(options):
   # Making list of wan interfaces
 
   for interface in configuration['wan_interface']:
-    tmplScript = tmplScript + "echo $iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE\n" % interface['name'] 
+    tmplScript = tmplScript + "$iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE\n" % interface['name'] 
   
   for interface in configuration['lan_interface']:
-    tmplScript = tmplScript + "echo $iptables --append FORWARD --in-interface %s -j ACCEPT\n" % interface['name'] 
+    tmplScript = tmplScript + "$iptables --append FORWARD --in-interface %s -j ACCEPT\n" % interface['name'] 
 
-  tmplScript = tmplScript + "echo $iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
-  tmplScript = tmplScript + "echo sysctl -w net.ipv4.ip_forward=1\n"
+  tmplScript = tmplScript + "$iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
+  tmplScript = tmplScript + "sysctl -w net.ipv4.ip_forward=1\n"
 
   command_template = Template(tmplScript)
   command = command_template.substitute(iptables=configuration["iptables"])
@@ -80,17 +80,17 @@ def masquerade(options):
 
 def clean_fw(options):
   check_options(options,0)
-  command_template = Template("""echo $iptables -F
-                                echo $iptables -X
-                                echo $iptables -t nat -F
-                                echo $iptables -t nat -X
-                                echo $iptables -t mangle -F
-                                echo $iptables -t mangle -X
-                                echo $iptables -t raw -F
-                                echo $iptables -t raw -X
-                                echo $iptables -P INPUT ACCEPT
-                                echo $iptables -P FORWARD ACCEPT
-                                echo $iptables -P OUTPUT ACCEPT """)
+  command_template = Template("""$iptables -F
+                                 $iptables -X
+                                 $iptables -t nat -F
+                                 $iptables -t nat -X
+                                 $iptables -t mangle -F
+                                 $iptables -t mangle -X
+                                 $iptables -t raw -F
+                                 $iptables -t raw -X
+                                 $iptables -P INPUT ACCEPT
+                                 $iptables -P FORWARD ACCEPT
+                                 $iptables -P OUTPUT ACCEPT """)
 
   command=command_template.substitute(iptables=configuration["iptables"])
   logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
@@ -99,6 +99,28 @@ def clean_fw(options):
 def mode(options):
   check_options(options,1)
   # TODO: implement mode setting
+  if options[0] not in  ['direct','tor','privoxy']:
+    raise Exception("Illegal mode")
+  
+  clean_fw([])
+  masquerade([])
+
+  commandTemplate=""
+  for interface in configuration['lan_interface']:
+   commandTemplate = "$iptables -t nat -A PREROUTING -i %s -p udp --dport 53 -j REDIRECT --to-ports 9053\n" % interface['name']  
+   commandTemplate = commandTemplate + "$iptables -t nat -A PREROUTING -i %s -p tcp --syn -j REDIRECT --to-ports 9040\n" % interface['name']
+
+  if options[0] == 'privoxy':
+    for interface in configuration['lan_interface']:
+      commandTemplate = commandTemplate + "$iptables -t nat -A PREROUTING -i %s -p tcp --dport 80 -j REDIRECT --to-port 8118\n" % interface['name']
+
+  command_template = Template(commandTemplate)
+  command = command_template.substitute(iptables=configuration["iptables"])
+  
+  if options[0] in ['tor','privoxy']:
+    logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+    
+
   logging.info("Mode setting called")  
 
 def is_wireless(section,name):
