@@ -1,0 +1,11 @@
+[Unit]
+Description=Masquerade
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/zno/tbng/engine/tbng.py clean_firewall
+ExecStart=/home/zno/tbng/engine/tbng.py masquerade 
+
+[Install]
+WantedBy=multi-user.target
