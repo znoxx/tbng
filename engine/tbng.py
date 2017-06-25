@@ -29,8 +29,6 @@ def main(args, loglevel):
   logging.debug("We are running in %s" % current_dir)
   logging.debug("Your Command: %s" % args.command)
   logging.debug("Options are: %s" % args.options)
-
-  print ("is wireless") if is_wireless(configuration['wan_interface'],"wlan0") else print("is not wireless")
   
   choices = {   #do not use ()
    'chkconfig': chkconfig,   # checks config
@@ -81,16 +79,16 @@ def masquerade(options):
 def clean_fw(options):
   check_options(options,0)
   command_template = Template("""$iptables -F
-                                 $iptables -X
-                                 $iptables -t nat -F
-                                 $iptables -t nat -X
-                                 $iptables -t mangle -F
-                                 $iptables -t mangle -X
-                                 $iptables -t raw -F
-                                 $iptables -t raw -X
-                                 $iptables -P INPUT ACCEPT
-                                 $iptables -P FORWARD ACCEPT
-                                 $iptables -P OUTPUT ACCEPT """)
+  $iptables -X
+  $iptables -t nat -F
+  $iptables -t nat -X
+  $iptables -t mangle -F
+  $iptables -t mangle -X
+  $iptables -t raw -F
+  $iptables -t raw -X
+  $iptables -P INPUT ACCEPT
+  $iptables -P FORWARD ACCEPT
+  $iptables -P OUTPUT ACCEPT """)
 
   command=command_template.substitute(iptables=configuration["iptables"])
   logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
@@ -102,8 +100,6 @@ def mode(options):
   if options[0] not in  ['direct','tor','privoxy']:
     raise Exception("Illegal mode")
   
-  clean_fw([])
-  masquerade([])
 
   commandTemplate=""
   for interface in configuration['lan_interface']:

@@ -1,22 +1,14 @@
 {
-  "iptables": "echo /usr/sbin/iptables",
+  "iptables": "/sbin/iptables",
   "wan_interface": [
     {
-      "name": "eth0",
-       "wireless": false
-    },
-    {
-      "name": "wlan0",
+      "name": "wlan1",
       "wireless": true
     }
   ],
   "lan_interface": [
     {
-      "name": "eth1",
-      "wireless": false
-    },
-    {
-      "name": "wlan1",
+      "name": "wlan0",
       "wireless": true
     }
   ] 

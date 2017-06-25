@@ -42,8 +42,7 @@ def run_multi_shell_command(command_line):
     Output: Combined stdout and stderror
     """
     prefix = """set -e errexit
-                set -o pipefail
-             """
+    """
  
     return subprocess.check_output(prefix+command_line, stderr=subprocess.STDOUT,shell=True)
 
