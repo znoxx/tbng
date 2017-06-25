@@ -35,6 +35,8 @@ def main(args, loglevel):
    'masquerade': masquerade, # enables masquerading on all outbound interfaces
    'clean_firewall': clean_fw, # cleans firewall
    'mode': mode, # sets mode -direct,tor,privoxy
+   'reboot': reboot, #reboots
+   'shutdown': shutdown, #shutdowns
    'unknown': unknown, # stub for unknown option
   }
   
@@ -118,6 +120,15 @@ def mode(options):
     
 
   logging.info("Mode setting called")  
+
+def reboot(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("reboot").decode("utf-8"))
+
+def shutdown(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("shutdown -h now").decode("utf-8"))
+
 
 def is_wireless(section,name):
   interface_found=False
