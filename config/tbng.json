@@ -1,5 +1,5 @@
 {
-  "iptables": "echo /sbin/iptables",
+  "iptables": "/sbin/iptables",
   "wan_interface": [
     {
       "name": "wlan1",

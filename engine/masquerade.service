@@ -4,8 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/zno/tbng/engine/tbng.py clean_firewall
-ExecStart=/home/zno/tbng/engine/tbng.py masquerade 
+ExecStart=/home/zno/tbng/engine/tbng.py mode restore 
 
 [Install]
 WantedBy=multi-user.target

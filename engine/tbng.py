@@ -130,8 +130,12 @@ def mode(options):
   command_template = Template(commandTemplate)
   command = command_template.substitute(iptables=configuration["iptables"])
   
+  clean_fw([])  
+
   if options[0] in ['tor','privoxy']:
     logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+  else:
+    masquerade([])
     
   runtime['mode']=options[0]
   update_runtime()
@@ -169,7 +173,7 @@ def update_runtime():
 if sys.version_info[0] < 3:
     raise Exception("Python 3.x is required.")
 
-if not 'SUDO_UID' in os.environ.keys():
+if not os.geteuid()==0:
   raise Exception("sudo is required.")
 
 if __name__ == '__main__':
