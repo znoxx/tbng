@@ -1,0 +1,16 @@
+[Unit]
+Description=WebUI for TorBoxNG
+After=masquerade.service
+
+[Service]
+ExecStart=/usr/bin/node /home/zno/tbng/bin/www
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=webui-torbox
+User=zno
+Group=zno
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

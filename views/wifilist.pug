@@ -14,7 +14,7 @@ block content
     for network in scanned.networks   
       tr
         td(class="tg-yw41") 
-          a(href="/wifi/connect?"+network.url) #{network.ssid}
+          a(href="/wan/wifi/connect?"+network.url) #{network.ssid}
         td(class="tg-yw41")= network.channel
         td(class="tg-yw41")= network.mac
         td(class="tg-yw41")= network.signal_level

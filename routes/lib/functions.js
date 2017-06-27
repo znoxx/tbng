@@ -159,7 +159,7 @@ this.wifi = function()
     var settings = {
       debug: true,
       iface: config.LEGACYstrWifiAdaptor,
-      connectionTimeout: 20000
+      connectionTimeout: 40000
     };
     wifi.configure(settings);
     wifi.init(settings); 
@@ -171,4 +171,13 @@ this.MacSpoof = function()
   var execSync = require('child_process').execSync;
   script = execSync(config.LEGACYstrWrapper+" "+config.LEGACYstrMacSpoof+" "+config.strWifiAdaptor);
   return "Command successfully passed to system";
+}
+
+this.tor_restart = function()
+{
+
+   var execSync = require('child_process').execSync;
+   tor_restart = execSync(engineRun+" tor_restart");
+   return "Command successfully passed to system";
+
 }
