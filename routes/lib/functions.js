@@ -1,30 +1,25 @@
 //globals
 
   var path = require('path');   
-  var config_path=path.join(__dirname,'../../config/config.json');
+  var engine = path.join(__dirname,'../../engine/tbng.py');
+  var engineRun = "sudo "+engine;
+  var config_path=path.join(__dirname,'../../config/tbng.json');
+  var runtime_path=path.join(__dirname,'../../config/runtime.json');
   var config=require(config_path);
+  
 
 
 this.readStatus = function()
 {
-  var res;
-  var fs=require('fs');
-  res = fs.readFileSync(config.strStatusFile, 'utf8');
-  if (res.match("TOR"))
-    return "TOR";
-  if (res.match("PRIVOXY"))
-    return "PRIVOXY";
-  if (res.match("DIRECT"))
-    return "DIRECT";
-  
-  return "ERROR";
+   var fs = require('fs');
+   return JSON.parse(fs.readFileSync(runtime_path, 'utf8')).mode.toUpperCase();
 }
 
 this.switchMode = function(modeNew)
 {
    
    var execSync = require('child_process').execSync;
-   script = execSync(config.strWrapper+" "+config.strCommand+" "+modeNew.toLowerCase());
+   script = execSync(engineRun+" mode "+modeNew.toLowerCase());
    console.log("Called switchMode with parameter: ",modeNew);
    return script
    
@@ -64,7 +59,7 @@ this.reboot = function()
 {
    
    var execSync = require('child_process').execSync;
-   var reboot = execSync(config.strWrapper+" "+config.strReboot);
+   var reboot = execSync(engineRun+" reboot");
    console.log("Called reboot...");
      
 }
@@ -73,7 +68,7 @@ this.shutdown = function()
 {
    
    var execSync = require('child_process').execSync;
-   var shutdown = execSync(config.strWrapper+" "+config.strShutdown);
+   var shutdown = execSync(engineRun+" shutdown");
    console.log("Called shutdown...");
      
 }
@@ -107,11 +102,6 @@ this.sysInfo = function()
 
 
  var temperature = "Not supported ";
-  if (doesExist(config.strTemperature))
-  {
-       var execSync = require('child_process').execSync;
-       temperature = execSync(config.strWrapper+" "+config.strTemperature); 
-  }
  
   
  var system_info = {
@@ -157,7 +147,7 @@ this.i2pAction = function(i2p)
 {
 
    var execSync = require('child_process').execSync;
-   script = execSync(config.strWrapper+" "+config.strSystemctl+"/"+"i2p "+i2p.toLowerCase());
+   script = execSync(engineRun +"i2p_"+i2p.toLowerCase());
    return "Command successfully passed to system";
 
 }
@@ -168,7 +158,7 @@ this.wifi = function()
 
     var settings = {
       debug: true,
-      iface: config.strWifiAdaptor,
+      iface: config.LEGACYstrWifiAdaptor,
       connectionTimeout: 20000
     };
     wifi.configure(settings);
@@ -179,6 +169,6 @@ this.wifi = function()
 this.MacSpoof = function()
 {
   var execSync = require('child_process').execSync;
-  script = execSync(config.strWrapper+" "+config.strMacSpoof+" "+config.strWifiAdaptor);
+  script = execSync(config.LEGACYstrWrapper+" "+config.LEGACYstrMacSpoof+" "+config.strWifiAdaptor);
   return "Command successfully passed to system";
 }

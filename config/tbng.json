@@ -13,5 +13,11 @@
     }
   ],
   "allowed_ports" : [],
-  "lock_firewall": false 
+  "lock_firewall": false,
+   
+  "LEGACYstrWrapper": "sudo",
+  "LEGACYstrWifiAdaptor": "wlan1",
+  "LEGACYstrMacSpoof": "/usr/local/bin/macspoof.sh"
+
+    
 }
