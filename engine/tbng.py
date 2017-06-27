@@ -22,25 +22,25 @@ def main(args, loglevel):
 
   with open(config_path) as data_file:    
     configuration = json.load(data_file)
-  logging.debug("Configuration loaded from file %s" % config_path)
+  logging.debug("Configuration loaded from file {0}".format(config_path))
 
     
   if os.path.isfile(runtime_path):
     with open(runtime_path) as data_file:    
       runtime = json.load(data_file)
-    logging.debug("Runtime data loaded from file %s" % runtime_path)
+    logging.debug("Runtime data loaded from file {0}".format(runtime_path))
   else:
     ### default runtime is here
     runtime['mode']="direct"
     logging.debug("Runtime not found, creating default")
     update_runtime()
    
-  logging.debug("Configuration  dump: %s" % configuration)
-  logging.debug("Runtime dump: %s" % runtime)
+  logging.debug("Configuration dump: {0}".format(configuration))
+  logging.debug("Runtime dump: {0}".format(runtime))
   # Actual code starts here
-  logging.debug("We are running in %s" % current_dir)
-  logging.debug("Your Command: %s" % args.command)
-  logging.debug("Options are: %s" % args.options)
+  logging.debug("We are running in {0}".format(current_dir))
+  logging.debug("Your Command: {0}".format(args.command))
+  logging.debug("Options are: {0}".format(args.options))
   
   choices = {   #do not use ()
    'chkconfig': chkconfig,   # checks config
@@ -49,6 +49,9 @@ def main(args, loglevel):
    'mode': mode, # sets mode -direct,tor,privoxy, restore
    'reboot': reboot, #reboots
    'shutdown': shutdown, #shutdowns
+   'tor_restart': tor_restart, #restarts tor
+   'i2p_restart': i2p_restart, #(re)starts i2p
+   'i2p_stop': i2p_stop, #stops i2p
    'unknown': unknown, # stub for unknown option
   }
   
@@ -59,7 +62,7 @@ def main(args, loglevel):
 
 def check_options(options,num):
   if num!=len(options):
-    raise Exception("Illegal number of options, required number is %d" % num)  
+    raise Exception("Illegal number of options, required number is {0}".format(num))  
 
 #function implementation goes here
 def unknown(options):
@@ -76,23 +79,20 @@ def masquerade(options):
   # Making list of wan interfaces
 
   for interface in configuration['wan_interface']:
-    tmplScript = tmplScript + "$iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE\n" % interface['name'] 
+    tmplScript = tmplScript + "$iptables --table nat --append POSTROUTING --out-interface {0} -j MASQUERADE\n".format(interface['name']) 
   
   for interface in configuration['lan_interface']:
-    tmplScript = tmplScript + "$iptables --append FORWARD --in-interface %s -j ACCEPT\n" % interface['name'] 
+    tmplScript = tmplScript + "$iptables --append FORWARD --in-interface {0} -j ACCEPT\n".format(interface['name']) 
 
   tmplScript = tmplScript + "$iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
   tmplScript = tmplScript + "sysctl -w net.ipv4.ip_forward=1\n"
 
-  command_template = Template(tmplScript)
-  command = command_template.substitute(iptables=configuration["iptables"])
-
-  logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+  logging.debug(utility.run_multi_shell_command(Template(tmplScript).substitute(iptables=configuration["iptables"])).decode("utf-8"))
   logging.info("Masquerading called")
 
 def clean_fw(options):
   check_options(options,0)
-  command_template = Template("""$iptables -F
+  logging.debug(utility.run_multi_shell_command(Template("""$iptables -F
   $iptables -X
   $iptables -t nat -F
   $iptables -t nat -X
@@ -102,45 +102,56 @@ def clean_fw(options):
   $iptables -t raw -X
   $iptables -P INPUT ACCEPT
   $iptables -P FORWARD ACCEPT
-  $iptables -P OUTPUT ACCEPT """)
-
-  command=command_template.substitute(iptables=configuration["iptables"])
-  logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+  $iptables -P OUTPUT ACCEPT""").substitute(iptables=configuration["iptables"])).decode("utf-8"))
   logging.info("Clean firewall called")
 
 def mode(options):
   check_options(options,1)
-  # TODO: implement mode setting
+  
   if options[0] not in  ['direct','tor','privoxy','restore']:
     raise Exception("Illegal mode")
   
 
-  commandTemplate=""
+  commandModeTemplate=""
   for interface in configuration['lan_interface']:
-   commandTemplate = "$iptables -t nat -A PREROUTING -i %s -p udp --dport 53 -j REDIRECT --to-ports 9053\n" % interface['name']  
-   commandTemplate = commandTemplate + "$iptables -t nat -A PREROUTING -i %s -p tcp --syn -j REDIRECT --to-ports 9040\n" % interface['name']
+   commandModeTemplate = "$iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
+   commandModeTemplate = commandModeTemplate + "$iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
 
   if options[0] == 'restore':
     options[0] = runtime['mode']
 
   if options[0] == 'privoxy':
     for interface in configuration['lan_interface']:
-      commandTemplate = commandTemplate + "$iptables -t nat -A PREROUTING -i %s -p tcp --dport 80 -j REDIRECT --to-port 8118\n" % interface['name']
-
-  command_template = Template(commandTemplate)
-  command = command_template.substitute(iptables=configuration["iptables"])
+      commandModeTemplate = commandModeTemplate + "$iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118\n".format(interface['name'])
   
-  clean_fw([])  
+  clean_fw([])
+
+  #Allowing desired ports
+  allowed_ports = [22,3000,7657,9050,8118] + configuration['allowed_ports']
+  
+  commandAllowTemplate="sysctl -w net.ipv4.ip_forward=1\n" #must run always
+  for interface in configuration['lan_interface']:
+    for port in allowed_ports:
+      commandAllowTemplate = commandAllowTemplate + "$iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
+  logging.debug(utility.run_multi_shell_command(Template(commandAllowTemplate).substitute(iptables=configuration["iptables"])).decode("utf-8"))
 
   if options[0] in ['tor','privoxy']:
-    logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+    logging.debug(utility.run_multi_shell_command(Template(commandModeTemplate).substitute(iptables=configuration["iptables"])).decode("utf-8"))
   else:
     masquerade([])
-    
+
+  #Locking firewall if needed
+  commandLockTemplate = "$iptables  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n"
+  for interface in configuration['wan_interface']:
+   commandLockTemplate = commandLockTemplate + "$iptables -A INPUT -i {0} -j DROP\n".format(interface['name'])
+  
+  if configuration['lock_firewall']:
+    logging.debug(utility.run_multi_shell_command(Template(commandLockTemplate).substitute(iptables=configuration["iptables"])).decode("utf-8"))
+  
   runtime['mode']=options[0]
   update_runtime()
 
-  logging.info("Mode setting called - mode %s selected" % options[0])  
+  logging.info("Mode setting called - mode {0} selected".format(options[0]))  
 
 def reboot(options):
   check_options(options,0)
@@ -149,6 +160,18 @@ def reboot(options):
 def shutdown(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("shutdown -h now").decode("utf-8"))
+
+def tor_restart(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("systemctl restart tor").decode("utf-8"))
+
+def i2p_restart(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("systemctl restart i2p").decode("utf-8"))
+
+def i2p_stop(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("systemctl stop i2p").decode("utf-8"))
 
 
 def is_wireless(section,name):
@@ -165,7 +188,7 @@ def is_wireless(section,name):
 def update_runtime():
   with open(runtime_path, 'w') as outfile:
     json.dump(runtime, outfile)
-  logging.debug("Runtime updated at %s" % runtime_path)
+  logging.debug("Runtime updated at {0}".format(runtime_path))
  
 # Standard boilerplate to call the main() function to begin
 # the program.
@@ -174,7 +197,7 @@ if sys.version_info[0] < 3:
     raise Exception("Python 3.x is required.")
 
 if not os.geteuid()==0:
-  raise Exception("sudo is required.")
+ raise Exception("sudo or root is required.")
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser( 

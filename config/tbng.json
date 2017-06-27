@@ -11,5 +11,7 @@
       "name": "wlan0",
       "wireless": true
     }
-  ] 
+  ],
+  "allowed_ports" : [],
+  "lock_firewall": false 
 }
