@@ -70,6 +70,48 @@ def unknown(options):
 
 def chkconfig(options):
   check_options(options,0)
+  ##getting interface list
+  iface_list = os.listdir("/sys/class/net")
+  logging.debug("Interface list: {0}".format(iface_list))
+  ##checking WAN interfaces
+  wireless=0
+  wired=0
+
+  if ('wan_interface' not in configuration.keys()) or (not configuration['wan_interface']):
+   raise Exception("No WAN interfaces configured")
+     
+  for interface in configuration['wan_interface']:
+    if interface['name'] not in iface_list:
+      raise Exception("WAN interface {0} is not defined or does not exist in /sys/class/net".format(interface['name']))
+    else: 
+      if is_wireless(configuration['wan_interface'],interface['name']):
+        wireless +=1
+      else:
+        wired +=1
+
+  if ( wireless > 1 ) or ( wired > 1 ):
+    raise Exception("Only one interface of same type is allowed - wired or wireless")
+
+  #checking LAN Interfaces
+  if ('lan_interface' not in configuration.keys()) or (not configuration['lan_interface']):
+   raise Exception("No LAN interface configured")
+
+  for interface in configuration['lan_interface']:
+    if interface['name'] not in iface_list:
+      raise Exception("LAN interface {0} is not defined or does not exist in /sys/class/net".format(interface['name']))
+  
+  #Checking interface conflicts
+  lans=[]
+  for interface in configuration['lan_interface']:
+    lans.append(interface['name'])
+  wans=[]
+  for interface in configuration['wan_interface']:
+    wans.append(interface['name'])
+
+  if len(set(lans).intersection(wans)) > 0:
+   raise Exception("Conflicting interfaces in LAN and WAN are detected: {0}".format(set(lans).intersection(wans)))
+ 
+
   logging.info("Check config called")
 
 def masquerade(options):
@@ -176,6 +218,7 @@ def i2p_stop(options):
 
 def is_wireless(section,name):
   interface_found=False
+  logging.debug("is_wireless called with section: {0} and name: {1}".format(section,name)) 
   for interface in section:
     if interface['name']==name:
       interface_found=True                         

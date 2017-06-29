@@ -1,11 +1,11 @@
 {
   "iptables": "/sbin/iptables",
   "wan_interface": [
-    {
-      "name": "wlan1",
-      "wireless": true
-    }
-  ],
+   {
+     "name": "wlan1",
+      "wireless": true    
+   }
+    ],
   "lan_interface": [
     {
       "name": "wlan0",
