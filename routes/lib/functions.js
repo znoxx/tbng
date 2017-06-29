@@ -157,10 +157,10 @@ this.wifi = function()
 {
    
  //Checking first available wifi interface
-
+ var retVal=null
  if (config.wan_interface && util.isArray(config.wan_interface))
  {
-   
+  console.log("Found wan interface and they are non-empty"); 
   config.wan_interface.forEach(function(interface){
       if (interface.wireless)
       {
@@ -173,11 +173,12 @@ this.wifi = function()
          };
         wifi.configure(settings);
         wifi.init(settings); 
-        return wifi; 
+        retVal=wifi;
+        return; 
       }      
     }); 
  }
-   return null;     
+   return retVal;     
 }  
 
 this.MacSpoof = function()
