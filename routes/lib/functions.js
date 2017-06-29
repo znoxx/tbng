@@ -1,6 +1,7 @@
 //globals
 
   var path = require('path');   
+  var util = require('util');
   var engine = path.join(__dirname,'../../engine/tbng.py');
   var engineRun = "sudo "+engine;
   var config_path=path.join(__dirname,'../../config/tbng.json');
@@ -154,22 +155,35 @@ this.i2pAction = function(i2p)
   
 this.wifi = function()
 {
-     var wifi = require('wifi-control');
+   
+ //Checking first available wifi interface
 
-    var settings = {
-      debug: true,
-      iface: config.LEGACYstrWifiAdaptor,
-      connectionTimeout: 40000
-    };
-    wifi.configure(settings);
-    wifi.init(settings); 
-    return wifi; 
+ if (config.wan_interface && util.isArray(config.wan_interface))
+ {
+   
+  config.wan_interface.forEach(function(interface){
+      if (interface.wireless)
+      {
+         var wifi = require('wifi-control');
+     
+         var settings = {
+           debug: true,
+           iface: interface.name,
+           connectionTimeout: 20000
+         };
+        wifi.configure(settings);
+        wifi.init(settings); 
+        return wifi; 
+      }      
+    }); 
+ }
+   return null;     
 }  
 
 this.MacSpoof = function()
 {
   var execSync = require('child_process').execSync;
-  script = execSync(config.LEGACYstrWrapper+" "+config.LEGACYstrMacSpoof+" "+config.strWifiAdaptor);
+  script = execSync(config.LEGACYstrWrapper+" "+config.LEGACYstrMacSpoof+" "+config.LEGACYstrWifiAdaptor);
   return "Command successfully passed to system";
 }
 
