@@ -1,0 +1,10 @@
+[Unit]
+Description=I2P for TorBOX
+[Service]
+ExecStart=/home/zno/i2p/runplain.sh
+User=zno
+Group=zno
+Type=forking
+PIDFile=/tmp/router.pid
+[Install]
+WantedBy=multi-user.target
