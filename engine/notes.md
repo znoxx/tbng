@@ -14,3 +14,5 @@ https://gist.github.com/Apsu/5021255
 
 https://stackoverflow.com/questions/24196932/how-can-i-get-the-ip-address-of-eth0-in-python
 
+ip link set wlanxx down
+
