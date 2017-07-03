@@ -10,4 +10,5 @@ UseBridges 1
 Bridge obfs4 YOUR_BRIDGE
 ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
 
+https://gist.github.com/Apsu/5021255
 
