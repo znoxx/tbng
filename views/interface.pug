@@ -5,14 +5,14 @@ block content
   h1= title
   if message
    h2= message
-  form(name="interfaceswitch", action="/interface", method="post")
+  form(name="interfaceswitch", action="/wan/interface", method="post")
     fieldset
       for interface in available_interfaces
-      label(for=#{interface.name})
-       input(type="radio", name="interface", value=#{interface.name} checked=#{interface.current}) 
-       span #{interface.name} 
+        label(for=interface.name)
+        input(type="radio", name="interface", value=interface.name checked=interface.current, required=true) 
+        span &nbsp;#{interface.name} 
     fieldset                                           
-       input(type="submit", value="Select")
+      input(type="submit", value="Select")
   br
-  a(href="/") Main page                                           
+  a(href="/wan") Back                                           
  

@@ -160,7 +160,6 @@ this.wifi = function()
  var retVal=null
  if (config.wan_interface && util.isArray(config.wan_interface))
  {
-  console.log("Found wan interface and they are non-empty"); 
   config.wan_interface.forEach(function(interface){
       if (interface.wireless)
       {
@@ -195,4 +194,48 @@ this.tor_restart = function()
    tor_restart = execSync(engineRun+" tor_restart");
    return "Command successfully passed to system";
 
+}
+
+this.getWanInterfaces = function()
+{
+   
+   interface_list=[];
+  //getting active interface
+  strActiveInterface="";
+  var execSync = require('child_process').execSync
+  try
+  {
+    res = execSync(engineRun+" get_default_interface").toString().split("\n")[0];
+    console.log(res);
+    strActiveInterface = res; 
+  }
+  catch(error)
+  {
+    console.log("Dump of stderr:")
+    console.log(error.toString());
+  }
+ 
+
+ if (config.wan_interface && util.isArray(config.wan_interface))
+ {
+  config.wan_interface.forEach(function(interface){
+     someinterface={};
+     someinterface.name=interface.name;
+     someinterface.current=false;
+     if(someinterface.name==strActiveInterface)
+     {
+        someinterface.current=true;
+     }
+     interface_list.push(someinterface);
+  });
+ }
+   console.log("Acquired interface list:")
+   console.log(interface_list);
+   return interface_list;
+}
+
+this.setDefaultInterface = function(interface)
+{
+   var execSync = require('child_process').execSync;
+   execSync(engineRun+" set_default_interface "+interface);
 }
