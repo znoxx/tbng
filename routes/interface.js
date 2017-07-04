@@ -7,22 +7,8 @@ router.get('/', function(req, res, next) {
   var strStatus;
   try
   {
-    //stub
-    interfaces= {};
 
-    interfaces[0]={
-      name: "wlan1",
-      current: false
-     }
-
-     
-    interfaces[1]={
-      name: "bond0",
-      current: true
-    }
-
-
-     interfaces = functions.getWanInterfaces();  
+    interfaces = functions.getWanInterfaces();  
 
     res.render('interface', { title: 'Select WAN interface', available_interfaces: interfaces  });   
   }

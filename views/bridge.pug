@@ -1,0 +1,22 @@
+
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="bridges", action="/services/tor/bridge", method="post")
+    fieldset
+      for mode in available_modes
+        label(for=mode.name)
+        input(type="radio", name="mode", value=mode.name checked=mode.current) 
+        span &nbsp;#{mode.name}
+    fieldset
+        label(for="data")
+          span Paste bridge data here
+        textarea(rows="5", cols="170", name="data", id="data") 
+    fieldset                                           
+      input(type="submit", value="Apply")
+  br
+  a(href="/services/tor") Back                                           
+ 

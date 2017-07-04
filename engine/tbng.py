@@ -255,10 +255,15 @@ def probe_obfs(options):
   # looking for obfs3
   try:
     obfs_options['obfs3'] = utility.run_shell_command("which obfsproxy").decode("utf-8").strip()
+  except subprocess.CalledProcessError as e:
+    logging.debug(e.output)
+   
+  # looking for obfs4
+
+  try:
     obfs_options['obfs4'] = utility.run_shell_command("which obfs4proxy").decode("utf-8").strip()
   except subprocess.CalledProcessError as e:
     logging.debug(e.output)
-
   
   print(json.dumps(obfs_options))
 

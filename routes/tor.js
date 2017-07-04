@@ -43,4 +43,6 @@ router.post('/reset', function(req, res, next) {
 });
 
 
+router.use('/bridge', require('./bridges'));
+
 module.exports = router;

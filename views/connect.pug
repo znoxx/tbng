@@ -3,7 +3,7 @@ extends layout
 block content
   h1= title
   h2 Connecting to #{settings.ssid}
-  form(name="reboot", action="/wan/wifi/connect", method="post")
+  form(name="connect", action="/wan/wifi/connect", method="post")
     fieldset
       label(for="wifi_password")
         span  Wifi password, if network is encrypted &nbsp;
