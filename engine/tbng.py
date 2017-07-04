@@ -54,6 +54,7 @@ def main(args, loglevel):
    'i2p_stop': i2p_stop, #stops i2p
    'get_default_interface': get_default_interface, #prints default interface or raises an exception in case iface not in list
    'set_default_interface': set_default_interface, #sets default interface, raises exception if interface not in wan list.
+   'probe_obfs': probe_obfs, #returns possible obfsproxy options
    'unknown': unknown, # stub for unknown option
   }
   
@@ -246,6 +247,22 @@ def set_default_interface(options):
   command = command + "ip link set {0} up\n".format(options[0])
   logging.debug(command)
   logging.debug(utility.run_shell_command(command).decode("utf-8"))
+
+def probe_obfs(options):
+  check_options(options,0)
+  obfs_options = {}
+  obfs_options['none']=""
+  # looking for obfs3
+  try:
+    obfs_options['obfs3'] = utility.run_shell_command("which obfsproxy").decode("utf-8").strip()
+    obfs_options['obfs4'] = utility.run_shell_command("which obfs4proxy").decode("utf-8").strip()
+  except subprocess.CalledProcessError as e:
+    logging.debug(e.output)
+
+  
+  print(json.dumps(obfs_options))
+
+
 
 def is_wireless(section,name):
   interface_found=False
