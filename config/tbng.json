@@ -4,6 +4,9 @@
    {
      "name": "wlan1",
       "wireless": true    
+   },
+   {
+      "name":"bond0"
    }
     ],
   "lan_interface": [

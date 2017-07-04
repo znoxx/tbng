@@ -3,7 +3,7 @@
 
 
 # import modules used here -- sys is a very standard one
-import sys, argparse, logging, os, utility,json
+import sys, argparse, logging, os, utility,json,subprocess
 from string import Template
 
 #Getting path for config usage
@@ -52,6 +52,8 @@ def main(args, loglevel):
    'tor_restart': tor_restart, #restarts tor
    'i2p_restart': i2p_restart, #(re)starts i2p
    'i2p_stop': i2p_stop, #stops i2p
+   'get_default_interface': get_default_interface, #prints default interface or raises an exception in case iface not in list
+   'set_default_interface': set_default_interface, #sets default interface, raises exception if interface not in wan list.
    'unknown': unknown, # stub for unknown option
   }
   
@@ -215,6 +217,35 @@ def i2p_stop(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl stop i2p-torbox").decode("utf-8"))
 
+def get_default_interface(options):
+  check_options(options,0)
+  interface_name=utility.run_piped(["ip","r","g","1.1.1.1"],["sed","-rn","s/^.*dev ([^ ]*).*$/\\1/p"])[0].decode("utf-8").strip()
+  logging.debug("Return value: {0}".format(interface_name))
+  interface_known=False
+  for interface in configuration['wan_interface']:
+    if interface['name'] == interface_name:
+     interface_known=True
+     break
+  
+  if interface_known:
+    print(interface_name)
+  else:
+    raise Exception("Interface is unknown or not configured")
+
+
+def set_default_interface(options):
+  check_options(options,1)
+  wan = []
+  for i in configuration['wan_interface']:
+     wan.append(i['name'])
+  if options[0] not in wan:
+    raise Exception("Interface not configured WAN interfaces list.")
+  command=""  
+  for i in wan:
+    command = command + "ip link set {0} down\n".format(i)
+  command = command + "ip link set {0} up\n".format(options[0])
+  logging.debug(command)
+  logging.debug(utility.run_shell_command(command).decode("utf-8"))
 
 def is_wireless(section,name):
   interface_found=False

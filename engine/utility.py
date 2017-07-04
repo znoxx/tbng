@@ -132,8 +132,8 @@ def run_piped(pipe_from,pipe_to):
     Input: command from pipe, command to pipe
     Output: stdout,stderror tulip
     """
-    run_from = subprocess.Popen([pipe_from],stdout=subprocess.PIPE)
-    run_to = subprocess.Popen([pipe_to],stdin=run_from.stdout,stdout=subprocess.PIPE)
+    run_from = subprocess.Popen(pipe_from,stdout=subprocess.PIPE)
+    run_to = subprocess.Popen(pipe_to,stdin=run_from.stdout,stdout=subprocess.PIPE)
     return run_to.communicate()
 
 
