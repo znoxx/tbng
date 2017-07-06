@@ -6,33 +6,18 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   var strStatus;
   
-  
-    //stub
-    var modes= [];
-    var someMode1 = {};
-    var someMode2 = {};
-    var someMode3 = {};
-       
-
-    someMode1.name="none";
-    someMode1.current=true;
-    
-    modes.push(someMode1);
-     
-    someMode2.name="obfs3";
-    someMode2.current=false;
-    someMode2.value="obfs3 stub";
-    modes.push(someMode2);
-
-    someMode3.name="obfs4";
-    someMode3.current=false;
-    someMode3.value="obfs4 stub";
-    modes.push(someMode3);
+ 
 
  try{
-     //interfaces = functions.getObfsModes();  
-
-    res.render('bridge', { title: 'Configure TOR bridges', available_modes: modes, data: "OBFS STUB"  });   
+     modes = functions.getObfsModes();  
+     obfs_data = "";
+     modes.forEach(function(mode){
+       if (mode.current && mode.name!="none")
+       {
+          obfs_data = mode.bridges.join("\n")
+       }
+     });
+     res.render('bridge', { title: 'Configure TOR bridges', available_modes: modes, data: obfs_data  });   
   }
   catch(e)
   {
@@ -52,21 +37,14 @@ router.post('/', function(req, res, next) {
      var resultData ={};
      resultData.mode=req.body.mode.trim();
      resultData.bridges=[];
-     bridges.forEach(function(bridge,i) {
-        if(bridge.trim() != "") resultData.bridges.push(bridge.trim()); 
-     });
-     console.log(JSON.stringify(resultData));
-    
-     res.render('xresult', { title: 'Configure TOR bridges', message: 'TODO: Implement tor tor bridges' });
-    //if ( typeof req.body.interface !== 'undefined' && req.body.interface )
-    //{
-    //   functions.setDefaultInterface(req.body.interface);
-    //   res.render('xresult', { title: 'Operation status', message: 'Attempted to switch to '+req.body.interface });
-   // }
-    //else
-    //{
-    //   throw "Cannot use undefined interface";
-   // }
+     if(req.body.mode != "none")
+     {
+       bridges.forEach(function(bridge,i) {
+          if(bridge.trim() != "") resultData.bridges.push(bridge.trim()); 
+       });
+     }
+     functions.setObfsMode(resultData);
+     res.render('xresult', { title: 'Bridge applied', message: "Bridge mode is "+resultData.mode+". Don't forget to switch to TOR mode" });
   }
   catch(e)
    {

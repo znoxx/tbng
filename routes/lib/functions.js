@@ -13,7 +13,14 @@
 this.readStatus = function()
 {
    var fs = require('fs');
-   return JSON.parse(fs.readFileSync(runtime_path, 'utf8')).mode.toUpperCase();
+   if (fs.existsSync(runtime_path)) { 
+     return JSON.parse(fs.readFileSync(runtime_path, 'utf8')).mode.toUpperCase();
+   }
+   else
+   {
+     return "DIRECT";
+   }
+
 }
 
 this.switchMode = function(modeNew)
@@ -237,4 +244,60 @@ this.setDefaultInterface = function(interface)
 {
    var execSync = require('child_process').execSync;
    execSync(engineRun+" set_default_interface "+interface);
+}
+
+this.getObfsModes = function()
+{
+  var available_modes={};
+  //get supported obfs modes
+  try
+  {
+    var execSync = require('child_process').execSync;
+    res = execSync(engineRun+" probe_obfs").toString().split("\n")[0];
+    console.log(res);
+    available_modes=Object.keys(JSON.parse(res));
+  }
+  catch(error)
+  {
+    console.log("Dump of stderr:")
+    console.log(error.toString());
+  }   
+  
+  var modes= [];
+  var defaultMode = {};
+  available_modes.forEach(function(single_mode) {
+  var Mode = {};
+  Mode.name=single_mode;
+  Mode.bridges=[];
+  Mode.current=false;
+  if(single_mode == "none") Mode.current=true;
+  modes.push(Mode);
+  });
+
+
+  //now loading from runtime
+  var fs = require('fs');
+  var current_mode={};
+  
+  if (fs.existsSync(runtime_path)) current_mode=JSON.parse(fs.readFileSync(runtime_path, 'utf8')).tor_bridges;
+ 
+  if (current_mode)
+  {
+    modes.forEach(function(mode, i,mod) {
+      if (mode.name == current_mode.mode)
+      {
+        mod[i].current=true;
+        mod[i].bridges = current_mode.bridges;
+      }
+    });
+  }
+  return modes;
+}
+
+this.setObfsMode=function(obfs_mode)
+{
+  argument="'"+JSON.stringify(obfs_mode)+"'";
+  var execSync = require('child_process').execSync;
+  res = execSync(engineRun+" tor_bridge "+argument).toString().split("\n")[0];
+  console.log(res);   
 }

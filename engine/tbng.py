@@ -34,6 +34,9 @@ def main(args, loglevel):
   else:
     ### default runtime is here
     runtime['mode']="direct"
+    runtime['tor_bridges']={}
+    runtime['tor_bridges']['mode']="none"
+    runtime['tor_bridges']['bridges']=[]
     logging.debug("Runtime not found, creating default")
     update_runtime()
    
@@ -199,6 +202,10 @@ def mode(options):
   runtime['mode']=options[0]
   update_runtime()
 
+  #calling tor_bridges
+
+  tor_bridge([json.dumps(runtime['tor_bridges'])])
+
   logging.info("Mode setting called - mode {0} selected".format(options[0]))  
 
 def reboot(options):
@@ -307,7 +314,7 @@ def tor_bridge(options):
 
   runtime['tor_bridges']={}
   runtime['tor_bridges']['mode']=obfs_setting['mode']
-  runtime['tor_bridges']['data']=obfs_setting['bridges']
+  runtime['tor_bridges']['bridges']=obfs_setting['bridges']
   utility.removeFileData(torrc,config_prefix,config_section)
   
   if not obfs_setting['mode']=='none':
@@ -329,8 +336,10 @@ def tor_bridge(options):
     update_runtime()
   except subprocess.CalledProcessError as e:
     utility.removeFileData(torrc,config_prefix,config_section)
+    runtime['tor_bridges']['mode']="none"
+    runtime['tor_bridges']['bridges']=[]
     tor_restart([])
-    raise Exception("There was an error restarting TOR after bridge update. Settings were rolled back, TOR restarted.")
+    raise Exception("There was an error restarting TOR after bridge update. Bridge disabled, TOR restarted.")
  
 
 def is_managed(interface):

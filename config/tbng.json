@@ -4,9 +4,6 @@
    {
      "name": "wlan1",
       "wireless": true    
-   },
-   {  
-      "name": "eth0"
    }
     ],
   "lan_interface": [
