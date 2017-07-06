@@ -215,7 +215,6 @@ this.getWanInterfaces = function()
     console.log(error.toString());
   }
  
-
  if (config.wan_interface && util.isArray(config.wan_interface))
  {
   config.wan_interface.forEach(function(interface){

@@ -246,8 +246,17 @@ def set_default_interface(options):
     raise Exception("Interface not configured WAN interfaces list.")
   command=""  
   for i in wan:
-    command = command + "ip link set {0} down\n".format(i)
-  command = command + "ip link set {0} up\n".format(options[0])
+    device_managed=is_managed(i)
+    if device_managed:
+      command += "nmcli dev {0} disconnect\n".format(i)
+    else:
+      command += "ifdown {0}\n".format(i)
+
+  if is_managed(options[0]):
+   command += "nmcli dev connect {0}\n".format(options[0])
+  else:
+   command += "ifup {0}\n".format(options[0]) 
+ 
   logging.debug(command)
   logging.debug(utility.run_shell_command(command).decode("utf-8"))
 
@@ -323,9 +332,11 @@ def tor_bridge(options):
     tor_restart([])
     raise Exception("There was an error restarting TOR after bridge update. Settings were rolled back, TOR restarted.")
  
-  
-    
 
+def is_managed(interface):
+  command="nmcli dev show {0}|grep unmanaged||true".format(interface)
+  return "unmanaged" not in utility.run_shell_command(command).decode("utf-8") 
+    
 def is_wireless(section,name):
   interface_found=False
   logging.debug("is_wireless called with section: {0} and name: {1}".format(section,name)) 
