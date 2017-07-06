@@ -13,8 +13,8 @@ block content
         span &nbsp;#{mode.name}
     fieldset
         label(for="data")
-          span Paste bridge data here
-        textarea(rows="5", cols="170", name="data", id="data") 
+          span Paste bridge data here. If "none" selected, field will be ignored.
+        textarea(rows="5", cols="170", name="data", id="data")= data                  
     fieldset                                           
       input(type="submit", value="Apply")
   br
