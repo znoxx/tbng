@@ -13,7 +13,8 @@ block content
         span &nbsp;#{mode.name}
     fieldset
         label(for="data")
-          span Paste bridge data here. If "none" selected, field will be ignored.
+          span Get your bridges from <a href="https://bridges.torproject.org", target=_blank>TOR Bridges</a>, or drop a mail to <a href="mailto:bridges@torproject.org">bridges@torproject.org</a> via <a href="https://mail.google.com", target=_blank>Gmail</a>, <a href="https://mail.yahoo.com", target=_blank>Yahoo</a> or <a href="https://riseup.net", target=_blank>Riseup</a> service.
+          span <p>Paste bridge data here. If "none" selected, field will be ignored<p>.
         textarea(rows="5", cols="170", name="data", id="data",placeholder="obfs3 XXXX YYYY ZZZZ")= data                  
     fieldset                                           
       input(type="submit", value="Apply")

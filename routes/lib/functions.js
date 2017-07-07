@@ -270,7 +270,6 @@ this.getObfsModes = function()
   Mode.name=single_mode;
   Mode.bridges=[];
   Mode.current=false;
-  if(single_mode == "none") Mode.current=true;
   modes.push(Mode);
   });
 
@@ -281,16 +280,21 @@ this.getObfsModes = function()
   
   if (fs.existsSync(runtime_path)) current_mode=JSON.parse(fs.readFileSync(runtime_path, 'utf8')).tor_bridges;
  
-  if (current_mode)
-  {
     modes.forEach(function(mode, i,mod) {
-      if (mode.name == current_mode.mode)
-      {
-        mod[i].current=true;
-        mod[i].bridges = current_mode.bridges;
-      }
-    });
-  }
+       if (current_mode)
+       {
+         if (mode.name == current_mode.mode)
+         {
+           mod[i].current=true;
+           mod[i].bridges = current_mode.bridges;
+         }
+       } else
+       {
+          if(mode.name == "none") mod[i].current=false;
+       }
+      
+     });
+  console.log(modes);
   return modes;
 }
 
