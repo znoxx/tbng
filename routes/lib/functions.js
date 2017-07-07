@@ -305,3 +305,10 @@ this.setObfsMode=function(obfs_mode)
   res = execSync(engineRun+" tor_bridge "+argument).toString().split("\n")[0];
   console.log(res);   
 }
+
+this.resetTOR=function()
+{
+  var execSync = require('child_process').execSync;
+  res = execSync(engineRun+" tor_reset").toString().split("\n")[0];
+  console.log(res);
+}

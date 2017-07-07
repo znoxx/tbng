@@ -33,7 +33,8 @@ router.post('/restart', function(req, res, next) {
 router.post('/reset', function(req, res, next) {
   try 
   {
-    res.render('xresult', { title: 'Reset TOR', message: 'TODO: Implement tor reset' });
+    functions.resetTOR();
+    res.render('xresult', { title: 'Reset TOR', message: 'Removed generated bridge and country settings.' });
   }
   catch(e)
    {
