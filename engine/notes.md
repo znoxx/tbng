@@ -16,3 +16,5 @@ https://stackoverflow.com/questions/24196932/how-can-i-get-the-ip-address-of-eth
 
 ip link set wlanxx down
 
+apt-get install tor-geoipdb
+
