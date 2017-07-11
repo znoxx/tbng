@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  form(name="bridges", action="/services/tor/exitnodes", method="post")
+    fieldset
+       table(class="tg")
+         tr
+           th(class="tg-yw41") Country
+           th(class="tg-yw41") Exclude
+         for country in countries   
+           tr
+             td(class="tg-yw41")= country.name
+             td(class="tg-yw41" align="center")
+               input(type='checkbox' checked=country.selected name=country.code)
+    fieldset
+      input(type="submit", value="Apply")
+  br
+  a(href="/services/tor") Back

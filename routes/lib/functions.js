@@ -6,6 +6,7 @@
   var engineRun = "sudo "+engine;
   var config_path=path.join(__dirname,'../../config/tbng.json');
   var runtime_path=path.join(__dirname,'../../config/runtime.json');
+  var torcountry_path=path.join(__dirname,'../../config/torcountry.json');
   var config=require(config_path);
   
 
@@ -316,5 +317,48 @@ this.resetTOR=function()
 {
   var execSync = require('child_process').execSync;
   res = execSync(engineRun+" tor_reset").toString().split("\n")[0];
+  console.log(res);
+}
+
+this.getCountryList = function()
+{
+   var fs = require('fs');
+   tor_country=[];
+   selected_countries=[];
+   if (fs.existsSync(torcountry_path)) {
+     tor_country=JSON.parse(fs.readFileSync(torcountry_path, 'utf8'));
+   }
+   else
+   {
+     throw new Error("No TOR country list found. Unrecoverable.");
+   }
+   
+   if (fs.existsSync(runtime_path)) {
+     selected_countries=JSON.parse(fs.readFileSync(runtime_path, 'utf8')).tor_excluded_countries;
+   }
+
+
+   countries=[];
+   
+   tor_country.forEach(function(country) {
+     someCountry={};
+     someCountry.code=country.code;
+     someCountry.name=country.name;
+     someCountry.selected=false;
+     selected_countries.forEach(function(selected) {
+       if (someCountry.code==selected)
+         someCountry.selected=true;
+     });
+     countries.push(someCountry);
+   });   
+  
+   return countries;
+}
+
+this.setExitNodes = function(countries)
+{
+  argument="'"+JSON.stringify(countries)+"'";
+  var execSync = require('child_process').execSync;
+  res = execSync(engineRun+" tor_exclude_exit "+argument).toString().split("\n")[0];
   console.log(res);
 }

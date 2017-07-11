@@ -45,5 +45,5 @@ router.post('/reset', function(req, res, next) {
 
 
 router.use('/bridge', require('./bridges'));
-
+router.use('/exitnodes', require('./exitnodes'));
 module.exports = router;
