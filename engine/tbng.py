@@ -3,8 +3,10 @@
 
 
 # import modules used here -- sys is a very standard one
-import sys, argparse, logging, os, utility,json,subprocess
+import sys,argparse,logging,os,json,subprocess
 from string import Template
+from libraries import utility
+
 
 #Getting path for config usage
 
@@ -216,23 +218,28 @@ def mode(options):
 
 def reboot(options):
   check_options(options,0)
+  logging.info("Reboot called")
   logging.debug(utility.run_shell_command("reboot").decode("utf-8"))
-
+  
 def shutdown(options):
   check_options(options,0)
+  logging.info("Shutdown called")
   logging.debug(utility.run_shell_command("shutdown -h now").decode("utf-8"))
 
 def tor_restart(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl restart tor").decode("utf-8"))
+  logging.info("TOR Restart called")
 
 def i2p_restart(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl restart i2p-torbox").decode("utf-8"))
+  logging.info("I2P Restart called")  
 
 def i2p_stop(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl stop i2p-torbox").decode("utf-8"))
+  logging.info("I2P Stop called")
 
 def get_default_interface(options):
   check_options(options,0)
@@ -272,6 +279,7 @@ def set_default_interface(options):
  
   logging.debug(command)
   logging.debug(utility.run_shell_command(command).decode("utf-8"))
+  logging.info("Set default interface {0} called".format(options[0]))
 
 def probe_obfs(options):
   check_options(options,0)
@@ -347,11 +355,13 @@ def tor_bridge(options):
     update_runtime()
     tor_restart([])
     raise Exception("There was an error restarting TOR after bridge update. Bridge disabled, TOR restarted.")
- 
+  logging.info("TOR Bridge called") 
+
 def tor_reset(options):
   check_options(options,0)
   tor_bridge(['{"mode": "none", "bridges": []}'])
   tor_exclude_exit(['[]'])
+  logging.info("TOR Reset called")
 
 
 def tor_exclude_exit(options):
@@ -398,7 +408,7 @@ def tor_exclude_exit(options):
     update_runtime()
     tor_restart([])
     raise Exception("There was an error restarting TOR after country list update. Exit nodes ban disabled, TOR restarted.")
-  
+  logging.info("TOR Exclude exit called")
   
   
   
@@ -424,6 +434,7 @@ def update_runtime():
   with open(runtime_path, 'w') as outfile:
     json.dump(runtime, outfile)
   logging.debug("Runtime updated at {0}".format(runtime_path))
+  logging.info("Runtime updated called")
  
 # Standard boilerplate to call the main() function to begin
 # the program.
