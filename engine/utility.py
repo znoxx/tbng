@@ -159,7 +159,7 @@ def removeFileData(filename,prefix, token):
   """
   fileText=""
   prefix=prefix.replace('#','\#')
-  regexp="\\n+"+prefix+token+"_begin(.*)"+prefix+token+"_end\\n+"
+  regexp="\\n"+prefix+token+"_begin(.*)"+prefix+token+"_end\\n+"
   with open(filename) as f:
     f=open(filename,'r')
     fileText = f.read()
