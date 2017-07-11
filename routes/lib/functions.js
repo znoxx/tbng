@@ -228,6 +228,12 @@ this.getWanInterfaces = function()
      someinterface={};
      someinterface.name=interface.name;
      someinterface.current=false;
+
+     if(interface.wireless)
+       someinterface.wireless=true
+     else
+       someinterface.wireless=false
+
      if(someinterface.name==strActiveInterface)
      {
         someinterface.current=true;

@@ -1,9 +1,35 @@
 var express = require('express');
 var router = express.Router();
-
+var functions = require('./lib/functions.js');
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('wired', { title: 'Wired network' });
+
+  var strStatus;
+  try
+  {
+
+    interfaces = functions.getWanInterfaces();
+    bHasWired=false;
+    interfaces.forEach(function(interface){
+       if (interface.wireless==false) {
+         bHasWired=true;
+       }
+    });
+
+    if (bHasWired == false)
+    {
+        throw new Error("No wired interfaces configured.");
+    }
+    
+    res.render('wired', { title: 'Wired network' });
+  }
+  catch(e)
+  {
+    var strError = e.toString();
+    res.render('xerror', { message: 'Error occured', description: strError});
+  }
+
+
 });
 
 /* GET macspoof. */
