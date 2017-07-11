@@ -18,3 +18,7 @@ ip link set wlanxx down
 
 apt-get install tor-geoipdb
 
+/usr/bin/macchanger -A wlan0
+systemctl restart network-manager.service
+sleep 5
+
