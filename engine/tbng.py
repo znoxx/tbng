@@ -417,7 +417,7 @@ def get_cpu_temp(options):
   retval="Temperature not supported"
   if configuration['cputemp']:
     retval=run_plugin("cputemp",configuration['cputemp'])
-  print("{0}\n".format(retval))
+  print("{0}".format(retval))
   
 
 def is_managed(interface):
