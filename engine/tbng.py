@@ -69,7 +69,7 @@ def main(args, loglevel):
    'tor_bridge': tor_bridge, #configures tor bridge
    'tor_reset': tor_reset, #removes tor settings for bridge and for countries
    'tor_exclude_exit': tor_exclude_exit, #exclude exit nodes by country
-   'get_cpu_temp': get_cpu_temp, #Get CPU temperature
+   'get_cpu_temp': get_cpu_temp, #get cpu temperature
    'unknown': unknown, # stub for unknown option
   }
   
@@ -412,12 +412,12 @@ def tor_exclude_exit(options):
     raise Exception("There was an error restarting TOR after country list update. Exit nodes ban disabled, TOR restarted.")
   logging.info("TOR Exclude exit called")
   
-  def get_cpu_temp(options):
-    check_options(options,0)
-    retval="Temperature not supported"
-    if configuration['cputemp']:
-      retval=run_plugin("cputemp",configuration['cputemp'])
-    print("{0}]\n".format(retval))
+def get_cpu_temp(options):
+  check_options(options,0)
+  retval="Temperature not supported"
+  if configuration['cputemp']:
+    retval=run_plugin("cputemp",configuration['cputemp'])
+  print("{0}\n".format(retval))
   
 
 def is_managed(interface):
@@ -441,8 +441,6 @@ def update_runtime():
     json.dump(runtime, outfile)
   logging.debug("Runtime updated at {0}".format(runtime_path))
   logging.info("Runtime updated called")
-
-
  
 # Standard boilerplate to call the main() function to begin
 # the program.
