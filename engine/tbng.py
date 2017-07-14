@@ -413,7 +413,8 @@ def tor_exclude_exit(options):
 def get_cpu_temp(options):
   check_options(options,0)
   retval="Temperature monitoring not supported"
-  if hasattr(configuration,'cputemp'):
+  
+  if 'cputemp' in configuration:
     retval=run_plugin("cputemp",configuration['cputemp'])
   print("{0}".format(retval))
   

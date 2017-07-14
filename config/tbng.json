@@ -1,5 +1,5 @@
-{
-  "cputemp": "default",
+{ 
+  "cputemp": "cubie1",
   "wan_interface": [
    {
      "name": "wlan1",
