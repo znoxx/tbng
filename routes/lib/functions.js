@@ -112,6 +112,18 @@ this.sysInfo = function()
 
  var temperature = "Not supported ";
  
+ try
+  {
+    var execSync = require('child_process').execSync;
+    res = execSync(engineRun+" get_cpu_temp").toString().split("\n")[0];
+    console.log(res);
+    temperature = res; 
+  }
+  catch(error)
+  {
+    console.log("Dump of stderr:")
+    console.log(error.toString());
+  }
   
  var system_info = {
    
