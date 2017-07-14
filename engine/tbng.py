@@ -4,7 +4,6 @@
 
 # import modules used here -- sys is a very standard one
 import sys,argparse,logging,os,json,subprocess
-from string import Template
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
@@ -135,34 +134,34 @@ def chkconfig(options):
 def masquerade(options):
   check_options(options,0)
   # template
-  tmplScript=""
+  Script=""
   # Making list of wan interfaces
 
   for interface in configuration['wan_interface']:
-    tmplScript = tmplScript + "$iptables --table nat --append POSTROUTING --out-interface {0} -j MASQUERADE\n".format(interface['name']) 
+    Script = Script + "iptables --table nat --append POSTROUTING --out-interface {0} -j MASQUERADE\n".format(interface['name']) 
   
   for interface in configuration['lan_interface']:
-    tmplScript = tmplScript + "$iptables --append FORWARD --in-interface {0} -j ACCEPT\n".format(interface['name']) 
+    Script = Script + "iptables --append FORWARD --in-interface {0} -j ACCEPT\n".format(interface['name']) 
 
-  tmplScript = tmplScript + "$iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
-  tmplScript = tmplScript + "sysctl -w net.ipv4.ip_forward=1\n"
+  Script = Script + "iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
+  Script = Script + "sysctl -w net.ipv4.ip_forward=1\n"
 
-  logging.debug(utility.run_multi_shell_command(Template(tmplScript).substitute(iptables=configuration["iptables"])).decode("utf-8"))
+  logging.debug(utility.run_multi_shell_command(Script).decode("utf-8"))
   logging.info("Masquerading called")
 
 def clean_fw(options):
   check_options(options,0)
-  logging.debug(utility.run_multi_shell_command(Template("""$iptables -F
-  $iptables -X
-  $iptables -t nat -F
-  $iptables -t nat -X
-  $iptables -t mangle -F
-  $iptables -t mangle -X
-  $iptables -t raw -F
-  $iptables -t raw -X
-  $iptables -P INPUT ACCEPT
-  $iptables -P FORWARD ACCEPT
-  $iptables -P OUTPUT ACCEPT""").substitute(iptables=configuration["iptables"])).decode("utf-8"))
+  logging.debug(utility.run_multi_shell_command("""iptables -F
+  iptables -X
+  iptables -t nat -F
+  iptables -t nat -X
+  iptables -t mangle -F
+  iptables -t mangle -X
+  iptables -t raw -F
+  iptables -t raw -X
+  iptables -P INPUT ACCEPT
+  iptables -P FORWARD ACCEPT
+  iptables -P OUTPUT ACCEPT""").decode("utf-8"))
   logging.info("Clean firewall called")
 
 def mode(options):
@@ -172,12 +171,12 @@ def mode(options):
     raise Exception("Illegal mode")
   
 
-  commandModeTemplate=""
+  commandMode=""
   for interface in configuration['lan_interface']:
     if options[0] == 'privoxy':
-      commandModeTemplate  += "$iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118\n".format(interface['name'])
-    commandModeTemplate += "$iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
-    commandModeTemplate += "$iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
+      commandMode  += "iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118\n".format(interface['name'])
+    commandMode += "iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
+    commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
 
   if options[0] == 'restore':
     options[0] = runtime['mode']
@@ -187,26 +186,25 @@ def mode(options):
   #Allowing desired ports
   allowed_ports = [22,3000,7657,9050,8118] + configuration['allowed_ports']
   
-  commandAllowTemplate="sysctl -w net.ipv4.ip_forward=1\n" #must run always
+  commandAllow="sysctl -w net.ipv4.ip_forward=1\n" #must run always
   for interface in configuration['lan_interface']:
     for port in allowed_ports:
-      commandAllowTemplate = commandAllowTemplate + "$iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
-  logging.debug(utility.run_multi_shell_command(Template(commandAllowTemplate).substitute(iptables=configuration["iptables"])).decode("utf-8"))
+      commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
+  logging.debug(utility.run_multi_shell_command(commandAllow).decode("utf-8"))
 
   if options[0] in ['tor','privoxy']:
-    command = Template(commandModeTemplate).substitute(iptables=configuration["iptables"])
-    logging.debug("Running command: \n{0}\n".format(command))
-    logging.debug(utility.run_multi_shell_command(command).decode("utf-8"))
+    logging.debug("Running command: \n{0}\n".format(commandMode))
+    logging.debug(utility.run_multi_shell_command(commandMode).decode("utf-8"))
   else:
     masquerade([])
 
   #Locking firewall if needed
-  commandLockTemplate = "$iptables  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n"
+  commandLock = "iptables  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n"
   for interface in configuration['wan_interface']:
-   commandLockTemplate = commandLockTemplate + "$iptables -A INPUT -i {0} -j DROP\n".format(interface['name'])
+   commandLock = commandLock + "iptables -A INPUT -i {0} -j DROP\n".format(interface['name'])
   
   if configuration['lock_firewall']:
-    logging.debug(utility.run_multi_shell_command(Template(commandLockTemplate).substitute(iptables=configuration["iptables"])).decode("utf-8"))
+    logging.debug(utility.run_multi_shell_command(commandLock).decode("utf-8"))
   
   runtime['mode']=options[0]
   update_runtime()
@@ -415,7 +413,7 @@ def tor_exclude_exit(options):
 def get_cpu_temp(options):
   check_options(options,0)
   retval="Temperature monitoring not supported"
-  if configuration['cputemp']:
+  if hasattr(configuration,'cputemp'):
     retval=run_plugin("cputemp",configuration['cputemp'])
   print("{0}".format(retval))
   

@@ -1,6 +1,5 @@
 {
   "cputemp": "default",
-  "iptables": "/sbin/iptables",
   "wan_interface": [
    {
      "name": "wlan1",
