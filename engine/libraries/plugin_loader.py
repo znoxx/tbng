@@ -1,9 +1,9 @@
 from importlib import import_module
-def run_plugin(family,name):
-    plugin = import_module("plugins.{0}_{1}".format(family,name))
+def run_plugin(family,name,json_arguments=None):
     return_value="Error getting data plugin/{0}_{1}.py: ".format(family,name)
     try:
-      return_value=plugin.plugin_main()
+      plugin = import_module("plugins.{0}_{1}".format(family,name))
+      return_value=plugin.plugin_main(json_arguments)
     except Exception as e:
       return_value += str(e)
     return return_value
