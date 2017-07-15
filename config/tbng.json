@@ -3,7 +3,13 @@
   "wan_interface": [
    {
      "name": "wlan1",
-      "wireless": true    
+      "wireless": true,
+      "macspoof": {
+        "method": "modrealtek",
+        "parameters": {
+         "module_name": "8192cu"
+        }
+       }    
    }
     ],
   "lan_interface": [
