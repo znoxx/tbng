@@ -1,0 +1,18 @@
+
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="interfaceswitch", action="/wan/spoof", method="post")
+    fieldset
+      for interface in available_interfaces
+        label(for=interface.name)
+        input(type="radio", name="interface", value=interface.name checked=interface.current, required=true) 
+        span &nbsp;#{interface.name} 
+    fieldset                                           
+      input(type="submit", value="Spoof")
+  br
+  a(href="/wan") Back                                           
+ 

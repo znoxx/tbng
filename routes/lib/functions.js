@@ -200,12 +200,7 @@ this.wifi = function()
    return retVal;     
 }  
 
-this.MacSpoof = function()
-{
-  var execSync = require('child_process').execSync;
-  script = execSync(config.LEGACYstrWrapper+" "+config.LEGACYstrMacSpoof+" "+config.LEGACYstrWifiAdaptor);
-  return "Command successfully passed to system";
-}
+
 
 this.tor_restart = function()
 {
@@ -251,6 +246,7 @@ this.getWanInterfaces = function()
      {
         someinterface.current=true;
      }
+     
      interface_list.push(someinterface);
   });
  }
@@ -372,5 +368,13 @@ this.setExitNodes = function(countries)
   argument="'"+JSON.stringify(countries)+"'";
   var execSync = require('child_process').execSync;
   res = execSync(engineRun+" tor_exclude_exit "+argument).toString().split("\n")[0];
+  console.log(res);
+}
+
+this.spoofInterface = function(interface)
+{
+  var execSync = require('child_process').execSync;
+  var execSync = require('child_process').execSync;
+  res = execSync(engineRun+" macspoof "+interface).toString().split("\n")[0];
   console.log(res);
 }

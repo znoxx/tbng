@@ -146,44 +146,6 @@ router.post('/connect', function(req, res, next) {
 
 
 
-
-/* GET macspoof. */
-router.get('/macspoof', function(req, res, next) {
-  try
-  {
-    var wifiInstance=functions.wifi();
-	if(wifiInstance === null)
-	{
-		  throw Error(no_wifi_interface);
-	}
-   res.render('wifispoof', { title: 'MAC Spoof', message: 'Press button to randomly change wireless MAC address' });
-  }
-   catch(e)
-  {
-     var strError = e.toString();
-     res.render('xerror', { message: "Error occured", description: strError});
-  } 
-  
-});
-/* POST macspoof. */
-router.post('/macspoof', function(req, res, next) {
-  try
-  {
-	 var wifiInstance=functions.wifi();
-	 if(wifiInstance === null)
-	  {
-		  throw Error(no_wifi_interface);
-	  }
-     var spoof=functions.MacSpoof();
-     res.render('xresult', { title: 'MAC Spoof', message: spoof });
-  }
-  catch(e)
-   {
-     var strError = e.toString();
-     res.render('xerror', { message: "Error occured", description: strError});
-   }
-});
-
 /* GET wifi reset. */
 router.get('/reset', function(req, res, next) {
   try

@@ -8,6 +8,6 @@ router.get('/', function(req, res, next) {
 
 router.use('/interface',require('./interface'));
 router.use('/wifi',require('./wifi'));
-router.use('/wired', require('./wired'));
+router.use('/spoof', require('./spoof'));
 
 module.exports = router;
