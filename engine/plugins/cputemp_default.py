@@ -1,4 +1,5 @@
 ## Default plugin for temperature measurment - fits most hardware
+from libraries import utility
 def plugin_main(json_arguments=None):
   data="Undefned"  
   with open ("/sys/class/hwmon/hwmon0/temp1_input", "r") as temperature:
