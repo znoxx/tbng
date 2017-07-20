@@ -268,7 +268,7 @@ def set_default_interface(options):
   for i in wan:
     device_managed=is_managed(i)
     if device_managed:
-      command += "nmcli dev {0} disconnect\n".format(i)
+      command += "nmcli dev disconnect {0}\n".format(i)
     else:
       command += "ifdown {0}\n".format(i)
 
