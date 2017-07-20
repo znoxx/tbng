@@ -1,5 +1,5 @@
 [Unit]
-Description=Masquerade
+Description=TBNG Helper
 After=network.target
 
 [Service]
