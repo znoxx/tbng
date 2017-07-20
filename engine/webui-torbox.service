@@ -3,7 +3,7 @@ Description=WebUI for TorBoxNG
 After=masquerade.service
 
 [Service]
-ExecStart=/usr/bin/node /home/zno/tbng/bin/www
+ExecStart=/usr/bin/nodejs /home/zno/tbng/bin/www
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
