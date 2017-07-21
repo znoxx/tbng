@@ -375,6 +375,6 @@ this.spoofInterface = function(interface)
 {
   var execSync = require('child_process').execSync;
   var execSync = require('child_process').execSync;
-  res = execSync(engineRun+" macspoof "+interface).toString().split("\n")[0];
+  res = execSync(engineRun+" macspoof_wan "+interface).toString().split("\n")[0];
   console.log(res);
 }

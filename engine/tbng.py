@@ -69,6 +69,7 @@ def main(args, loglevel):
    'tor_reset': tor_reset, #removes tor settings for bridge and for countries
    'tor_exclude_exit': tor_exclude_exit, #exclude exit nodes by country
    'get_cpu_temp': get_cpu_temp, #get cpu temperature
+   'macspoof_wan': macspoof_wan, #spoof mac address
    'unknown': unknown, # stub for unknown option
   }
   
@@ -417,7 +418,22 @@ def get_cpu_temp(options):
   if 'cputemp' in configuration:
     retval=run_plugin("cputemp",configuration['cputemp'])
   print("{0}".format(retval))
-  
+
+def macspoof_wan(options):
+  check_options(options,1)
+  interface={}
+  interface['name']=options[0]
+  interfaces=configuration['wan_interface']
+  is_found=False
+  for iface in interfaces:
+    if iface['name']==interface['name']:
+      is_found=True
+      if ('macspoof' in iface):
+        run_plugin("macspoof",iface['macspoof']['method'],json.dumps(interface))
+      else:
+        raise Exception("Mac spoof plugin method is not defined for interface {0}".format(interface['name']))
+  if not is_found:
+   raise Exception("Interface not found")  
 
 def is_managed(interface):
   command="nmcli dev show {0}|grep unmanaged||true".format(interface)

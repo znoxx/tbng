@@ -9,10 +9,7 @@
        }    
    },
    {
-     "name": "eth0",
-      "macspoof": {
-        "method": "ifconfig"
-       }
+     "name": "eth0"
    }
     ],
   "lan_interface": [
