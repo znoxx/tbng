@@ -12,7 +12,6 @@ import subprocess
 import fileinput
 import hashlib
 import re
-                         
 
 def make_sure_path_exists(path):
     """

@@ -5,10 +5,7 @@
      "name": "wlan1",
       "wireless": true,
       "macspoof": {
-        "method": "modrealtek",
-        "parameters": {
-         "module_name": "8192cu"
-        }
+        "method": "ifconfig"
        }    
    },
    {
