@@ -1,0 +1,30 @@
+{ 
+  "cputemp": "armbian",
+  "wan_interface": [
+   {
+     "name": "wlan1",
+      "wireless": true,
+      "macspoof": {
+        "method": "ifconfig"
+       }    
+   },
+   {
+     "name": "eth0"
+   }
+    ],
+  "lan_interface": [
+    {
+      "name": "wlan0",
+      "wireless": true
+    }
+  ],
+
+  "allowed_ports" : [4200],
+  "lock_firewall": false,
+   
+  "LEGACYstrWrapper": "sudo",
+  "LEGACYstrWifiAdaptor": "wlan1",
+  "LEGACYstrMacSpoof": "/usr/local/bin/macspoof.sh"
+
+    
+}

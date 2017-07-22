@@ -429,6 +429,8 @@ def macspoof_wan(options):
     if iface['name']==interface['name']:
       is_found=True
       if ('macspoof' in iface):
+        if 'parameters' in iface['macspoof'].keys():
+          interface.update(iface['macspoof']['parameters'])
         run_plugin("macspoof",iface['macspoof']['method'],json.dumps(interface))
       else:
         raise Exception("Mac spoof plugin method is not defined for interface {0}".format(interface['name']))
