@@ -21,10 +21,5 @@
 
   "allowed_ports" : [4200],
   "lock_firewall": false,
-   
-  "LEGACYstrWrapper": "sudo",
-  "LEGACYstrWifiAdaptor": "wlan1",
-  "LEGACYstrMacSpoof": "/usr/local/bin/macspoof.sh"
-
     
 }
