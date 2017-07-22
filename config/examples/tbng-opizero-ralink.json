@@ -20,6 +20,5 @@
   ],
 
   "allowed_ports" : [4200],
-  "lock_firewall": false,
-    
+  "lock_firewall": false    
 }
