@@ -3,7 +3,6 @@ Description=WebUI for TorBoxNG
 After=tbng
 
 [Service]
-ExecStartPre=/home/zno/tbng/engine/tbng.py mode restore
 ExecStart=/usr/bin/nodejs /home/zno/tbng/bin/www
 Restart=always
 StandardOutput=syslog
