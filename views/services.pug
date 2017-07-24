@@ -2,7 +2,17 @@ extends layout
 
 block content
   h1= title 
-  p Choose a service to configure
+  h2 Open service console
+  p Some URLs require JavaScript enabled to modify port
+  ul#options
+    li
+      a(href="http://p.p" target="_blank") Privoxy config (system must be in PRIVOXY mode or proxy must be configured in browser)
+    li
+      a(href="/" target="_blank" onclick="javascript:event.target.port=7657") I2P Console (default port 7657)
+    li
+      a(href="/" target="_blank" onclick="javascript:event.target.port=4200") Shell-In-A-Box (default port 4200)
+
+  h2 Choose a service to configure
   ul#options
     li
       a(href="/services/tor") TOR configuration

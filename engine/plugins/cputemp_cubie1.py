@@ -1,4 +1,4 @@
-## Cubieboard1@Armbiab plugin for temperature measurment
+## Cubieboard@Armbian plugin for temperature measurment
 from libraries import utility
 def plugin_main(json_arguments=None):
   data="Undefned"  

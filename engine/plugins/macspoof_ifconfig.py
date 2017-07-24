@@ -1,4 +1,4 @@
-## Using arguments
+## Spoofing mac via ifconfig
 from libraries import utility
 import json
 def plugin_main(json_arguments=None):

@@ -184,8 +184,8 @@ def mode(options):
 
   clean_fw([])
 
-  #Allowing desired ports
-  allowed_ports = [22,3000,7657,9050,8118] + configuration['allowed_ports']
+  #Allowing desired ports,22 and 3000 are enabled by default!
+  allowed_ports = list(set([22,3000]+configuration['allowed_ports']))
   
   commandAllow="sysctl -w net.ipv4.ip_forward=1\n" #must run always
   for interface in configuration['lan_interface']:
@@ -435,7 +435,8 @@ def macspoof_wan(options):
       else:
         raise Exception("Mac spoof plugin method is not defined for interface {0}".format(interface['name']))
   if not is_found:
-   raise Exception("Interface not found")  
+   raise Exception("Interface {0} not found".format(interface['name']=options[0]))
+  logging.info("Called macspoof for interface {0}".format(interface['name']))  
 
 def is_managed(interface):
   command="nmcli dev show {0}|grep unmanaged||true".format(interface)

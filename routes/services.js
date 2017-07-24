@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('services', { title: 'Services configuration' });
+  res.render('services', { title: 'Services' });
 });
 
 router.use('/tor',require('./tor'));
