@@ -53,28 +53,33 @@ def main(args, loglevel):
   logging.debug("Options are: {0}".format(args.options))
   
   choices = {   #do not use ()
-   'chkconfig': chkconfig,   # checks config
-   'masquerade': masquerade, # enables masquerading on all outbound interfaces
-   'clean_firewall': clean_fw, # cleans firewall
-   'mode': mode, # sets mode -direct,tor,privoxy, restore
-   'reboot': reboot, #reboots
-   'shutdown': shutdown, #shutdowns
-   'tor_restart': tor_restart, #restarts tor
-   'i2p_restart': i2p_restart, #(re)starts i2p
-   'i2p_stop': i2p_stop, #stops i2p
-   'get_default_interface': get_default_interface, #prints default interface or raises an exception in case iface not in list
-   'set_default_interface': set_default_interface, #sets default interface, raises exception if interface not in wan list.
-   'probe_obfs': probe_obfs, #returns possible obfsproxy options
-   'tor_bridge': tor_bridge, #configures tor bridge
-   'tor_reset': tor_reset, #removes tor settings for bridge and for countries
-   'tor_exclude_exit': tor_exclude_exit, #exclude exit nodes by country
-   'get_cpu_temp': get_cpu_temp, #get cpu temperature
-   'macspoof_wan': macspoof_wan, #spoof mac address
-   'unknown': unknown, # stub for unknown option
+   'chkconfig': [chkconfig, "Check configuration"],
+   'masquerade': [masquerade, "Enables masquerading on all WAN interfaces"],
+   'clean_firewall': [clean_fw, "Cleans firewall settings"],
+   'mode': [mode, "Sets operation mode - can be direct,tor,privoxy or restore to restore from saved runtime"],
+   'reboot': [reboot, "Reboots system"],
+   'shutdown': [shutdown,"Shutdowns system"],
+   'tor_restart': [tor_restart, "Restarts TOR service"],
+   'i2p_restart': [i2p_restart, "(Re)starts i2p service"],
+   'i2p_stop': [i2p_stop, "Stops i2p service"],
+   'get_default_interface': [get_default_interface, "Prints default interface or raises an exception in case iface not in wan list"],
+   'set_default_interface': [set_default_interface, "Sets default interface, raises exception if interface not in wan list."],
+   'probe_obfs': [probe_obfs, "Returns available obfsproxy options"],
+   'tor_bridge': [tor_bridge, "Configures tor bridge - json string with settings must be passed"],
+   'tor_reset': [tor_reset, "Resets tor configuration to default by removing bridges and excluded countries setting"],
+   'tor_exclude_exit': [tor_exclude_exit, "Exclude TOR exit nodes by country - parameter is json array of countries"],
+   'get_cpu_temp': [get_cpu_temp, "Prints CPU temperature (plugin must be configured"],
+   'macspoof_wan': [macspoof_wan, "Spoofs MAC address of WAN interface (plugin must be configured)"],
+   'help': [help, "Prints list of available commands"],
+   'unknown': [unknown, "This is a stub for unknown options"]
   }
   
-  runfunc = choices[args.command] if choices.get(args.command) else unknown
-  runfunc(args.options)  
+  if args.command == 'help':
+    for key, value in choices.items():
+	  print("{0} - {1}",format(key,value) if key != "unknown"
+  else:
+    runfunc = choices[args.command][0] if choices.get(args.command) else unknown[0]
+    runfunc(args.options)  
   
 #options checker
 
@@ -477,7 +482,7 @@ if __name__ == '__main__':
 
   parser.add_argument(
                       "command",
-                      help = "pass command to the program",
+                      help = "pass command to the program - use 'help' to see available options",
                       metavar = "command")
 
   parser.add_argument(
