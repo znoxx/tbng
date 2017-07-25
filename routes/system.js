@@ -48,16 +48,33 @@ router.post('/reboot', function(req, res, next) {
 
 /* GET shutdown. */
 router.get('/shutdown', function(req, res, next) {
-  res.render('shutdown', { title: 'Shutdown system', message: 'Press button to shutdown system' });
+  res.render('shutdown', { title: 'Shutdown system', message: 'Press button to shutdown or halt system' });
 });
 /* POST shutdown. */
 router.post('/shutdown', function(req, res, next) {
   try 
   {
-    setInterval(function(){
-       functions.shutdown();
-    },10000);
-    res.render('xresult', { title: 'Shutdown', message: 'Shutdown in progress...' });
+    if ( typeof req.body.shutdown !== 'undefined' && req.body.shutdown )
+    {
+      var callee;
+      switch(req.body.shutdown)
+      {
+        case 'shutdown':
+         callee=functions.shutdown;
+         break;
+        case 'halt':
+         callee=functions.halt;
+         break;
+      }
+      setInterval(function(){
+         callee();
+      },10000);
+      res.render('xresult', { title: 'Shutdown', message: 'Shutdown in progress...' });
+    }
+    else
+    {
+       throw "Undefined action";
+    }
   }
   catch(e)
    {

@@ -82,6 +82,13 @@ this.shutdown = function()
      
 }
 
+this.halt = function()
+{
+  var execSync = require('child_process').execSync;
+  var shutdown = execSync(engineRun+" halt");
+  console.log("Called halt...");
+}
+
 this.sysInfo = function()
 {
 

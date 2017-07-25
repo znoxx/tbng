@@ -5,6 +5,14 @@ block content
   if message
    h2= message
   form(name="shutdown", action="/system/shutdown", method="post")
-    input(type="submit", value="Shutdown")
+   fieldset
+     label(for="shutdown")
+     input(type="radio", name="shutdown", value="shutdown" checked=true, required=true)
+     span &nbsp;shutdown
+     label(for="halt")
+     input(type="radio", name="shutdown", value="halt" checked=false, required=true)
+     span &nbsp;halt
+   fieldset
+     input(type="submit", value="Proceed")
   br
   a(href="/system") Back                                           
