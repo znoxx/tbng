@@ -113,8 +113,8 @@ def chkconfig(options):
       else:
         wired +=1
 
-  if ( wireless > 1 ) or ( wired > 1 ):
-    raise Exception("Only one interface of same type is allowed - wired or wireless")
+  if ( wireless > 1 ):
+    raise Exception("Only one WAN wireless interface is allowed")
 
   #checking LAN Interfaces
   if ('lan_interface' not in configuration.keys()) or (not configuration['lan_interface']):
