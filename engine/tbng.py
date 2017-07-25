@@ -76,9 +76,10 @@ def main(args, loglevel):
   
   if args.command == 'help':
     for key, value in choices.items():
-	  print("{0} - {1}",format(key,value) if key != "unknown"
+      if key != 'unknown':
+        print("{0} - {1}".format(key,value[1]))
   else:
-    runfunc = choices[args.command][0] if choices.get(args.command) else unknown[0]
+    runfunc = choices[args.command][0] if choices.get(args.command)[0] else unknown
     runfunc(args.options)  
   
 #options checker
@@ -440,7 +441,7 @@ def macspoof_wan(options):
       else:
         raise Exception("Mac spoof plugin method is not defined for interface {0}".format(interface['name']))
   if not is_found:
-   raise Exception("Interface {0} not found".format(interface['name']=options[0]))
+   raise Exception("Interface {0} not found".format(interface['name']))
   logging.info("Called macspoof for interface {0}".format(interface['name']))  
 
 def is_managed(interface):
