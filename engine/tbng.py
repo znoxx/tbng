@@ -177,7 +177,8 @@ def mode(options):
   if options[0] not in  ['direct','tor','privoxy','restore']:
     raise Exception("Illegal mode")
   
-
+  if options[0] == 'restore':     
+    options[0] = runtime['mode']
   commandMode=""
   for interface in configuration['lan_interface']:
     if options[0] == 'privoxy':
@@ -185,8 +186,6 @@ def mode(options):
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
 
-  if options[0] == 'restore':
-    options[0] = runtime['mode']
 
   clean_fw([])
 
