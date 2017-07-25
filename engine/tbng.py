@@ -59,6 +59,7 @@ def main(args, loglevel):
    'mode': [mode, "Sets operation mode - can be direct,tor,privoxy or restore to restore from saved runtime"],
    'reboot': [reboot, "Reboots system"],
    'shutdown': [shutdown,"Shutdowns system"],
+   'halt': [halt, "Halts system"],
    'tor_restart': [tor_restart, "Restarts TOR service"],
    'i2p_restart': [i2p_restart, "(Re)starts i2p service"],
    'i2p_stop': [i2p_stop, "Stops i2p service"],
@@ -231,6 +232,11 @@ def shutdown(options):
   check_options(options,0)
   logging.info("Shutdown called")
   logging.debug(utility.run_shell_command("shutdown -h now").decode("utf-8"))
+
+def halt(options):
+  check_options(options,0)
+  logging.info("Halt called")
+  logging.debug(utility.run_shell_command("shutdown -H now").decode("utf-8"))
 
 def tor_restart(options):
   check_options(options,0)
