@@ -1,9 +1,8 @@
 [Unit]
-Description=I2P for TorBOX
+Description=I2P for TBNG
 [Service]
-ExecStart=/home/zno/i2p/runplain.sh
-User=zno
-Group=zno
+ExecStart=/home/arm/tbng/i2p/runplain.sh
+User=arm
 Type=forking
 PIDFile=/tmp/router.pid
 [Install]

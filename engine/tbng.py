@@ -245,12 +245,12 @@ def tor_restart(options):
 
 def i2p_restart(options):
   check_options(options,0)
-  logging.debug(utility.run_shell_command("systemctl restart i2p-torbox").decode("utf-8"))
+  logging.debug(utility.run_shell_command("systemctl restart i2p-tbng").decode("utf-8"))
   logging.info("I2P Restart called")  
 
 def i2p_stop(options):
   check_options(options,0)
-  logging.debug(utility.run_shell_command("systemctl stop i2p-torbox").decode("utf-8"))
+  logging.debug(utility.run_shell_command("systemctl stop i2p-tbng").decode("utf-8"))
   logging.info("I2P Stop called")
 
 def get_default_interface(options):
