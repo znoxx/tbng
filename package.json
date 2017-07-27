@@ -1,8 +1,13 @@
 {
-  "name": "webui",
-  "version": "0.2.1",
+  "name": "webui-tbng",
+  "version": "0.3.0",
   "private": true,
+  "engines": {
+    "node": ">=6.11"
+  },
   "scripts": {
+    "requirements-check": "nodejs check-version.js",
+    "postinstall": "npm run requirements-check",
     "start": "nodejs ./bin/www"
   },
   "dependencies": {
@@ -14,6 +19,7 @@
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0",
     "basic-auth-connect": "~1.0.0",
-    "wifi-control": "~2.0.0"
+    "wifi-control": "~2.0.0",
+    "semver": "~5.4.1"
   }
 }

@@ -54,7 +54,9 @@ router.get('/networks', function(req, res, next) {
 		}
 		else
 		{
-		  response.networks.forEach(function(entry) {
+                  response.networks = response.networks.filter((network, index, self) => self.findIndex(t => t.ssid === network.ssid && t.security === network.security) === index);
+		  response.msg=response.msg.replace(/\s\(\d+\sfound\)/g,"");
+                   response.networks.forEach(function(entry) {
 		   var current=entry;
 		   entry.url=querystring.stringify({ssid: current.ssid,encryption: current.security});
 		   //console.log(entry.url);
