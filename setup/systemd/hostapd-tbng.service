@@ -1,0 +1,14 @@
+[Unit]
+Description=hostapd-torbox
+Wants=network.target
+Before=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/hostapd-tbng -B /etc/hostapd/hostapd-tbng.conf
+ExecStop=/sbin/ip addr flush dev wlan1
+ExecStop=/sbin/ip link set dev wlan1 down
+
+[Install]
+WantedBy=multi-user.target
