@@ -22,3 +22,5 @@ apt-get install tor-geoipdb
 systemctl restart network-manager.service
 sleep 5
 
+arm ALL = (root) NOPASSWD: /home/arm/tbng/engine/tbng.py
+
