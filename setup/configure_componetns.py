@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 #
 
-
 # import modules used here -- sys is a very standard one
 import sys,argparse,logging,os,json,subprocess
+from pathlib import Path
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = Path(current_dir).parent
+
+sys.path.insert(0,'{0}/engine'.format(project_dir))
+from libraries import utility
 
 # Gather our code in a main() function
 def main(args, loglevel):
@@ -22,7 +27,8 @@ def main(args, loglevel):
   logging.info("Installing i2p")
 
   logging.info("Doing npm install for webui")
-
+  command='su - {0} -c "cd {1} && npm install"'.format(args.user,project_dir)
+  logging.debug(utility.run_shell_command(command))
 
 # Standard boilerplate to call the main() function to begin
 # the program.
