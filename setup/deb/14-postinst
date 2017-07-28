@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "Patching nmcli to run without root credentials"
+NMCLILOCATION=$(which nmcli)
+chmod u+s,a-w $NMCLILOCATION
+
+

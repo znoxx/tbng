@@ -1,0 +1,23 @@
+#!/bin/sh
+
+TOR_CONFIG_LOCATION=/etc/tor
+PRIVOXY_CONFIG_LOCATION=/etc/privoxy
+TIMESTAMP=$(date +%s)
+
+echo "Purging TOR and Privoxy  packages to make sure default config is installed"
+
+if [ -d "$TOR_CONFIG_LOCATION" ]; then
+  echo "Backup up existing TOR config..."
+  mkdir -p "${TOR_CONFIG_LOCATION}.${TIMESTAMP}"
+  cp -R $TOR_CONFIG_LOCATION/* $TOR_CONFIG_LOCATION.$TIMESTAMP/
+fi
+
+if [ -d "$PRIVOXY_CONFIG_LOCATION" ]; then
+  echo "Backup up existing PRIVOXY config..."
+  mkdir -p "${PRIVOXY_CONFIG_LOCATION}.${TIMESTAMP}"
+  cp -R $PRIVOXY_CONFIG_LOCATION/* $PRIVOXY_CONFIG_LOCATION.$TIMESTAMP/
+fi
+
+apt-get -y purge tor privoxy >/dev/null
+
+
