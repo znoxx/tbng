@@ -6,8 +6,9 @@ block content
   ul#options
     li
       a(href="/wan/interface") Select interface
-    li
-      a(href="/wan/wifi") WiFi settings
+    unless !hasWifi
+      li
+        a(href="/wan/wifi") WiFi settings
     li
       a(href="/wan/spoof") Spoof WAN MAC
    
