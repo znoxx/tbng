@@ -6,7 +6,7 @@ apt-get -y install network-manager systemd iptables nodejs \
 python3 tor tor-geoipdb obfsproxy obfs4proxy privoxy \
 haveged dnsmasq shellinabox \
 python3-pexpect python3-requests python3-lxml \
-oracle-java8-installer "oracle-java8-set-default"
+links oracle-java8-installer "oracle-java8-set-default"
 
 
 
