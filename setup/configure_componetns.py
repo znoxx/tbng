@@ -17,6 +17,29 @@ project_dir = Path(current_dir).parent
 sys.path.insert(0,'{0}/engine'.format(project_dir))
 from libraries import utility
 
+prefix="#Added by TBNG setup - do not edit "
+
+def configure_tor(torrc):
+  token="tbng enabled settings"
+  settings="""Log notice syslog
+VirtualAddrNetworkIPv4 10.192.0.0/10
+AutomapHostsOnResolve 1
+TransPort 9040
+DNSPort 9053
+CircuitBuildTimeout 30
+KeepAlivePeriod 60
+NewCircuitPeriod 15
+NumEntryGuards 8
+ConstrainedSockets 1
+ConstrainedSockSize 8192
+AvoidDiskWrites 1
+DNSListenAddress 0.0.0.0
+TransListenAddress 0.0.0.0
+SocksPort 0.0.0.0:9050"""
+  utility.removeFileData(torrc,prefix,token)
+  utility.appendFileData(torrc,prefix,token,settings)
+  logging.debug(utility.run_multi_shell_command("systemctl restart tor"))
+
 def download_i2p():
   page = requests.get('https://geti2p.net/en/download')
   tree = html.fromstring(page.content)
@@ -48,6 +71,7 @@ def install_i2p(filename):
 
 # Gather our code in a main() function
 def main(args, loglevel):
+
   logging.basicConfig(format="%(levelname)s: %(message)s", level=loglevel)
   logging.debug("Arguments passed: user {0}, tor config file {1}, privoxy config file {2}".format(args.user,args.torrc,args.privoxyconf))
 
@@ -55,9 +79,12 @@ def main(args, loglevel):
   logging.debug(utility.run_shell_command("getent passwd {0}".format(args.user)))
 
   logging.info("Adding user to sudoers for TBNG engine")
-  utility.appendFileData("/etc/sudoers","#Added by TBNG setup - do not edit ","run engine without password","{0} ALL=NOPASSWD: {1}/engine/tbng.py".format(args.user,project_dir))
+  token="run engine without password"
+  utility.removeFileData("/etc/sudoers",prefix,token)
+  utility.appendFileData("/etc/sudoers",prefix,token,"{0} ALL=NOPASSWD: {1}/engine/tbng.py".format(args.user,project_dir))
 
   logging.info("Configuring tor")
+  configure_tor(args.torrc)
 
   logging.info("Configuring privoxy")
   

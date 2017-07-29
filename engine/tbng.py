@@ -71,6 +71,7 @@ def main(args, loglevel):
    'tor_exclude_exit': [tor_exclude_exit, "Exclude TOR exit nodes by country - parameter is json array of countries"],
    'get_cpu_temp': [get_cpu_temp, "Prints CPU temperature (plugin must be configured"],
    'macspoof_wan': [macspoof_wan, "Spoofs MAC address of WAN interface (plugin must be configured)"],
+   'patch_nmcli': [patch_nmcli, "Set sticky bit and readonly to nmcli binary for easy patching after system update" ],
    'help': [help, "Prints list of available commands"],
    'unknown': [unknown, "This is a stub for unknown options"]
   }
@@ -448,6 +449,11 @@ def macspoof_wan(options):
   if not is_found:
    raise Exception("Interface {0} not found".format(interface['name']))
   logging.info("Called macspoof for interface {0}".format(interface['name']))  
+
+def patch_nmcli(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("chmod u+s,a-w `which nmcli`"))
+  logging.info("nmcli patch called")
 
 def is_managed(interface):
   command="nmcli dev show {0}|grep unmanaged||true".format(interface)
