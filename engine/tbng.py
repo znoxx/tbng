@@ -80,7 +80,7 @@ def main(args, loglevel):
       if key != 'unknown':
         print("{0} - {1}".format(key,value[1]))
   else:
-    runfunc = choices[args.command][0] if choices.get(args.command)[0] else unknown
+    runfunc = choices[args.command][0] if choices.get(args.command) else unknown
     runfunc(args.options)  
   
 #options checker
