@@ -11,6 +11,7 @@ import urllib.request
 import tempfile
 import re
 import pexpect
+from string import Template
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = Path(current_dir).parent
@@ -19,6 +20,18 @@ sys.path.insert(0,'{0}/engine'.format(project_dir))
 from libraries import utility
 
 prefix="#Added by TBNG setup - do not edit "
+
+def toSystemd(name,parameters,autostart=False):
+  systemd_folder="/lib/systemd/system"
+  filein = open( "templates/{0}".format(name) )
+  src = Template( filein.read() )
+  src.substitute(parameters)
+  with open("{0}/{1}".format(systemd_folder,name), "w") as text_file:
+    text_file.write(src.substitute(parameters))
+  logging.info("File {0}/{1} created".format(systemd_folder,name))
+  logging.debug(utility.run_shell_command("systemctl daemon-reload"))
+  if autostart:
+    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)))
 
 def configure_tor(torrc):
   token="tbng enabled settings"
@@ -86,7 +99,9 @@ def install_i2p(filename):
   kill `cat /tmp/router.pid` || true
   sleep 5
 fi  
-rm -rf {0}/i2p || true""".format(project_dir)
+rm -rf {0}/i2p || true
+rm -rf ~{0}/.i2p""".format(project_dir)
+
   logging.debug(utility.run_multi_shell_command(killer))
   logging.debug("Installing from {0}".format(filename))
   command_line = "java -jar {0} -console".format(filename)
@@ -113,6 +128,10 @@ rm -rf {0}/i2p || true""".format(project_dir)
 # Gather our code in a main() function
 def main(args, loglevel):
 
+  parameters={}
+  parameters['project']=project_dir
+  parameters['user']=args.user
+
   logging.basicConfig(format="%(levelname)s: %(message)s", level=loglevel)
   logging.debug("Arguments passed: user {0}, tor config file {1}, privoxy config file {2}".format(args.user,args.torrc,args.privoxyconf))
 
@@ -135,12 +154,40 @@ def main(args, loglevel):
 
   logging.info("Installing i2p")
   install_i2p(i2p_package)
+  toSystemd("i2p-tbng.service",parameters)
+  logging.info("Starting i2p and doing inital configuration")
+  command="""systemctl start i2p-tbng
+sleep 5
+systemctl stop i2p-tbng
+su -c "sed -i 's/clientApp.0.args=7657\s*::1,127.0.0.1\s*.\/webapps\//clientApp.0.args=7657 0.0.0.0 .\/webapps\//' ~{0}/.i2p/clients.config" {0}
+su -c "sed -i 's/clientApp.4.startOnLoad=true/clientApp.4.startOnLoad=false/'  ~{0}/.i2p/clients.config" {0}"""
+  logging.debug(utility.run_multi_shell_command(command.format(args.user)))
+  
    
   logging.info("Doing npm install for webui")
   command='su - {0} -c "cd {1} && npm install"'.format(args.user,project_dir)
   logging.debug(utility.run_shell_command(command))
 
-  logging.info("Configuring autostart")
+  logging.info("Configuring autostart for tbng-helper")
+  toSystemd("tbng.service",parameters,True)
+
+  logging.info("Configuring autostart for webui-tbng")
+  toSystemd("webui-tbng.service",parameters,True)
+  
+  logging.info("Checking TBNG configuration")
+  try:
+    logging.debug(utility.run_shell_command("{0}/engine/tbng.py chkconfig".format(project_dir)))
+  except subprocess.CalledProcessError as e:
+    message="""There was en error checking your configuraiotn:
+ - your file config/tbng.json is not found
+ - your system is not configured
+Fix config file and run engine/tbng.py chkconfig to check config manually.
+After this you can proceed with reboot and start using your system."""
+    logging.info(message)
+    logging.info("Original error message:\n{0}".format(e.output))
+  else:
+    logging.info("Configuration done. Reboot your system and connect to http://your.ip.address:3000 via browser")
+      
 
 
 # Standard boilerplate to call the main() function to begin

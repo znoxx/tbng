@@ -3,7 +3,7 @@ Description=WebUI for TorBoxNG
 After=tbng
 
 [Service]
-ExecStart=nodejs $project/bin/www
+ExecStart=/usr/bin/env nodejs $project/bin/www
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
