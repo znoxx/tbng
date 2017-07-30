@@ -1,5 +1,5 @@
 { 
-  "cputemp": "armbian",
+  "cputemp": "default",
   "wan_interface": [
    {
      "name": "wlan1",
@@ -9,7 +9,10 @@
        }    
    },
    {
-     "name": "eth0"
+     "name": "eth0",
+     "macspoof": {
+        "method": "ifconfig"
+       }
    }
     ],
   "lan_interface": [
