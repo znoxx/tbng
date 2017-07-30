@@ -3,4 +3,8 @@ echo "Patching nmcli to run without root credentials"
 NMCLILOCATION=$(which nmcli)
 chmod u+s,a-w $NMCLILOCATION
 
+echo "Creating /usr/lib/systemd/system if needed"
+if [ ! -d "/usr/lib/systemd/system" ]; then
+  mkdir -p /usr/lib/systemd/system
+fi
 
