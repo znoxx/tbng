@@ -10,6 +10,7 @@ import requests
 import urllib.request
 import tempfile
 import re
+import pexpect
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = Path(current_dir).parent
@@ -81,6 +82,21 @@ def install_i2p(filename):
   #Install code here
   #systemd stuff also  
   logging.debug("Installing from {0}".format(filename))
+  command_line = "java -jar {0} -console".format(filename)
+  location = "{0}/i2p".format(project_dir)
+  os.mkdir(location)
+  child = pexpect.spawn(command_line)
+  child.expect("press 1 to continue, 2 to quit, 3 to redisplay")
+  child.sendline("1")
+  child.expect("Select target path.*")
+  child.sendline(location)
+  child.expect("press 1 to continue, 2 to quit, 3 to redisplay")
+  child.sendline("1")
+  child.expect(".*Console installation done.*")
+  child.sendline("")
+
+  logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)))
+
   try:
     os.remove(filename)
   except OSError:
