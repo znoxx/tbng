@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/zno/tbng/engine/tbng.py mode restore 
+ExecStart=$project/engine/tbng.py mode restore 
 
 [Install]
 WantedBy=multi-user.target

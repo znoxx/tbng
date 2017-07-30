@@ -3,12 +3,12 @@ Description=WebUI for TorBoxNG
 After=tbng
 
 [Service]
-ExecStart=/usr/bin/nodejs /home/arm/tbng/bin/www
+ExecStart=nodejs $project/bin/www
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=webui-tbng
-User=arm
+User=$user
 Environment=NODE_ENV=production
 
 [Install]

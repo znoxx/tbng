@@ -1,8 +1,8 @@
 [Unit]
 Description=I2P for TBNG
 [Service]
-ExecStart=/home/arm/tbng/i2p/runplain.sh
-User=arm
+ExecStart=$project/i2p/runplain.sh
+User=$user
 Type=forking
 PIDFile=/tmp/router.pid
 [Install]

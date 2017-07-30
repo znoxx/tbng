@@ -6,9 +6,9 @@ Before=network.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/local/bin/hostapd-tbng -B /etc/hostapd/hostapd-tbng.conf
-ExecStop=/sbin/ip addr flush dev wlan1
-ExecStop=/sbin/ip link set dev wlan1 down
+ExecStart=$project/bin/hostapd-tbng -B $project/config/hostapd-tbng.conf
+ExecStop=ip addr flush dev $interface
+ExecStop=ip link set dev wlan1 $interface
 
 [Install]
 WantedBy=multi-user.target
