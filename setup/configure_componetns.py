@@ -80,7 +80,14 @@ def download_i2p():
 def install_i2p(filename):
 
   #Install code here
-  #systemd stuff also  
+  #systemd stuff also
+  logging.info("Trying to kill running i2p if any")
+  killer="""if [ -f /tmp/router.pid ]; then
+  kill `cat /tmp/router.pid` || true
+  sleep 5
+fi  
+rm -rf {0}/i2p || true""".format(project_dir)
+  logging.debug(utility.run_multi_shell_command(killer))
   logging.debug("Installing from {0}".format(filename))
   command_line = "java -jar {0} -console".format(filename)
   location = "{0}/i2p".format(project_dir)
