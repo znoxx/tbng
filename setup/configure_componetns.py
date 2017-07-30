@@ -40,6 +40,24 @@ SocksPort 0.0.0.0:9050"""
   utility.appendFileData(torrc,prefix,token,settings)
   logging.debug(utility.run_multi_shell_command("systemctl restart tor"))
 
+def configure_privoxy(privoxyconf):
+  utility.replace_string_in_file(privoxyconf,"listen-address  localhost:8118","#listen-address  localhost:8118")
+  utility.replace_string_in_file(privoxyconf,"enable-remote-toggle  0","#enable-remote-toggle  0")
+  utility.replace_string_in_file(privoxyconf,"enable-edit-actions 0","#enable-edit-actions 0")
+  utility.replace_string_in_file(privoxyconf,"accept-intercepted-requests 0","#accept-intercepted-requests 0")
+  
+  token="tbng enabled settings"
+  settings="""listen-address 0.0.0.0:8118
+enable-remote-toggle 1
+enable-edit-actions 1
+accept-intercepted-requests 1
+forward-socks4a / 127.0.0.1:9050 .
+forward          .i2p            127.0.0.1:4444
+forward-socks4a  .onion          127.0.0.1:9050 ."""
+  utility.removeFileData(privoxyconf,prefix,token)
+  utility.appendFileData(privoxyconf,prefix,token,settings)
+  logging.debug(utility.run_multi_shell_command("systemctl restart privoxy"))
+
 def download_i2p():
   page = requests.get('https://geti2p.net/en/download')
   tree = html.fromstring(page.content)
@@ -87,6 +105,7 @@ def main(args, loglevel):
   configure_tor(args.torrc)
 
   logging.info("Configuring privoxy")
+  configure_privoxy(args.privoxyconf)
   
   logging.info("Downloading i2p")
   i2p_package=download_i2p()
@@ -97,6 +116,9 @@ def main(args, loglevel):
   logging.info("Doing npm install for webui")
   command='su - {0} -c "cd {1} && npm install"'.format(args.user,project_dir)
   logging.debug(utility.run_shell_command(command))
+
+  logging.info("Configuring autostart")
+
 
 # Standard boilerplate to call the main() function to begin
 # the program.
