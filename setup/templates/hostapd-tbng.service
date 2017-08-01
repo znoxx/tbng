@@ -8,7 +8,7 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=$project/bin/hostapd-tbng -B $project/config/hostapd-tbng.conf
 ExecStop=ip addr flush dev $interface
-ExecStop=ip link set dev wlan1 $interface
+ExecStop=ip link set dev $interface down
 
 [Install]
 WantedBy=multi-user.target

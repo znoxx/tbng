@@ -47,6 +47,7 @@ def main(args, loglevel):
   parameters['appassword']=args.appassword
   parameters['driver']=args.driver
 
+  logging.info("Checking arguments")
   if len(args.appassword) < 8:
     raise Exception("Access point password must be 8 symbols or more")
   
@@ -56,39 +57,61 @@ def main(args, loglevel):
 
   
   if args.dnsmasq not in ["none"]:
-    if (args.dhcpbegin == "none") or (args.dhcpend == "none"):
-      raise Exception("DHCP start and addresses must be provided") 
+    if (args.dhcpbegin == "none") or (args.dhcpend == "none") or (args.dhcpmask == "none"):
+      raise Exception("DHCP start, end and mask must be provided") 
 
+  logging.info("Checking {0} is configured manually".format(args.interface))
 
-  #Check the interface in unmanaged and up via nmcli
+  command="nmcli dev show {0}|grep unmanaged||true".format(args.interface)
+  if "unmanaged" not in utility.run_shell_command(command).decode("utf-8"):
+     raise Exception("""Interface {0} appears to be managed or not configured. 
+Configure it via /etc/network/interfaces to have static ip and restart Network Manager or reboot your device.""".format(args.interface))
 
   filename = "{0}_hostapd.gz".format(tempfile.mktemp())
-  url="http://static-bins.herokuapp.com/{0}/hostapd/hostapd.gz".format(args.arch)
+  url="http://static-bins.herokuapp.com/files/{0}/hostapd/hostapd.gz".format(args.arch)
 
   logging.info("""Downloading from {0}
   to {1}
   """.format(url,filename))
   urllib.request.urlretrieve(url,filename)
 
-
+  logging.info("Extracting archive")
   with gzip.open(filename, "rb") as compressed_file:
     with open("{0}/bin/hostapd-tbng".format(project_dir),"wb") as uncompressed_file:
       uncompressed_file.write(compressed_file.read())
 
-
+  logging.info("Generating hostapd config file")
   filein = open("templates/hostapd-tbng.conf")
   src = Template( filein.read() )
   src.substitute(parameters)
   with open("{0}/config/hostapd-tbng.conf".format(project_dir), "w") as text_file:
     text_file.write(src.substitute(parameters)) 
 
-  #Generate hostapd service and push it to folder
+  logging.info("Generating systemd file")
+  systemd_folder="/lib/systemd/system"
+  filein = open( "templates/hostapd-tbng.service")
+  src = Template( filein.read() )
+  src.substitute(parameters)
+  with open("{0}/hostapd-tbng.service".format(systemd_folder), "w") as text_file:
+    text_file.write(src.substitute(parameters))
+  logging.info("File {0}/hostapd-tbng.service created".format(systemd_folder))
+  logging.debug(utility.run_shell_command("systemctl daemon-reload"))
+  logging.debug(utility.run_shell_command("systemctl enable hostapd-tbng")) 
 
-  #Silently install dnsmasq from yum or apt
+  logging.info("Installing dnsmasq package")
+  if args.dnsmasq in ["apt","yum"]:
+    if (args.dnsmasq == "apt"):
+      debug.log(silently_install_by_apt("dnsmasq"))
+    elif (args.dnsmasq == "yum"):
+      debug.log(silently_install_by_yum("dnsmasq"))
+  
+    settings = """interface={0}
+dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
+    utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
+    utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
+    logging.debug(utility.run_multi_shell_command("systemctl restart privoxy"))
 
-  #Configure dnsmasq with settings
-
-  #Report, advice to reboot 
+  logging.info("Device configured. Reboot your system and try to connect to new access point")
       
 
 
@@ -133,6 +156,10 @@ if __name__ == '__main__':
   parser.add_argument('-e',
                       '--dhcpend',
                        type=str, default="none", help="DHCP end address, used to configure dnsmasq service. Not validated!")
+  
+  parser.add_argument('-m',
+                      '--dhcpmask',
+                       type=str, default="none", help="DHCP mask, used to configure dnsmasq service. Not validated!")                       
  
   parser.add_argument('-d',
                       '--driver',
