@@ -79,7 +79,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   with gzip.open(filename, "rb") as compressed_file:
     with open("{0}/bin/hostapd-tbng".format(project_dir),"wb") as uncompressed_file:
       uncompressed_file.write(compressed_file.read())
-  logging.debug(library.run_shell_command("chmod a+x {0}/bin/hostapd-tbng".format(project_dir)))
+  logging.debug(utility.run_shell_command("chmod a+x {0}/bin/hostapd-tbng".format(project_dir)))
 
   logging.info("Generating hostapd config file")
   filein = open("templates/hostapd-tbng.conf")
