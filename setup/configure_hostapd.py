@@ -109,7 +109,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
 dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
     utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
-    logging.debug(utility.run_multi_shell_command("systemctl restart privoxy"))
+    logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq"))
 
   logging.info("Device configured. Reboot your system and try to connect to new access point")
       
