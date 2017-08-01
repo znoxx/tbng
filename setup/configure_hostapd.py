@@ -102,9 +102,9 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   logging.info("Installing dnsmasq package")
   if args.dnsmasq in ["apt","yum"]:
     if (args.dnsmasq == "apt"):
-      debug.log(silently_install_by_apt("dnsmasq"))
+      logging.debug(silently_install_by_apt("dnsmasq"))
     elif (args.dnsmasq == "yum"):
-      debug.log(silently_install_by_yum("dnsmasq"))
+     logging.debug(silently_install_by_yum("dnsmasq"))
   
     settings = """interface={0}
 dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
