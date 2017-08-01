@@ -106,6 +106,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
     elif (args.dnsmasq == "yum"):
      logging.debug(utility.silently_install_by_yum("dnsmasq"))
   
+  logging.info("Configuring dnsmasq")
     settings = """interface={0}
 dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
