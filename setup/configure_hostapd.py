@@ -82,7 +82,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   logging.debug(utility.run_shell_command("chmod a+x {0}/bin/hostapd-tbng".format(project_dir)))
 
   logging.info("Generating hostapd config file")
-  filein = open("templates/hostapd-tbng.conf")
+  filein = open("{0}/setup/templates/hostapd-tbng.conf".format(project_dir))
   src = Template( filein.read() )
   src.substitute(parameters)
   with open("{0}/config/hostapd-tbng.conf".format(project_dir), "w") as text_file:
@@ -90,7 +90,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
 
   logging.info("Generating systemd file")
   systemd_folder="/lib/systemd/system"
-  filein = open( "templates/hostapd-tbng.service")
+  filein = open( "{0}/setup/templates/hostapd-tbng.service".format(project_dir))
   src = Template( filein.read() )
   src.substitute(parameters)
   with open("{0}/hostapd-tbng.service".format(systemd_folder), "w") as text_file:
