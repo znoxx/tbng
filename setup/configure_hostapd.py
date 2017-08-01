@@ -106,14 +106,15 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
     elif (args.dnsmasq == "yum"):
      logging.debug(utility.silently_install_by_yum("dnsmasq"))
   
-  logging.info("Configuring dnsmasq")
+    logging.info("Configuring dnsmasq")
     settings = """interface={0}
 dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
     utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
     logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq"))
 
-  logging.info("Device configured. Reboot your system and try to connect to new access point")
+  logging.debug(utility.run_shell_command("sync"))
+  logging.info("Device configured. Powercycle your system and try to connect to new access point")
       
 
 
