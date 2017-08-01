@@ -187,7 +187,7 @@ After this you can proceed with reboot and start using your system."""
     logging.info("Original error message:\n{0}".format(e.output))
   else:
     logging.debug(utility.run_shell_command("sync"))
-    logging.info("Configuration done. Reboot your system and connect to http://your.ip.address:3000 via browser")
+    logging.info("Configuration done. Powercycle your system and connect to http://your.ip.address:3000 via browser")
       
 
 
