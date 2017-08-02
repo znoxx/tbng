@@ -75,6 +75,7 @@ def main(args, loglevel):
    'macspoof_wan': [macspoof_wan, "Spoofs MAC address of WAN interface (plugin must be configured)"],
    'patch_nmcli': [patch_nmcli, "Set sticky bit and readonly to nmcli binary for easy patching after system update" ],
    'help': [help, "Prints list of available commands"],
+   'version': [version, "Show version info"],
    'unknown': [unknown, "This is a stub for unknown options"]
   }
   
@@ -467,6 +468,11 @@ def patch_nmcli(options):
   logging.debug(utility.run_shell_command("chmod u+s,a-w `which nmcli`"))
   logging.info("nmcli patch called")
 
+def version(options):
+  check_options(options,0)
+  println(__version_info__)
+
+
 def is_managed(interface):
   command="nmcli dev show {0}|grep unmanaged||true".format(interface)
   return "unmanaged" not in utility.run_shell_command(command).decode("utf-8") 
@@ -523,16 +529,9 @@ if __name__ == '__main__':
                       help="increase output verbosity",
                       action="store_true")
 
-  parser.add_argument(
-                      "--version",
-                      help="show version info",
-                      action="store_true")
 
   args = parser.parse_args()
 
-  if args.version:
-    print(__version__)
-    quit()
   
   # Setup logging
   if args.verbose:
