@@ -7,6 +7,8 @@ import sys,argparse,logging,os,json,subprocess
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
+__version_info__ = ('1', '2', '3')
+__version__ = '.'.join(__version_info__)
 
 #Getting path for config usage
 
@@ -198,6 +200,16 @@ def mode(options):
   for interface in configuration['lan_interface']:
     for port in allowed_ports:
       commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
+
+  allowed_ports_wan=[]
+  if ('allowed_ports_wan' in configuration.keys()):
+    allowed_ports = list(set([]+configuration['allowed_ports_wan']))    
+  
+  #Allowing Wan ports if any
+  for interface in configuration['wan_interface']:
+    for port in allowed_ports_wan:
+      commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
+     
   logging.debug(utility.run_multi_shell_command(commandAllow).decode("utf-8"))
 
   if options[0] in ['tor','privoxy']:
@@ -510,7 +522,16 @@ if __name__ == '__main__':
                       "--verbose",
                       help="increase output verbosity",
                       action="store_true")
+
+  parser.add_argument(
+                      "--version",
+                      help="show version info")
+
   args = parser.parse_args()
+
+  if args.version:
+    print(__version__)
+    quit()
   
   # Setup logging
   if args.verbose:
