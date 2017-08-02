@@ -7,7 +7,7 @@ import sys,argparse,logging,os,json,subprocess
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
-__version_info__ = ('1', '2', '3')
+__version_info__ = ('0', '9', '0')
 __version__ = '.'.join(__version_info__)
 
 #Getting path for config usage
@@ -470,7 +470,7 @@ def patch_nmcli(options):
 
 def version(options):
   check_options(options,0)
-  print(__version_info__)
+  print(__version__)
 
 
 def is_managed(interface):
