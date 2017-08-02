@@ -27,9 +27,9 @@ def toSystemd(name,parameters,autostart=False):
   with open("{0}/{1}".format(systemd_folder,name), "w") as text_file:
     text_file.write(src.substitute(parameters))
   logging.info("File {0}/{1} created".format(systemd_folder,name))
-  logging.debug(utility.run_shell_command("systemctl daemon-reload"))
+  logging.debug(utility.run_shell_command("systemctl daemon-reload").decode("utf-8"))
   if autostart:
-    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)))
+    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)).decode("utf-8"))
 
 
 # Gather our code in a main() function
@@ -79,7 +79,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   with gzip.open(filename, "rb") as compressed_file:
     with open("{0}/bin/hostapd-tbng".format(project_dir),"wb") as uncompressed_file:
       uncompressed_file.write(compressed_file.read())
-  logging.debug(utility.run_shell_command("chmod a+x {0}/bin/hostapd-tbng".format(project_dir)))
+  logging.debug(utility.run_shell_command("chmod a+x {0}/bin/hostapd-tbng".format(project_dir)).decode("utf-8"))
 
   logging.info("Generating hostapd config file")
   filein = open("{0}/setup/templates/hostapd-tbng.conf".format(project_dir))
@@ -96,24 +96,24 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   with open("{0}/hostapd-tbng.service".format(systemd_folder), "w") as text_file:
     text_file.write(src.substitute(parameters))
   logging.info("File {0}/hostapd-tbng.service created".format(systemd_folder))
-  logging.debug(utility.run_shell_command("systemctl daemon-reload"))
-  logging.debug(utility.run_shell_command("systemctl enable hostapd-tbng")) 
+  logging.debug(utility.run_shell_command("systemctl daemon-reload").decode("utf-8"))
+  logging.debug(utility.run_shell_command("systemctl enable hostapd-tbng").decode("utf-8")) 
 
   logging.info("Installing dnsmasq package")
   if args.dnsmasq in ["apt","yum"]:
     if (args.dnsmasq == "apt"):
-      logging.debug(utility.silently_install_by_apt("dnsmasq"))
+      logging.debug(utility.silently_install_by_apt("dnsmasq").decode("utf-8"))
     elif (args.dnsmasq == "yum"):
-     logging.debug(utility.silently_install_by_yum("dnsmasq"))
+     logging.debug(utility.silently_install_by_yum("dnsmasq").decode("utf-8"))
   
     logging.info("Configuring dnsmasq")
     settings = """interface={0}
 dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
     utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
-    logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq"))
+    logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq").decode("utf-8"))
 
-  logging.debug(utility.run_shell_command("sync"))
+  logging.debug(utility.run_shell_command("sync").decode("utf-8"))
   logging.info("Device configured. Powercycle your system and try to connect to new access point")
       
 

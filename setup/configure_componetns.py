@@ -29,9 +29,9 @@ def toSystemd(name,parameters,autostart=False):
   with open("{0}/{1}".format(systemd_folder,name), "w") as text_file:
     text_file.write(src.substitute(parameters))
   logging.info("File {0}/{1} created".format(systemd_folder,name))
-  logging.debug(utility.run_shell_command("systemctl daemon-reload"))
+  logging.debug(utility.run_shell_command("systemctl daemon-reload").decode("utf-8"))
   if autostart:
-    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)))
+    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)).decode("utf-8"))
 
 def configure_tor(torrc):
   token="tbng enabled settings"
@@ -52,7 +52,7 @@ TransListenAddress 0.0.0.0
 SocksPort 0.0.0.0:9050"""
   utility.removeFileData(torrc,prefix,token)
   utility.appendFileData(torrc,prefix,token,settings)
-  logging.debug(utility.run_multi_shell_command("systemctl restart tor"))
+  logging.debug(utility.run_multi_shell_command("systemctl restart tor").decode("utf-8"))
 
 def configure_privoxy(privoxyconf):
   utility.replace_string_in_file(privoxyconf,"listen-address  localhost:8118","#listen-address  localhost:8118")
@@ -70,7 +70,7 @@ forward          .i2p            127.0.0.1:4444
 forward-socks4a  .onion          127.0.0.1:9050 ."""
   utility.removeFileData(privoxyconf,prefix,token)
   utility.appendFileData(privoxyconf,prefix,token,settings)
-  logging.debug(utility.run_multi_shell_command("systemctl restart privoxy"))
+  logging.debug(utility.run_multi_shell_command("systemctl restart privoxy").decode("utf-8"))
 
 def download_i2p():
   page = requests.get('https://geti2p.net/en/download')
@@ -102,7 +102,7 @@ fi
 rm -rf {0}/i2p || true
 rm -rf ~{0}/.i2p""".format(project_dir)
 
-  logging.debug(utility.run_multi_shell_command(killer))
+  logging.debug(utility.run_multi_shell_command(killer).decode("utf-8"))
   logging.debug("Installing from {0}".format(filename))
   command_line = "java -jar {0} -console".format(filename)
   location = "{0}/i2p".format(project_dir)
@@ -117,7 +117,7 @@ rm -rf ~{0}/.i2p""".format(project_dir)
   child.expect(".*Console installation done.*")
   child.sendline("")
 
-  logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)))
+  logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)).decode("utf-8"))
 
   try:
     os.remove(filename)
@@ -136,7 +136,7 @@ def main(args, loglevel):
   logging.debug("Arguments passed: user {0}, tor config file {1}, privoxy config file {2}".format(args.user,args.torrc,args.privoxyconf))
 
   logging.info("Checking user {0}".format(args.user))
-  logging.debug(utility.run_shell_command("getent passwd {0}".format(args.user)))
+  logging.debug(utility.run_shell_command("getent passwd {0}".format(args.user)).decode("utf-8"))
 
   logging.info("Adding user to sudoers for TBNG engine")
   token="run engine without password"
@@ -161,12 +161,12 @@ sleep 5
 systemctl stop i2p-tbng
 su -c "sed -i 's/clientApp.0.args=7657\s*::1,127.0.0.1\s*.\/webapps\//clientApp.0.args=7657 0.0.0.0 .\/webapps\//' ~{0}/.i2p/clients.config" {0}
 su -c "sed -i 's/clientApp.4.startOnLoad=true/clientApp.4.startOnLoad=false/'  ~{0}/.i2p/clients.config" {0}"""
-  logging.debug(utility.run_multi_shell_command(command.format(args.user)))
+  logging.debug(utility.run_multi_shell_command(command.format(args.user)).decode("utf-8"))
   
    
   logging.info("Doing npm install for webui")
   command='su - {0} -c "cd {1} && npm install"'.format(args.user,project_dir)
-  logging.debug(utility.run_shell_command(command))
+  logging.debug(utility.run_shell_command(command).decode("utf-8"))
 
   logging.info("Configuring autostart for tbng-helper")
   toSystemd("tbng.service",parameters,True)
@@ -176,7 +176,7 @@ su -c "sed -i 's/clientApp.4.startOnLoad=true/clientApp.4.startOnLoad=false/'  ~
   
   logging.info("Checking TBNG configuration")
   try:
-    logging.debug(utility.run_shell_command("{0}/engine/tbng.py chkconfig".format(project_dir)))
+    logging.debug(utility.run_shell_command("{0}/engine/tbng.py chkconfig".format(project_dir)).decode("utf-8"))
   except subprocess.CalledProcessError as e:
     message="""There was en error checking your configuraiotn:
  - your file config/tbng.json is not found
@@ -186,7 +186,7 @@ After this you can proceed with reboot and start using your system."""
     logging.info(message)
     logging.info("Original error message:\n{0}".format(e.output))
   else:
-    logging.debug(utility.run_shell_command("sync"))
+    logging.debug(utility.run_shell_command("sync").decode("utf-8"))
     logging.info("Configuration done. Powercycle your system and connect to http://your.ip.address:3000 via browser")
       
 
