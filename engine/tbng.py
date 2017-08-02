@@ -202,14 +202,6 @@ def mode(options):
     for port in allowed_ports:
       commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
 
-  allowed_ports_wan=[]
-  if ('allowed_ports_wan' in configuration.keys()):
-    allowed_ports = list(set([]+configuration['allowed_ports_wan']))    
-  
-  #Allowing Wan ports if any
-  for interface in configuration['wan_interface']:
-    for port in allowed_ports_wan:
-      commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {2}\n".format(interface['name'],port,port)  
      
   logging.debug(utility.run_multi_shell_command(commandAllow).decode("utf-8"))
 
@@ -221,10 +213,26 @@ def mode(options):
 
   #Locking firewall if needed
   commandLock = "iptables  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n"
+  allowed_ports_wan_tcp=[]
+  if ('allowed_ports_wan_tcp' in configuration.keys()):
+    allowed_ports_wan_tcp = list(set([]+configuration['allowed_ports_wan_tcp']))
+
+  allowed_ports_wan_udp=[]
+  if ('allowed_ports_wan_udp' in configuration.keys()):
+    allowed_ports_wan_udp = list(set([]+configuration['allowed_ports_wan_udp']))
+
+  #Allowing Wan ports if any
+  for interface in configuration['wan_interface']:
+    for port in allowed_ports_wan_tcp:
+      commandLock = commandLock + "iptables -A INPUT -i {0} -p tcp --dport {1} -j ACCEPT\n".format(interface['name'],port)
+    for port in allowed_ports_wan_udp:
+      commandLock = commandLock + "iptables -A INPUT -i {0} -p udp --dport {1} -j ACCEPT\n".format(interface['name'],port)
+ 
   for interface in configuration['wan_interface']:
    commandLock = commandLock + "iptables -A INPUT -i {0} -j DROP\n".format(interface['name'])
   
   if configuration['lock_firewall']:
+    logging.debug(commandLock)
     logging.debug(utility.run_multi_shell_command(commandLock).decode("utf-8"))
   
   runtime['mode']=options[0]
