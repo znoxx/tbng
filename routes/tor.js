@@ -9,21 +9,33 @@ router.get('/', function(req, res, next) {
 
 /* GET restart. */
 router.get('/restart', function(req, res, next) {
-  res.render('restarttor', { title: 'Restart TOR', message: 'Press button to restart TOR' });
+  var strStatus;
+  try
+  {
+    res.render('restarttor', { title: 'Select TOR action', message: 'Warning! Stopping TOR will cause functionality loss and will automatically switch device to DIRECT mode.'});   
+  }
+  catch(e)
+  {
+    var strError = e.toString();
+    res.render('xerror', { message: 'Error occured', description: strError+"\nReboot the device. If error persists, please fix it via SSH"});  
+  }
+ 
 });
 /* POST restart. */
 router.post('/restart', function(req, res, next) {
-  try
-    {
-      var result = functions.tor_restart();
-      res.render('xresult', { title: 'Operation status', message: result });
+  console.log(req.body.tor);
+  try 
+  {
+    var result = functions.torAction(req.body.tor);
+    res.render('xresult', { title: 'Operation status', message: result });
   }
   catch(e)
    {
      var strError = e.toString();
-     res.render('xerror', { message: "Error occured", description: strError});
+     res.render('xerror', { message: 'Error occured',description: strError}); 
    }
 });
+
 
 /* GET reset. */
   router.get('/reset', function(req, res, next) {

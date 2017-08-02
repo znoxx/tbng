@@ -5,6 +5,15 @@ block content
   if message
    h2= message
   form(name="restarttor", action="/services/tor/restart", method="post")
-    input(type="submit", value="Restart TOR")
+    fieldset
+     label(for="restart")
+       input(type="radio", name="tor", value="restart" checked=1) 
+       span (re)Start TOR
+     label(for="stop") 
+       input(type="radio", name="tor", value="stop" checked=0)
+       span Stop TOR
+     fieldset                                           
+       input(type="submit", value="Select")
   br
   a(href="/services/tor") Back                                           
+ 

@@ -63,6 +63,7 @@ def main(args, loglevel):
    'shutdown': [shutdown,"Shutdowns system"],
    'halt': [halt, "Halts system"],
    'tor_restart': [tor_restart, "Restarts TOR service"],
+   'tor_stop': [tor_stop,"Stops TOR service"],
    'i2p_restart': [i2p_restart, "(Re)starts i2p service"],
    'i2p_stop': [i2p_stop, "Stops i2p service"],
    'get_default_interface': [get_default_interface, "Prints default interface or raises an exception in case iface not in wan list"],
@@ -271,6 +272,12 @@ def tor_restart(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl restart tor").decode("utf-8"))
   logging.info("TOR Restart called")
+
+def tor_stop(options):
+  check_options(options,0)
+  mode(["direct"])
+  logging.debug(utility.run_shell_command("systemctl stop tor").decode("utf-8"))
+  logging.info("TOR Stop called")
 
 def i2p_restart(options):
   check_options(options,0)

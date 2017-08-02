@@ -179,6 +179,14 @@ this.i2pAction = function(i2p)
    return "Command successfully passed to system";
 
 }
+
+this.torAction= function(tor)
+{
+   var execSync = require('child_process').execSync;
+   script = execSync(engineRun +" tor_"+tor.toLowerCase());
+   return "Command successfully passed to system";
+}
+
   
 this.wifi = function()
 {
@@ -207,16 +215,6 @@ this.wifi = function()
    return retVal;     
 }  
 
-
-
-this.tor_restart = function()
-{
-
-   var execSync = require('child_process').execSync;
-   tor_restart = execSync(engineRun+" tor_restart");
-   return "Command successfully passed to system";
-
-}
 
 this.getWanInterfaces = function()
 {
