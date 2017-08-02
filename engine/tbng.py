@@ -470,7 +470,7 @@ def patch_nmcli(options):
 
 def version(options):
   check_options(options,0)
-  println(__version_info__)
+  print(__version_info__)
 
 
 def is_managed(interface):
