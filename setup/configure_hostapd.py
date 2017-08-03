@@ -70,7 +70,7 @@ def main(args, loglevel):
 Configure it via /etc/network/interfaces to have static ip and restart Network Manager or reboot your device.""".format(args.interface))
 
   logging.info("Trying to get address of interface {0}".format(args.interface))
-  ip_address = ni.ifaddresses('args.interface')[2][0]['addr']
+  ip_address = ni.ifaddresses(args.interface)[2][0]['addr']
 
   if not ip_address:
     raise Exception("Cannot determine interface {0} address. Run ifup {0} and restart the script".format(args.interface))
