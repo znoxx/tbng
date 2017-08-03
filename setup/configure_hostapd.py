@@ -11,6 +11,8 @@ import re
 import gzip
 from string import Template
 
+import netifaces as ni
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = Path(current_dir).parent
 
@@ -67,6 +69,13 @@ def main(args, loglevel):
      raise Exception("""Interface {0} appears to be managed or not configured. 
 Configure it via /etc/network/interfaces to have static ip and restart Network Manager or reboot your device.""".format(args.interface))
 
+  logging.info("Trying to get address of interface {0}".format(args.interface))
+  ip_address = ni.ifaddresses('args.interface')[2][0]['addr']
+
+  if not ip_address:
+    raise Exception("Cannot determine interface {0} address. Run ifup {0} and restart the script".format(args.interface))
+
+  
   filename = "{0}_hostapd.gz".format(tempfile.mktemp())
   url="http://static-bins.herokuapp.com/files/{0}/hostapd/hostapd.gz".format(args.arch)
 
@@ -108,9 +117,10 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   
     logging.info("Configuring dnsmasq")
     settings = """interface={0}
-server=8.8.8.8
-dhcp-option=6,0.0.0.0
-dhcp-range={0},{1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
+server=8.8.8.8 #Change this to your favourite public dns server, if needed
+dhcp-option={0},6,0.0.0.0
+dhcp-option={0},3,{4}
+dhcp-range={0},{1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask,ip_address)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
     utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
     logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq").decode("utf-8"))
