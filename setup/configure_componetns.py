@@ -136,6 +136,9 @@ def main(args, loglevel):
   logging.debug("Arguments passed: user {0}, tor config file {1}, privoxy config file {2}".format(args.user,args.torrc,args.privoxyconf))
 
   logging.info("Checking user {0}".format(args.user))
+  if  args.user == "root":
+    raise Exception("DO NOT use root account for TBNG.")
+
   logging.debug(utility.run_shell_command("getent passwd {0}".format(args.user)).decode("utf-8"))
 
   logging.info("Adding user to sudoers for TBNG engine")

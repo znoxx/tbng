@@ -118,8 +118,8 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
     logging.info("Configuring dnsmasq")
     settings = """interface={0}
 server=8.8.8.8 #Change this to your favourite public dns server, if needed
-dhcp-option={0},6,0.0.0.0
-dhcp-option={0},3,{4}
+dhcp-option={0},option:dns-server,0.0.0.0
+dhcp-option={0},option:router,{4}
 dhcp-range={0},{1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask,ip_address)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
     utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)

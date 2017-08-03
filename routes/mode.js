@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   try
   {
     strStatus = functions.readStatus();
-    res.render('mode', { title: 'Select operation mode', status: strStatus });   
+    res.render('mode', { title: 'Select operation mode - keep in mind, that TOR service will be (re)started anyway.', status: strStatus });   
   }
   catch(e)
   {
