@@ -189,6 +189,8 @@ def mode(options):
   for interface in configuration['lan_interface']:
     if options[0] == 'privoxy':
       commandMode  += "iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118\n".format(interface['name'])
+    
+    commandMode += "iptables -t nat -D PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-port 53\n".format(interface['name'])
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
 
@@ -196,13 +198,14 @@ def mode(options):
   clean_fw([])
 
   allowed_ports_tcp=[22,3000]
-  allowed_ports_udp=[]
+  allowed_ports_udp=[53]
   if ('allowed_ports_tcp' in configuration.keys()):
     #Ports 22 and 3000 are allowed by default
     allowed_ports_tcp = list(set([22,3000]+configuration['allowed_ports_tcp']))
 
   if ('allowed_ports_udp' in configuration.keys()):
-    allowed_ports_udp = list(set([]+configuration['allowed_ports_udp']))
+    #Port 53 allowed by default
+    allowed_ports_udp = list(set([53]+configuration['allowed_ports_udp']))
   
   commandAllow="sysctl -w net.ipv4.ip_forward=1\n" #must run always
   for interface in configuration['lan_interface']:
@@ -210,7 +213,8 @@ def mode(options):
       commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port)  
     for port in allowed_ports_udp:
       commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p udp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port)
-  logging.debug("Allowed LAN service ports: \n{0}\n".format(commandAllow))   
+
+  logging.debug("Allowed LAN service ports: \n{0}\n".format(commandAllow))
   logging.debug(utility.run_multi_shell_command(commandAllow).decode("utf-8"))
 
   if options[0] in ['tor','privoxy']:

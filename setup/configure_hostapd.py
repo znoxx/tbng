@@ -108,7 +108,9 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   
     logging.info("Configuring dnsmasq")
     settings = """interface={0}
-dhcp-range={1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
+server=8.8.8.8
+dhcp-option=6,0.0.0.0
+dhcp-range={0},{1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask)
     utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
     utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
     logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq").decode("utf-8"))
