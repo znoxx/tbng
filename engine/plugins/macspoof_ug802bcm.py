@@ -7,7 +7,9 @@ def plugin_main(json_arguments=None):
     if ('name' not in interface.keys()) or (not interface['name']):
       raise Exception("No interface name passed")
     command="""/usr/bin/macchanger -A {0} || true
+    sleep 3
     systemctl restart network-manager.service
+    sleep 3
     """.format(interface['name'])
     utility.run_multi_shell_command(command)
   else:
