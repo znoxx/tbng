@@ -26,7 +26,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
 
 def toSystemd(name,parameters,autostart=False):
   systemd_folder="/lib/systemd/system"
-  filein = open( "templates/{0}".format(name) )
+  filein = open( "{0}/setup/templates/{1}".format(project_dir,name) )
   src = Template( filein.read() )
   src.substitute(parameters)
   with open("{0}/{1}".format(systemd_folder,name), "w") as text_file:
