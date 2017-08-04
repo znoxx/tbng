@@ -52,7 +52,7 @@ forward-socks4a  .onion          127.0.0.1:9050 ."""
   logging.debug(utility.run_multi_shell_command("systemctl restart privoxy").decode("utf-8"))
 
 def download_i2p():
-  page = requests.get('https://geti2p.net/en/download')
+  page = requests.get('https://geti2p.com/en/download')
   tree = html.fromstring(page.content)
 
   version_url = tree.xpath('//div[@id="unix"]/div[@class="details"]/div[@class="file"]/a[@class="default"]/@href')[0]
