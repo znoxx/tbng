@@ -1,4 +1,10 @@
 #!/bin/sh
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 echo "Patching nmcli to run without root credentials"
 NMCLILOCATION=$(which nmcli)
 chmod u+s,a-w $NMCLILOCATION

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 JAVA_REPO=trusty
 NODE_VERSION=6.x
 
@@ -13,12 +18,12 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 >/dev
 
 apt-get update >/dev/null
 
-echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
 echo "Adding NodeJS ${NODE_VERSION} repo"
-apt-get install curl
-curl --silent --location https://deb.nodesource.com/setup_${NODE_VERSION} | sudo bash -
-apt-get update >/dev/null
+apt-get -y install curl
+curl --silent --location https://deb.nodesource.com/setup_${NODE_VERSION} | bash -
+apt-get -y update >/dev/null
 
 
