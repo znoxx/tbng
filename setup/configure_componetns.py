@@ -2,8 +2,7 @@
 #
 
 # import modules used here -- sys is a very standard one
-import sys,argparse,logging,os,json,subprocess
-from pathlib import Path
+import sys,argparse,os,subprocess
 
 from lxml import html
 import requests
@@ -11,27 +10,7 @@ import urllib.request
 import tempfile
 import re
 import pexpect
-from string import Template
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_dir = Path(current_dir).parent
-
-sys.path.insert(0,'{0}/engine'.format(project_dir))
-from libraries import utility
-
-prefix="#Added by TBNG setup - do not edit "
-
-def toSystemd(name,parameters,autostart=False):
-  systemd_folder="/lib/systemd/system"
-  filein = open( "templates/{0}".format(name) )
-  src = Template( filein.read() )
-  src.substitute(parameters)
-  with open("{0}/{1}".format(systemd_folder,name), "w") as text_file:
-    text_file.write(src.substitute(parameters))
-  logging.info("File {0}/{1} created".format(systemd_folder,name))
-  logging.debug(utility.run_shell_command("systemctl daemon-reload").decode("utf-8"))
-  if autostart:
-    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)).decode("utf-8"))
+from libtbngsetup import *
 
 def configure_tor(torrc):
   token="tbng enabled settings"

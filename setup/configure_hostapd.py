@@ -2,42 +2,18 @@
 #
 
 # import modules used here -- sys is a very standard one
-import sys,argparse,logging,os,json,subprocess
-from pathlib import Path
+import argparse,json
 
 import urllib.request
 import tempfile
-import re
 import gzip
-from string import Template
 
 import netifaces as ni
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_dir = Path(current_dir).parent
-
-sys.path.insert(0,'{0}/engine'.format(project_dir))
-from libraries import utility
-
-prefix="#Added by TBNG setup - do not edit "
-
-def toSystemd(name,parameters,autostart=False):
-  systemd_folder="/lib/systemd/system"
-  filein = open( "templates/{0}".format(name) )
-  src = Template( filein.read() )
-  src.substitute(parameters)
-  with open("{0}/{1}".format(systemd_folder,name), "w") as text_file:
-    text_file.write(src.substitute(parameters))
-  logging.info("File {0}/{1} created".format(systemd_folder,name))
-  logging.debug(utility.run_shell_command("systemctl daemon-reload").decode("utf-8"))
-  if autostart:
-    logging.debug(utility.run_shell_command("systemctl enable {0}".format(name)).decode("utf-8"))
-
+from libtbngsetup import *
 
 # Gather our code in a main() function
 def main(args, loglevel):
-
-  
 
   logging.basicConfig(format="%(levelname)s: %(message)s", level=loglevel)
   logging.debug("Arguments passed: {0}".format(args))
@@ -52,30 +28,14 @@ def main(args, loglevel):
   logging.info("Checking arguments")
   if len(args.appassword) < 8:
     raise Exception("Access point password must be 8 symbols or more")
-  
-
-  if args.dnsmasq not in ["none","apt","yum"]:
-    raise Exception("apt,yum,none options for dnsmasq are allowed")
-
-  
-  if args.dnsmasq not in ["none"]:
-    if (args.dhcpbegin == "none") or (args.dhcpend == "none") or (args.dhcpmask == "none"):
-      raise Exception("DHCP start, end and mask must be provided") 
 
   logging.info("Checking {0} is configured manually".format(args.interface))
-
-  command="nmcli dev show {0}|grep unmanaged||true".format(args.interface)
-  if "unmanaged" not in utility.run_shell_command(command).decode("utf-8"):
-     raise Exception("""Interface {0} appears to be managed or not configured. 
-Configure it via /etc/network/interfaces to have static ip and restart Network Manager or reboot your device.""".format(args.interface))
-
   logging.info("Trying to get address of interface {0}".format(args.interface))
-  ip_address = ni.ifaddresses(args.interface)[2][0]['addr']
+  ip_address = check_interface(args.interface)
 
   if not ip_address:
     raise Exception("Cannot determine interface {0} address. Run ifup {0} and restart the script".format(args.interface))
 
-  
   filename = "{0}_hostapd.gz".format(tempfile.mktemp())
   url="http://static-bins.herokuapp.com/files/{0}/hostapd/hostapd.gz".format(args.arch)
 
@@ -95,7 +55,7 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   src = Template( filein.read() )
   src.substitute(parameters)
   with open("{0}/config/hostapd-tbng.conf".format(project_dir), "w") as text_file:
-    text_file.write(src.substitute(parameters)) 
+    text_file.write(src.substitute(parameters))
 
   logging.info("Generating systemd file")
   systemd_folder="/lib/systemd/system"
@@ -108,26 +68,13 @@ Configure it via /etc/network/interfaces to have static ip and restart Network M
   logging.debug(utility.run_shell_command("systemctl daemon-reload").decode("utf-8"))
   logging.debug(utility.run_shell_command("systemctl enable hostapd-tbng").decode("utf-8")) 
 
-  logging.info("Installing dnsmasq package")
-  if args.dnsmasq in ["apt","yum"]:
-    if (args.dnsmasq == "apt"):
-      logging.debug(utility.silently_install_by_apt("dnsmasq").decode("utf-8"))
-    elif (args.dnsmasq == "yum"):
-     logging.debug(utility.silently_install_by_yum("dnsmasq").decode("utf-8"))
-  
-    logging.info("Configuring dnsmasq")
-    settings = """interface={0}
-server=8.8.8.8 #Change this to your favourite public dns server, if needed
-dhcp-option={0},option:dns-server,0.0.0.0
-dhcp-option={0},option:router,{4}
-dhcp-range={0},{1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask,ip_address)
-    utility.removeFileData("/etc/dnsmasq.conf",prefix,"AP settings")
-    utility.appendFileData("/etc/dnsmasq.conf",prefix,"AP settings",settings)
-    logging.debug(utility.run_multi_shell_command("systemctl restart dnsmasq").decode("utf-8"))
-
   logging.debug(utility.run_shell_command("sync").decode("utf-8"))
-  logging.info("Device configured. Powercycle your system and try to connect to new access point")
-      
+
+  result="""Static version of hostapd binary installed to {0}/bin/hostapd-tbng.
+Configuration located at {0}/config/hostapd-tbng.conf.
+SystemD service hostapd-tbng is registered and enabled by default.
+Don' forget to confgure dhcp service for {1} or use static IPs. Current IP of {1} is {2}""".format(project_dir,args.interface,ip_address)
+  logging.info(result)
 
 
 # Standard boilerplate to call the main() function to begin
@@ -160,22 +107,6 @@ if __name__ == '__main__':
                       '--appassword',
                        type=str, help="Access point password (must be 8+ symbols)",required=True)
   
-  parser.add_argument('-s',
-                      '--dnsmasq',
-                       type=str, default="none",help="Configure dnsmasq. Possible values are apt (install from apt),yum (install from yum) or none (default - no config will be made)")
-  
-  parser.add_argument('-b',
-                      '--dhcpbegin',
-                       type=str, default="none", help="DHCP start address, used to configure dnsmasq service. Not validated!")
-
-  parser.add_argument('-e',
-                      '--dhcpend',
-                       type=str, default="none", help="DHCP end address, used to configure dnsmasq service. Not validated!")
-  
-  parser.add_argument('-m',
-                      '--dhcpmask',
-                       type=str, default="none", help="DHCP mask, used to configure dnsmasq service. Not validated!")                       
- 
   parser.add_argument('-d',
                       '--driver',
                       type=str, default="nl80211", help="Driver for hostapd. Default is nl80211, also possible rtl871xdrv for Realtek cards")
