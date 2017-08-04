@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
   parser.add_argument('-a',
                       '--arch',
-                       type=str, help='Architecture (armh,aarch65,x86,x86_64,...)',required=True)
+                       type=str, help='Architecture (armh,aarch64,x86,x86_64,...)',required=True)
 
   parser.add_argument('-i',
                       '--interface',
