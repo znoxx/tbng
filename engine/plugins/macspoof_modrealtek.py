@@ -13,6 +13,7 @@ def plugin_main(json_arguments=None):
     rmmod {1}
     modprobe {1} rtw_power_mgnt=0 rtw_enusbss=0 rtw_initmac=${{macaddr}}
     ip link set {0} up
+    systemctl restart network-manager
     """.format(interface['name'],interface['module_name'])
     utility.run_multi_shell_command(command)
   else:
