@@ -1,6 +1,6 @@
 [Unit]
 Description=WebUI for TorBoxNG
-After=tbng
+After=tbng.service
 
 [Service]
 ExecStart=/usr/bin/env nodejs $project/bin/www
