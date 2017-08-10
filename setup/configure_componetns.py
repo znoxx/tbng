@@ -137,7 +137,7 @@ def main(args, loglevel):
   logging.info("Installing i2p")
   install_i2p(i2p_package)
   toSystemd("i2p-tbng.service",parameters)
-  logging.info("Starting i2p and doing inital configuration")
+  logging.info("Starting i2p and doing initial configuration")
   command="""systemctl start i2p-tbng
 sleep 5
 systemctl stop i2p-tbng
