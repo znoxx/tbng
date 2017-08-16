@@ -12,6 +12,8 @@ import subprocess
 import fileinput
 import hashlib
 import re
+import shutil
+import tempfile
 
 def make_sure_path_exists(path):
     """
@@ -90,13 +92,16 @@ def append_file_to_file(file_to_append,append_data):
      Raises exception if something went wrong.
      Input: Original file, file to append.
      """
-     f2append = open(file_to_append, 'a')
+     tempFileName=tempfile.mktemp()
+     shutil.copy(file_to_append,tempFileName)
+     f2append = open(tempFileName, 'a')
      f2read = open(append_data, 'r')
      data = f2read.read()
      data = "\n"+data
      f2read.close()
      f2append.write(data)
      f2append.close()
+     shutil.move(tempFileName,file_to_append)
 
 
 def replace_string_in_file(file_to_replace,initial_string,replacement_string):
@@ -144,13 +149,15 @@ def appendFileData(filename, prefix ,token, data):
   """
   fileText=""
   dataToAppend="\n"+prefix+token+"_begin\n"+data+"\n"+prefix+token+"_end\n"
-
-  with open(filename) as f:
-    f=open(filename,'r')
+  tempFileName=tempfile.mktemp()
+  shutil.copy(filename,tempFileName)
+  with open(tempFileName) as f:
+    f=open(tempFileName,'r')
     fileText = f.read()
   fileText +=dataToAppend
-  with open(filename,'w') as f:
+  with open(tempFileName,'w') as f:
     f.write(fileText)
+  shutil.move(tempFileName,filename)
 
 def removeFileData(filename,prefix, token):
   """
@@ -159,10 +166,14 @@ def removeFileData(filename,prefix, token):
   fileText=""
   prefix=prefix.replace('#','\#')
   regexp="\\n"+prefix+token+"_begin(.*)"+prefix+token+"_end\\n+"
-  with open(filename) as f:
-    f=open(filename,'r')
+  tempFileName=tempfile.mktemp()
+  shutil.copy(filename,tempFileName)
+  with open(tempFileName) as f:
+    f=open(tempFileName,'r')
     fileText = f.read()
   fileText=re.sub(regexp,'',fileText,flags=re.DOTALL)
-  with open(filename,'w') as f:
-    f.write(fileText)  
+  with open(tempFileName,'w') as f:
+    f.write(fileText)
+  shutil.move(tempFileName,filename)
+  
 
