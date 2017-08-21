@@ -165,7 +165,7 @@ def removeFileData(filename,prefix, token):
   """
   fileText=""
   prefix=prefix.replace('#','\#')
-  regexp="\\n"+prefix+token+"_begin(.*)"+prefix+token+"_end\\n+"
+  regexp="\\n"+prefix+token+"_begin(.*)"+prefix+token+"_end\\n"
   tempFileName=tempfile.mktemp()
   shutil.copy(filename,tempFileName)
   with open(tempFileName) as f:
