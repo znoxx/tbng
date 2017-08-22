@@ -275,7 +275,8 @@ def halt(options):
 def tor_restart(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl restart tor").decode("utf-8"))
-  logging.info("TOR Restart called")
+  logging.debug(utility.run_shell_command("systemctl restart privoxy").decode("utf-8"))
+  logging.info("TOR Restart called, Privoxy restarted")
 
 def tor_stop(options):
   check_options(options,0)
@@ -286,7 +287,8 @@ def tor_stop(options):
 def i2p_restart(options):
   check_options(options,0)
   logging.debug(utility.run_shell_command("systemctl restart i2p-tbng").decode("utf-8"))
-  logging.info("I2P Restart called")  
+  logging.info("I2P Restart called")
+  
 
 def i2p_stop(options):
   check_options(options,0)
