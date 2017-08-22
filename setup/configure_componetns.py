@@ -76,7 +76,7 @@ def install_i2p(filename):
   logging.info("Trying to kill running i2p if any")
   killer="""if [ -f /tmp/router.pid ]; then
   kill `cat /tmp/router.pid` || true
-  sleep 5
+  sleep 10
 fi  
 rm -rf {0}/i2p || true
 rm -rf ~{0}/.i2p""".format(project_dir)
@@ -87,13 +87,13 @@ rm -rf ~{0}/.i2p""".format(project_dir)
   location = "{0}/i2p".format(project_dir)
   os.mkdir(location)
   child = pexpect.spawn(command_line)
-  child.expect("press 1 to continue, 2 to quit, 3 to redisplay")
+  child.expect("press 1 to continue, 2 to quit, 3 to redisplay",timeout=60)
   child.sendline("1")
-  child.expect("Select target path.*")
+  child.expect("Select target path.*",timeout=60)
   child.sendline(location)
-  child.expect("press 1 to continue, 2 to quit, 3 to redisplay")
+  child.expect("press 1 to continue, 2 to quit, 3 to redisplay",timeout=60)
   child.sendline("1")
-  child.expect(".*Console installation done.*")
+  child.expect(".*Console installation done.*",timeout=60)
   child.sendline("")
 
   logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)).decode("utf-8"))
@@ -139,7 +139,7 @@ def main(args, loglevel):
   toSystemd("i2p-tbng.service",parameters)
   logging.info("Starting i2p and doing initial configuration")
   command="""systemctl start i2p-tbng
-sleep 5
+sleep 20
 systemctl stop i2p-tbng
 su -c "sed -i 's/clientApp.0.args=7657\s*::1,127.0.0.1\s*.\/webapps\//clientApp.0.args=7657 0.0.0.0 .\/webapps\//' ~{0}/.i2p/clients.config" {0}
 su -c "sed -i 's/clientApp.4.startOnLoad=true/clientApp.4.startOnLoad=false/'  ~{0}/.i2p/clients.config" {0}"""
