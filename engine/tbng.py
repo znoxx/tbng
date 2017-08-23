@@ -4,6 +4,7 @@
 
 # import modules used here -- sys is a very standard one
 import sys,argparse,logging,os,json,subprocess
+import netifaces as ni
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
@@ -190,7 +191,13 @@ def mode(options):
     if options[0] == 'privoxy':
       commandMode  += "iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118\n".format(interface['name'])
     
-    commandMode += "iptables -t nat -D PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-port 53\n".format(interface['name'])
+    iface_data=ni.ifaddresses(interface['name'])
+    destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else ""
+    if destination_address:    
+      commandMode += "iptables -t nat -D PREROUTING -i {0} -d {1} -p udp --dport 53 -j REDIRECT --to-port 53\n".format(interface['name'],destination_address)
+    else:
+      commandMode += "iptables -t nat -D PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-port 53\n".format(interface['name'])
+
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
 
@@ -209,10 +216,19 @@ def mode(options):
   
   commandAllow="sysctl -w net.ipv4.ip_forward=1\n" #must run always
   for interface in configuration['lan_interface']:
+    iface_data=ni.ifaddresses(interface['name'])
+    destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else "" 
     for port in allowed_ports_tcp:
-      commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port)  
+      if destination_address:
+        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -d {2} -p tcp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port,destination_address)
+      else:
+        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p tcp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port)
+
     for port in allowed_ports_udp:
-      commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p udp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port)
+      if destination_address:
+        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -d {2} -p udp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port,destination_address)
+      else:
+        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -p udp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port) 
 
   logging.debug("Allowed LAN service ports: \n{0}\n".format(commandAllow))
   logging.debug(utility.run_multi_shell_command(commandAllow).decode("utf-8"))
@@ -235,11 +251,20 @@ def mode(options):
 
   #Allowing Wan ports if any
   for interface in configuration['wan_interface']:
+    iface_data=ni.ifaddresses(interface['name'])
+    destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else ""
     for port in allowed_ports_wan_tcp:
-      commandLock = commandLock + "iptables -A INPUT -i {0} -p tcp --dport {1} -j ACCEPT\n".format(interface['name'],port)
+      if destination_address:
+        commandLock = commandLock + "iptables -A INPUT -i {0} -d {2} -p tcp --dport {1} -j ACCEPT\n".format(interface['name'],port,destination_address)
+      else:
+        commandLock = commandLock + "iptables -A INPUT -i {0} -p tcp --dport {1} -j ACCEPT\n".format(interface['name'],port)
+     
     for port in allowed_ports_wan_udp:
-      commandLock = commandLock + "iptables -A INPUT -i {0} -p udp --dport {1} -j ACCEPT\n".format(interface['name'],port)
- 
+      if destination_address:
+        commandLock = commandLock + "iptables -A INPUT -i {0} -d {2} -p udp --dport {1} -j ACCEPT\n".format(interface['name'],port,destination_address)
+      else:
+        commandLock = commandLock + "iptables -A INPUT -i {0} -p udp --dport {1} -j ACCEPT\n".format(interface['name'],port) 
+
   for interface in configuration['wan_interface']:
    commandLock = commandLock + "iptables -A INPUT -i {0} -j DROP\n".format(interface['name'])
   
