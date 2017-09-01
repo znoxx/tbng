@@ -1,7 +1,7 @@
 [Unit]
 Description=hostapd-torbox
 Wants=network.target
-Before=network.target
+After=network.target
 
 [Service]
 Type=oneshot
