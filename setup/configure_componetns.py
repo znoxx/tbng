@@ -35,6 +35,8 @@ SocksPort 0.0.0.0:9050"""
 
 def configure_privoxy(privoxyconf):
   utility.replace_string_in_file(privoxyconf,"listen-address  localhost:8118","#listen-address  localhost:8118")
+  utility.replace_string_in_file(privoxyconf,"listen-address  127.0.0.1:8118","#listen-address  127.0.0.1:8118")
+  utility.replace_string_in_file(privoxyconf,"listen-address  [::1]:8118","#listen-address  [::1]:8118")
   utility.replace_string_in_file(privoxyconf,"enable-remote-toggle  0","#enable-remote-toggle  0")
   utility.replace_string_in_file(privoxyconf,"enable-edit-actions 0","#enable-edit-actions 0")
   utility.replace_string_in_file(privoxyconf,"accept-intercepted-requests 0","#accept-intercepted-requests 0")
