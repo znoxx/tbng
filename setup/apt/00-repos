@@ -8,6 +8,12 @@ fi
 JAVA_REPO=trusty
 NODE_VERSION=6.x
 
+echo "Pre-config..."
+
+apt-get update >/dev/null
+
+apt-get install -y dirmngr >/dev/null
+
 echo "Adding Java 8 repo"
 
 echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu ${JAVA_REPO} main" | tee /etc/apt/sources.list.d/webupd8team-java.list
