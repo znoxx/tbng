@@ -12,7 +12,8 @@ echo "Pre-config..."
 
 apt-get update >/dev/null
 
-apt-get install -y dirmngr >/dev/null
+apt-get -y install dirmngr >/dev/null
+apt-get -y install curl >/dev/null
 
 echo "Adding Java 8 repo"
 
@@ -28,7 +29,6 @@ echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selec
 echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
 echo "Adding NodeJS ${NODE_VERSION} repo"
-apt-get -y install curl
 curl --silent --location https://deb.nodesource.com/setup_${NODE_VERSION} | bash -
 apt-get -y update >/dev/null
 
