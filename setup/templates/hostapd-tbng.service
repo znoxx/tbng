@@ -1,5 +1,5 @@
 [Unit]
-Description=hostapd-tbng
+Description=Hostapd for TBNG
 Wants=network.target
 After=network.target
 
