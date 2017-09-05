@@ -1,5 +1,5 @@
 [Unit]
-Description=hostapd-torbox
+Description=hostapd-tbng
 Wants=network.target
 After=network.target
 
