@@ -1,5 +1,5 @@
 [Unit]
-Description=WebUI for TorBoxNG
+Description=WebUI for TBNG
 After=tbng.service
 
 [Service]
