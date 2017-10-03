@@ -85,31 +85,18 @@ TBNG — это всего лишь скрипты. Основные потре�
 После распаковки там же в домашней директории появится поддиректория **_tbng_**.
 
 `johndoe@linuxbox:~$ ls -la tbng
-
  drwxr-xr-x 10 johndoe johndoe 4096 Jul 31 13:51 .
-
  drwxr-xr-x 21 johndoe johndoe 4096 Aug 10 13:19 ..
-
  -rw-r--r--  1 johndoe johndoe 1876 Jul 14 20:24 app.js
-
  drwxr-xr-x  2 johndoe johndoe 4096 Jul 25 12:01 bin
-
  -rw-r--r--  1 johndoe johndoe  285 Jul 31 13:51 check-version.js
-
  drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 config
-
  drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 engine
-
  -rw-r--r--  1 johndoe johndoe  570 Jul 31 13:51 package.json
-
  drwxr-xr-x  5 johndoe johndoe 4096 Jul 14 20:24 public
-
  -rw-r--r--  1 johndoe johndoe  198 Jul 14 20:24 README.md
-
  drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 routes
-
  drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 setup
-
  drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views`
 
 ## Установка необходимых пакетов
