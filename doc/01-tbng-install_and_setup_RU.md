@@ -1,8 +1,6 @@
 # TorBOX Next Generation
 
-#### Руководство по установке и настройке
-
-[[TOC]]
+##### Руководство по установке и настройке
 
 ## Введение
 
@@ -76,53 +74,53 @@ TBNG — это всего лишь скрипты. Основные потре�
 
 На момент написания документа TBNG распространяется в виде архива .tar.gz. Скачать его можно на том же сайте, где вы читаете этот документ. 
 
-johndoe@linuxbox:~$ wget -t0 -c http://site.url/tbng_xxxx.tar.gz
+`johndoe@linuxbox:~$ wget -t0 -c http://site.url/tbng_xxxx.tar.gz`
 
 В домашней директории появится файл **_tbng_xxxx.tar.gz._**
 
 Распакуем его:
 
-johndoe@linuxbox:~$ tar -xzvf tbng_xxxx.tar.gz
+`johndoe@linuxbox:~$ tar -xzvf tbng_xxxx.tar.gz`
 
 После распаковки там же в домашней директории появится поддиректория **_tbng_**.
 
-johndoe@linuxbox:~$ ls -la tbng
+`johndoe@linuxbox:~$ ls -la tbng
 
-drwxr-xr-x 10 johndoe johndoe 4096 Jul 31 13:51 .
+ drwxr-xr-x 10 johndoe johndoe 4096 Jul 31 13:51 .
 
-drwxr-xr-x 21 johndoe johndoe 4096 Aug 10 13:19 ..
+ drwxr-xr-x 21 johndoe johndoe 4096 Aug 10 13:19 ..
 
--rw-r--r--  1 johndoe johndoe 1876 Jul 14 20:24 app.js
+ -rw-r--r--  1 johndoe johndoe 1876 Jul 14 20:24 app.js
 
-drwxr-xr-x  2 johndoe johndoe 4096 Jul 25 12:01 bin
+ drwxr-xr-x  2 johndoe johndoe 4096 Jul 25 12:01 bin
 
--rw-r--r--  1 johndoe johndoe  285 Jul 31 13:51 check-version.js
+ -rw-r--r--  1 johndoe johndoe  285 Jul 31 13:51 check-version.js
 
-drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 config
+ drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 config
 
-drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 engine
+ drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 engine
 
--rw-r--r--  1 johndoe johndoe  570 Jul 31 13:51 package.json
+ -rw-r--r--  1 johndoe johndoe  570 Jul 31 13:51 package.json
 
-drwxr-xr-x  5 johndoe johndoe 4096 Jul 14 20:24 public
+ drwxr-xr-x  5 johndoe johndoe 4096 Jul 14 20:24 public
 
--rw-r--r--  1 johndoe johndoe  198 Jul 14 20:24 README.md
+ -rw-r--r--  1 johndoe johndoe  198 Jul 14 20:24 README.md
 
-drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 routes
+ drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 routes
 
-drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 setup
+ drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 setup
 
-drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views
+ drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views`
 
 ## Установка необходимых пакетов
 
-Перед конфигурацией нужно установить некоторые пакеты. Помимо стандартных пакетов потребуется ещё **_Java_**** **для I2P и самое главное — **_node.js_** и **_npm_*** *для работы с web-интерфейсом.
+Перед конфигурацией нужно установить некоторые пакеты. Помимо стандартных пакетов потребуется ещё **_Java_** для I2P и самое главное — **_node.js_** и **_npm_*** для работы с web-интерфейсом.
 
 Версия node.js — не младше 4.2.1.
 
-Протестированная версия Java
+Протестированная версия Java — 8 для ARM платформ с сайта Oracle
 
-Если в системе уже установлены **_tor_** и **_privoxy — _**рекомендуется вычистить их вместе с конфигурационными файлами и установить заново с "заводскими настройками".
+Если в системе уже установлены **_tor_** и **_privoxy_** — рекомендуется вычистить их вместе с конфигурационными файлами и установить заново с "заводскими настройками".
 
 Для пользователей Debian/Ubuntu установка пакетов автоматизирована, для пользователей других дистрибутивов — пакеты нужно установить тем способом, который принят в системе.
 
@@ -130,7 +128,7 @@ drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views
 
 Команда автоматической установки пакетов выполняется с правами суперпользователя:
 
-johndoe@linuxbox:~$ sudo run-parts tbng/setup/apt
+`johndoe@linuxbox:~$ sudo run-parts tbng/setup/apt`
 
 Скрипты автоустановки пакетов выполняются ощутимое время. В процессе будут удалены tor и privoxy, причём их конфигурация будет сохранена в резервную копию. Также будет подключено несколько дополнительных репозиториев для Java и node.js.
 
@@ -142,15 +140,15 @@ C Raspberry PI 1 всё не так просто и потребуются до�
 
 Скрипт установки node.js сообщит, что для архитектуры armv6l сборки node.js нет, и будет установлена версия из репозитория Stretch/Raspbian. Её нужно будет удалить и установить более новую версию:
 
-johndoe@linuxbox:~$ sudo apt-get purge nodejs
+`johndoe@linuxbox:~$ sudo apt-get purge nodejs
 
-johndoe@linuxbox:~$ wget http://node-arm.herokuapp.com/node_latest_armhf.deb
+ johndoe@linuxbox:~$ wget http://node-arm.herokuapp.com/node_latest_armhf.deb
 
-johndoe@linuxbox:~$ dpkg -i ./node_latest_armhf.deb
+ johndoe@linuxbox:~$ dpkg -i ./node_latest_armhf.deb
 
-johndoe@linuxbox:~$ sudo apt-get install npm
+ johndoe@linuxbox:~$ sudo apt-get install npm
 
-johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs
+ johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs`
 
 В принципе, этого должно быть достаточно для полноценной работы.
 
@@ -168,9 +166,9 @@ johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs
 
 Делается это примерно так:
 
-NMCLILOCATION=$(which nmcli)
+`NMCLILOCATION=$(which nmcli)
 
-chmod u+s,a-w $NMCLILOCATION
+ chmod u+s,a-w $NMCLILOCATION`
 
 Это нужно для правильной работы веб-интерфейса и некоторых других действий.
 
