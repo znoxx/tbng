@@ -84,20 +84,22 @@ TBNG — это всего лишь скрипты. Основные потре�
 
 После распаковки там же в домашней директории появится поддиректория **_tbng_**.
 
-`johndoe@linuxbox:~$ ls -la tbng
- drwxr-xr-x 10 johndoe johndoe 4096 Jul 31 13:51 .
- drwxr-xr-x 21 johndoe johndoe 4096 Aug 10 13:19 ..
- -rw-r--r--  1 johndoe johndoe 1876 Jul 14 20:24 app.js
- drwxr-xr-x  2 johndoe johndoe 4096 Jul 25 12:01 bin
- -rw-r--r--  1 johndoe johndoe  285 Jul 31 13:51 check-version.js
- drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 config
- drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 engine
- -rw-r--r--  1 johndoe johndoe  570 Jul 31 13:51 package.json
- drwxr-xr-x  5 johndoe johndoe 4096 Jul 14 20:24 public
- -rw-r--r--  1 johndoe johndoe  198 Jul 14 20:24 README.md
- drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 routes
- drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 setup
- drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views`
+```
+johndoe@linuxbox:~$ ls -la tbng
+drwxr-xr-x 10 johndoe johndoe 4096 Jul 31 13:51 .
+drwxr-xr-x 21 johndoe johndoe 4096 Aug 10 13:19 ..
+-rw-r--r--  1 johndoe johndoe 1876 Jul 14 20:24 app.js
+drwxr-xr-x  2 johndoe johndoe 4096 Jul 25 12:01 bin
+-rw-r--r--  1 johndoe johndoe  285 Jul 31 13:51 check-version.js
+drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 config
+drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 engine
+-rw-r--r--  1 johndoe johndoe  570 Jul 31 13:51 package.json
+drwxr-xr-x  5 johndoe johndoe 4096 Jul 14 20:24 public
+-rw-r--r--  1 johndoe johndoe  198 Jul 14 20:24 README.md
+drwxr-xr-x  3 johndoe johndoe 4096 Aug  4 14:05 routes
+drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 setup
+drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views
+```
 
 ## Установка необходимых пакетов
 
@@ -127,15 +129,13 @@ C Raspberry PI 1 всё не так просто и потребуются до�
 
 Скрипт установки node.js сообщит, что для архитектуры armv6l сборки node.js нет, и будет установлена версия из репозитория Stretch/Raspbian. Её нужно будет удалить и установить более новую версию:
 
-`johndoe@linuxbox:~$ sudo apt-get purge nodejs
-
- johndoe@linuxbox:~$ wget http://node-arm.herokuapp.com/node_latest_armhf.deb
-
- johndoe@linuxbox:~$ dpkg -i ./node_latest_armhf.deb
-
- johndoe@linuxbox:~$ sudo apt-get install npm
-
- johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs`
+```
+johndoe@linuxbox:~$ sudo apt-get purge nodejs
+johndoe@linuxbox:~$ wget http://node-arm.herokuapp.com/node_latest_armhf.deb
+johndoe@linuxbox:~$ dpkg -i ./node_latest_armhf.deb
+johndoe@linuxbox:~$ sudo apt-get install npm
+johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs
+```
 
 В принципе, этого должно быть достаточно для полноценной работы.
 
@@ -153,9 +153,10 @@ C Raspberry PI 1 всё не так просто и потребуются до�
 
 Делается это примерно так:
 
-`NMCLILOCATION=$(which nmcli)
-
- chmod u+s,a-w $NMCLILOCATION`
+```
+NMCLILOCATION=$(which nmcli)
+chmod u+s,a-w $NMCLILOCATION
+```
 
 Это нужно для правильной работы веб-интерфейса и некоторых других действий.
 
@@ -187,7 +188,7 @@ dnsmasq можно установить самостоятельно и наст
 
 Запускать его (скрипт настройки) нужно с правами суперпользователя. Работу его проще объяснить на примере:
 
-johndoe@linuxbox:~$ sudo tbng/setup/configure_dnsmasq.py -i wlan0 -s apt -b 192.168.222.10 -e 192.168.222.30 -m 255.255.255.0
+`johndoe@linuxbox:~$ sudo tbng/setup/configure_dnsmasq.py -i wlan0 -s apt -b 192.168.222.10 -e 192.168.222.30 -m 255.255.255.0`
 
 Здесь мы объявляем, что dnsmasq будет работать на интерфейсе wlan0 (-i wlan0), устанавливать мы его будем из apt-репозитария (-s apt), адреса будут выделяться начиная с 192.168.222.10 по 192.168.222.30 (опции -b, -e) и маска подсети будет 255.255.255.0 (-m).
 
@@ -195,7 +196,7 @@ johndoe@linuxbox:~$ sudo tbng/setup/configure_dnsmasq.py -i wlan0 -s apt -b 192.
 
 Если после отработки команда
 
-johndoe@linuxbox:~$ sudo systemctl restart dnsmasq
+`johndoe@linuxbox:~$ sudo systemctl restart dnsmasq`
 
 выполнилась без ошибки — значит установка завершена успешно. Если ваш LAN-интерфейс проводной, то можно сразу подключить к нему устройство и проверить, что адреса выдаются. Если же нет — нужно настроить беспроводную точку доступа.
 
@@ -209,7 +210,7 @@ johndoe@linuxbox:~$ sudo systemctl restart dnsmasq
 
 Рассмотрим пример:
 
-johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a arm -i wlan0 -n my_access_point -p mysuperpassword -d nl80211
+`johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a arm -i wlan0 -n my_access_point -p mysuperpassword -d nl80211`
 
 Опции, которые используются в команде:
 
@@ -227,27 +228,27 @@ johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a arm -i wlan0 -n my_a
 
 После установки проверить работу точки доступа можно командой (если использовался скрипт):
 
-johndoe@linuxbox:~$ sudo systemctl restart hostapd-tbng
+`johndoe@linuxbox:~$ sudo systemctl restart hostapd-tbng`
 
 Если же использовался hostapd из пакетов:
 
-johndoe@linuxbox:~$ sudo systemctl restart hostapd
+`johndoe@linuxbox:~$ sudo systemctl restart hostapd`
 
 Если точка доступа видна — установка выполнена успешно. Конечно бывает так, что сеть видна, но соединения нет, но это уже вопрос к работе оборудования.
 
 При пользовании скрипта бинарый файл можно найти в папке **_tbng/bin_**, а конфигурацию в **_tbng/config_**. В случае возникновения проблем можно запустить бинарник из командной строки и посмотреть, что происходит.
 
-johndoe@linuxbox:~$ sudo tbng/bin/hostapd-tbng tbng/config/hostapd-tbng.conf
+`johndoe@linuxbox:~$ sudo tbng/bin/hostapd-tbng tbng/config/hostapd-tbng.conf`
 
 ## Подготовка конфигурационных файлов
 
 Перед началом работы *необходимо* подготовить конфигурационные файлы.  TBNG поставляется только с примерами файлов, из них нужно создать реальные конфигурационные файлы. Делается это простым копированием из файлов configfile.json.example в configfile.json.
 
+```
 johndoe@linuxbox:~$ cp tbng/config/tbng.json.example tbng/config/tbng.json
-
 johndoe@linuxbox:~$ cp tbng/config/user.json.example tbng/config/user.json
-
 johndoe@linuxbox:~$ cp tbng/config/torcountry.json.example tbng/config/torcountry.json
+```
 
 Далее необходимо отредактировать файлы, по крайней мере tbng.json, так как там содержится ключевая информация, необходимая для работы.
 
@@ -258,46 +259,28 @@ johndoe@linuxbox:~$ cp tbng/config/torcountry.json.example tbng/config/torcountr
 ##### tbng.json
 
 Самый главный конфигурационный файл. Его, как минимум, необходимо привести в соответствие с конфигурацией сетевых интерфейсов на устройстве с TBNG. Рассмотрим пример:
-
+```
 {
-
   "cputemp": "default",
-
   "wan_interface": [
-
    {
-
      "name": "wlan1",
-
       "wireless": true,
-
       "macspoof": {
-
         "method": "ifconfig"
-
        }
-
    } 
-
   ],
-
   "lan_interface": [
-
     {
-
       "name": "wlan0"
-
     }
-
   ],
-
   "allowed_ports_tcp" : [22,3000,7657,9050,8118,4200],
-
   "allowed_ports_udp" : [53],
-
   "lock_firewall": false
-
 }
+```
 
 Тут перечислены основные обязательные поля. 
 
@@ -345,7 +328,7 @@ johndoe@linuxbox:~$ cp tbng/config/torcountry.json.example tbng/config/torcountr
 
 Этот файл появляется только после первого старта TBNG и используется для хранения настроек и их восстановления. Он не предназначен для самостоятельного редактирования, однако его можно удалить, если "что-то пошло нет так", и перезагрузить систему, либо выполнить команду:
 
-johndoe@linuxbox:~$ sudo tbng/engine/tbng.py mode restore
+`johndoe@linuxbox:~$ sudo tbng/engine/tbng.py mode restore`
 
 Это привёдет систему в первоначальное состояние.
 
@@ -353,7 +336,7 @@ johndoe@linuxbox:~$ sudo tbng/engine/tbng.py mode restore
 
 Итак, настройки сформированы, сетевые интерфейсы проверены — время применить финальную конфигурацию и пользоваться. Для запуска настройки делаем следующее:
 
-johndoe@linuxbox:~$ sudo tbng/setup/configure_componetns.py -u johndoe
+`johndoe@linuxbox:~$ sudo tbng/setup/configure_componetns.py -u johndoe`
 
 Эта команда сделает следующее:
 
@@ -399,11 +382,11 @@ TBNG написана на языке Python, и почти все действ�
 
 Файл имеет название cputemp_action.py. Проверить функциональность можно просто:
 
-johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py cputemp default
+`johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py cputemp default`
 
 Если плагин вывел температуру, проверка прошла успешно. А вот на Raspberry Pi 1 процесс чтения температуры отличается и нужно использовать плагин cputemip_rpi1.py, то есть:
 
-johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py cputemp rpi1
+`johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py cputemp rpi1`
 
 ###   Плагины  для mac spoof
 
@@ -424,20 +407,15 @@ MAC spoof позволяет подменять адрес интерфейса 
 ##### Запись в конфигурационном файле
 
 Формат записи довольно простой:
-
+```
 {
-
      "name": "wlan1",
-
       "wireless": true,
-
       "macspoof": {
-
         "method": "ifconfig"
-
        }
-
 }
+```
 
 Разрешаем spoof на интерфейсе с именем wlan1.
 
@@ -445,7 +423,7 @@ MAC spoof позволяет подменять адрес интерфейса 
 
 В командную строку нужно передать JSON-строку с именем интерфейса:
 
- johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py macspoof ifconfig '{"name":"wlan1"}'
+`johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py macspoof ifconfig '{"name":"wlan1"}'`
 
 #### modrealtek
 
@@ -453,27 +431,20 @@ MAC spoof позволяет подменять адрес интерфейса 
 
 ##### Запись в конфигурационном файле
 
-Формат записи довольно простой:
+Формат записи немного сложнее предыдущего:
 
+```
  {
-
      "name": "wlan1",
-
       "wireless": true,
-
       "macspoof": {
-
         "method": "modrealtek",
-
         "parameters": {
-
          "module_name": "8192cu"
-
         }
-
      }
-
-   }
+}
+```
 
 Разрешаем spoof на интерфейсе с именем wlan1 и указываем имя модуля, который надо перегружать.
 
@@ -481,7 +452,7 @@ MAC spoof позволяет подменять адрес интерфейса 
 
 В командную строку нужно передать JSON-строку с именем интерфейса и именем модуля для перегрузки:
 
-johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py macspoof modrealtek '{"name":"wlan1","module_name":"8192cu"}'
+`johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py macspoof modrealtek '{"name":"wlan1","module_name":"8192cu"}'`
 
 ### Написание собственных плагинов
 
