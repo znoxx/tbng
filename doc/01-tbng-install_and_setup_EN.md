@@ -1,40 +1,40 @@
 # TorBOX Next Generation
 
-##### Руководство по установке и настройке
+##### Install and setup guide
 
-## Введение
+## Introduction
 
-Этот документ описывает шаги по установке и настройке набора скриптов TorBOX Next Generation (далее TBNG) — простому и удобному средству для создания точек доступа в сеть Интернет с использованием псевдо анонимной сети TOR (The Onion Router).
+This document describes the steps for installing and configuring the TorBOX Next Generation (hereinafter TBNG) script set, a simple and convenient tool for creating access points to the Internet using the TOR (The Onion Router) pseudo-anonymous network.
 
-Предполагается, что пользователь:
+It is assumed that user:
 
-* В достаточной мере ориентируется в ОС Linux — умеет устанавливать пакеты и редактировать конфигурационные файлы.
+* Is sufficiently competent in the Linux OS — e.g. can install packages and edit configuration files.
 
-* Имеет представление о настройке сети в Linux.
+* Has an understanding about Linux network stack
 
-* Ознакомлен с описанием проекта TBNG.
+* Familiar with TBNG overview document
 
-Так же предполагается, что ОС полностью работает, нет проблем с драйверами и имеется доступ в интернет.
+It is also assumed, that OS is fully functional, there is no problems with drivers, including network ones and system can access the Internet.
 
-TBNG не предоставляет "готовые сборки", "работающие образы", а также никто не будет решать проблемы с драйверами, кроме самого пользователя. Это инструмент, расширяющий возможности  обеспечения приватности и да, требуются некоторые усилия для его правильной настройки.
+TBNG does not provide "pre-made images" or "working out-of-the box distribution" of any kind and no one will solve problems with drivers other than the user. It is a tool that enhances privacy and yes, it takes some effort to properly configure it.
 
-## Системные требования
+## System requirements
 
-* Операционная система Linux, работающая с SystemD (init.d, openrc не подходят).
+* SystemD powered Linux (OpenRC, Init.d are not supported and won't be in visible future)
 
-* Доступность Network Manager (хотя бы в пакетах стандартного репозитария ОС, если не используется в данный момент). Версия должна быть не младше 0.9.10.0.
+* Network Manager availability (at least in standart packages repository of operating system, if not used at the moment). The version must be at least 0.9.10.0.
 
-* Один сетевой интерфейс для доступа в Интернет (должен работать на момент установки).
+* One network interface for Internet access (should work at the time of installation).
 
-* Один сетевой интерфейс (возможно, виртуальный типа TUN/TAP) для клиентского соединения. В идеале он уже должен быть настроен и работать.
+* One network interface (virtual TUN/TAP also possible) for the client connection. Ideally, it should already be configured and working.
 
-*  Учетная запись без прав root (обычная учетная запись).
+* A non-root account (a regular user account).
 
-* Возможность получить права root (либо sudo, либо нужно знать пароль root).
+* Ability to get root (either sudo, or need to know the root password).
 
-Отличный вариант — ставить TBNG на свежеустановленную систему, где есть только стандартные пакеты.
+An excellent option is to put TBNG on a freshly installed system, where there are only standard packages.
 
-TBNG протестирован на следующем оборудовании:
+TBNG is tested on the following equipment:
 
 * Orange Pi PC 2, Armbian Ubuntu 16.04 unstable mainline kernel, Wifi 1 Realtek 8188EU, Wifi 2 Ralink 2800
 
@@ -44,39 +44,39 @@ TBNG протестирован на следующем оборудовании
 
 * Raspberry Pi 1, Raspbian@Debian Stretch, Wifi 1 RTL8188EU, Wifi 2 Ralink 2800
 
-* Разные платы под управлением Diet PI OS
+* Different boards under Diet Pi OS.
 
 * VPS x86-64, Ubuntu 16.04, Ethernet, VPN virtual interface
 
-Объем памяти для комфортной работы — 512 MB + Swap. Одноядерный процессор от 600..800 Мгц тоже достаточен для работы. 
+The amount of memory for comfortable work is 512 MB + Swap. A single-core processor from 600..800 MHz is also sufficient for operation.
 
-TBNG — это всего лишь скрипты. Основные потребители памяти — web-интерфейс и конечно же  I2P, который использует Java.
+TBNG is just a set of scripts. The main memory-hungry parts are  web-interface and of course I2P, which uses Java.
 
-## Термины и определения
+## Terms and assumptions
 
-Для определенности введем некоторые термины.
+Let's introduce some terms, just to be clear
 
-Сеть во "внешний мир" — Интернет будем называть **WAN**.
+We will call "outer" network (Internet) —  **WAN**.
 
-Сеть, которую будет создавать TBNG для доступа клиентов будем называть **LAN**.
+The network that TBNG will create for client access will be called **LAN**.
 
-Предположим, что устройство (компьютер, одноплатный компьютер) соединено с роутером, и имеет доступ в Интернет. Пусть роутер имеет адрес 192.168.1.1, а целевое устройство для TBNG получило WAN-адрес 192.168.1.x. Это может быть как проводной интерфейс, так и беспроводной, главное получить доступ в Интернет. 
+Let's assume that the device (computer, single board computer) is connected to a router, and has access to the Internet. Let the router have the address 192.168.1.1, and the target device for TBNG received the WAN address 192.168.1.x. It can be either a wired interface or wireless, the main thing is to get access to the Internet. 
 
-Адрес интерфейса LAN на стороне — 192.168.222.1, статический. 
+LAN interface on TBNG has static address — 192.168.222.1. 
 
-Также предположим, что пользователь Linux называется *johndoe*, соответственно домашняя директория будет называться */home/johndoe*.
+Also assume that the Linux user is called _johndoe_, so the home directory will be called _/home/johndoe_.
 
-Мы будем настраивать TBNG с двумя беспроводными сетевыми интерфейсами, чтобы проиллюстрировать настройку точки доступа на TBNG. На рисунке ниже представлен примерный вариант работы:
+We will configure TBNG with two wireless network interfaces to illustrate the configuration of the access point on TBNG. The following figure shows an example of work:
 
-![Пример конфигурации TBNG](images/image_2.png)
+![TBNG example configuration](images/image_2.png)
 
-## Установка файлов пакета TBNG
+## Getting TBNG project files
 
-Файлы проекта можно получить из репозитария GIT.
+Files must be cloned from GIT repository.
 
 `johndoe@linuxbox:~$ git clone https://github.com/znoxx/tbng`
 
-После выполнения команды в домашней директории появится поддиректория **_tbng_**.
+After executing the command, a directory **_tbng_** will appear in the home directory.
 
 ```
 johndoe@linuxbox:~$ ls -la tbng
@@ -95,33 +95,33 @@ drwxr-xr-x  4 johndoe johndoe 4096 Aug  4 14:05 setup
 drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views
 ```
 
-## Установка необходимых пакетов
+## Installation of required packages
 
-Перед конфигурацией нужно установить некоторые пакеты. Помимо стандартных пакетов потребуется ещё **_Java_** для I2P и самое главное — **_node.js_** и **_npm_*** для работы с web-интерфейсом.
+Before configuration, installation of several packages is require. Also one will need **_Java_** for I2P and (and this is very importan) — **_node.js_** и **_npm_*** to get web-interface functionality.
 
-Версия node.js — не младше 4.2.1.
+Node.js version — not earlier than 4.2.1.
 
-Протестированная версия Java — 8 для ARM платформ с сайта Oracle
+Tested Java version — 8 for ARM platforms from Oracle website.
 
-Если в системе уже установлены **_tor_** и **_privoxy_** — рекомендуется вычистить их вместе с конфигурационными файлами и установить заново с "заводскими настройками".
+If system has alredy **_tor_** и **_privoxy_** installed — it is recommended to purge them with configuration files and re-install with default "factory" settings.
 
-Для пользователей Debian/Ubuntu установка пакетов автоматизирована, для пользователей других дистрибутивов — пакеты нужно установить тем способом, который принят в системе.
+For Debian/Ubuntu users, the installation of packages is automated, for users of other distributions — the packages need to be installed via system package manager.
 
-### Автоматическая установка для Debian/Ubuntu
+### Automatic install for Debian/Ubuntu
 
-Команда автоматической установки пакетов выполняется с правами суперпользователя:
+The automatic package installation command is executed with superuser privileges:
 
 `johndoe@linuxbox:~$ sudo run-parts tbng/setup/apt`
 
-Скрипты автоустановки пакетов выполняются ощутимое время. В процессе будут удалены tor и privoxy, причём их конфигурация будет сохранена в резервную копию. Также будет подключено несколько дополнительных репозиториев для Java и node.js.
+Auto-install scripts run for a considerable amount of time. The process will remove tor and privoxy, and their configuration will be saved to a backup. There will also be a couple of additional Java repositories and node.js.
 
-#### Дополнительные шаги для Raspbian (Debian Stretch) на Raspberry PI 1
+#### Additional steps for Raspbian (Debian Stretch) on Raspberry PI 1
 
-Для начала стоит упомянуть, что для RPI 1 работа проверялась только в новом Debian Stretch. Во-первых наконец-то появился вариант headless-системы, а во-вторых это просто самый новый дистрибутив, который и следует использовать.
+First of all, it's worth mentioning that for RPI 1 the work was checked only in the new Debian Stretch. The version of the headless system finally became available, and also it's just the newest distribution, which should be used.
 
-C Raspberry PI 1 всё не так просто и потребуются дополнительные действия *даже* при автоматической установке.
+Raspberry PI 1 requires additional steps *even* with automatic installation of required packages.
 
-Скрипт установки node.js сообщит, что для архитектуры armv6l сборки node.js нет, и будет установлена версия из репозитория Stretch/Raspbian. Её нужно будет удалить и установить более новую версию:
+The node.js installation script reports that there is no node.js for the armv6l architecture, and a version from Stretch/Raspbian repository will be installed. It _must_ be replaced with a newer version:
 
 ```
 johndoe@linuxbox:~$ sudo apt-get purge nodejs
@@ -131,112 +131,112 @@ johndoe@linuxbox:~$ sudo apt-get install npm
 johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs
 ```
 
-В принципе, этого должно быть достаточно для полноценной работы.
+Generally those steps are sufficient to continue.
 
-### Список пакетов для ручной установки в других дистрибутивах
+### List of packages for manual install in other distributions
 
-Пакеты именованы так, как принято в Debian/Ubuntu. Возможно, некоторые имена не совпадают, также возможно потребуется установка модулей  python3 через pip. Тем не менее, этого списка должно быть достаточно для  подготовки пакетов.
+Packages are named as in Debian / Ubuntu. Perhaps some names do not match, you may also need to install the python3 modules via pip. However, this list should be sufficient to find all required packages.
 
 **_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface._**
 
-Как уже упоминалось, нужно установить **_Java_** и **_npm_**.
+As it mentioned before,  **_Java_** and **_npm_** must be installed also.
 
-Вообще, в директории setup/apt есть набор скриптов, выполняющий установку пакетов, так что пользователь другого дистрибутива без проблем определит те действия, которые нужно сделать в его системе, базируясь на этих данных.
+In general, there is a set of scripts in the setup/apt directory that installs packages, so that the user of another distribution will easily identify the actions that need to be performed on his system based on this data.
 
-Помимо установки пакетов есть ещё одно важное действие, которое нужно не забыть сделать при использовании не-Debian/Ubuntu — а именно установить SUID бит на **_nmcli_**.
+In addition to installing packages, there is one more important action that you should not forget to do when using non-Debian/Ubuntu — set SUID bit on **_nmcli_**.
 
-Делается это примерно так:
+Can be done like this:
 
 ```
 NMCLILOCATION=$(which nmcli)
 chmod u+s,a-w $NMCLILOCATION
 ```
 
-Это нужно для правильной работы веб-интерфейса и некоторых других действий.
+This is required for correct web-interface operation and some other actions.
 
-## Проверка настройки сетевых интерфейсов
+## Network interfaces operation check-list
 
-Перед конфигурированием TBNG нужно убедиться, что сетевые интерфейсы, "вовлеченные" в работу настроены правильно. Как уже говорилось, у нас две зоны — LAN и WAN.
+Before configuring TBNG, you need to make sure that the network interfaces "involved" in the work are configured correctly. As already mentioned, we have two zones - LAN and WAN.
 
-LAN — это клиенты TBNG, WAN — "внешний мир". Для определенности и согласно рисунку выше интерфейс **wlan0** это LAN, **wlan1** — WAN.
+LAN is used for TBNG clients, WAN — "outer world". For consitency and according to figure abouve **wlan0** is LAN, **wlan1** — WAN.
 
-В этом случае:
+In this case:
 
-* **wlan0** должен быть настроен, как статический адрес в /etc/network/interfaces (Для Debian/Ubuntu. Для других ОС — согласно документации). Также *он должен быть UNMANAGED* для Network Manager. Как правило внесение данных в /etc/network/interfaces и перезапуск Network Manager приводят к желаемому результату.
+* **wlan0** must be configured with static addres in  /etc/network/interfaces (For Debian/Ubuntu. For other OS, please consult your documentation). Also *it must be UNMANAGED* for Network Manager. Usually, listing interface in /etc/network/interfaces Network Manager restart will make interface to have this unmanaged state.
 
-* **wlan1** в нашем случае *должен быть MANAGED* для Network Manager. В этом случае возможно управление через web-интерфейс — соединение с беспроводными сетями и сброс.
+* **wlan1** in our case *must be MANAGED* for Network Manager. This will allow connection to WiFi networks in web-interface and interface resetting (also via web-interface).
 
-Если интерфейс WAN — проводной, то нужно позаботиться о том, что он настроен. Это можно сделать либо с помощью Network Manager, либо через /etc/network/interfaces.
+If WAN interface is wired, one must take care to configure it. It can be done via Network Manager, or via /etc/network/interfaces.
 
-## Установка hostapd и dnsmasq
+## Setting up hostapd and dnsmasq
 
 ### dnsmasq
 
-Пакет dnsmasq выполняет много полезных функций, но в нашем случае он нужен для двух важных целей:
+The dnsmasq package performs many useful functions, but in our case it is needed for two important purposes:
 
-* Раздавать IP адреса по dhcp в зоне LAN
+* Assign IP addresses via dhcp in LAN zone.
 
-* Кэшировать запросы к DNS
+* Cache DNS requests
 
-dnsmasq можно установить самостоятельно и настроить, однако в комплект TBNG входит скрипт, помогающий его настроить.
+dnsmasq can be instaled and configured manually , but TBNG do have helper setup script for it.
 
-Запускать его (скрипт настройки) нужно с правами суперпользователя. Работу его проще объяснить на примере:
+Script must be run with superuser rights (root). Let's figure out how, using an example:
 
 `johndoe@linuxbox:~$ sudo tbng/setup/configure_dnsmasq.py -i wlan0 -s apt -b 192.168.222.10 -e 192.168.222.30 -m 255.255.255.0`
 
-Здесь мы объявляем, что dnsmasq будет работать на интерфейсе wlan0 (-i wlan0), устанавливать мы его будем из apt-репозитария (-s apt), адреса будут выделяться начиная с 192.168.222.10 по 192.168.222.30 (опции -b, -e) и маска подсети будет 255.255.255.0 (-m).
+Here we claim, that dnsmasq will work on interface wlan0 (-i wlan0), we will install it from apt-repository (-s apt), addresses will be assigned from 192.168.222.10 to 192.168.222.30 (options -b, -e) and subnet mask will be 255.255.255.0 (-m).
 
-Также возможна опция -s yum — в этом случае dnsmasq устанавливается через yum. Либо можно установить его вручную и указать опцию -s none. В этом случае скрипт пропустит этап установки и сразу перейдет к конфигурации.
+There is also possible option "-s yum" — in this case dnsmasq installed via yum. Or one can use option "-s none". In this case install step will be skipped and only configuration wiil be applied.
 
-Если после отработки команда
+If command execution succeeds:
 
 `johndoe@linuxbox:~$ sudo systemctl restart dnsmasq`
 
-выполнилась без ошибки — значит установка завершена успешно. Если ваш LAN-интерфейс проводной, то можно сразу подключить к нему устройство и проверить, что адреса выдаются. Если же нет — нужно настроить беспроводную точку доступа.
+Setup is completed successfully. If LAN interface is wired, one can connect client to TBNG immediately and check, that address is assigned. If not — one must configure wireless access point.
 
 ### hostapd
 
-Если интерфейс LAN беспроводной, то в большинстве случаев понадобится точка доступа. Почти все современные дистрибутивы содержат этот пакет и в Интернете масса инструкций по настройке. 
+If LAN interface is wireless, then in most cases one will need a wireless access point. Almost all modern distributions contain this package and there are lots of instructions on setting up on the Internet.
 
-Тем не менее TBNG содержит вспомогательные скрипт для настройки точки доступа. 
+However, TBNG contains a helper script to configure the access point.
 
-Пользователю нужно настроить hostapd на зону LAN (в нашем примере интерфейс wlan0) и сделать он может это либо с помощью стандартного пакета системы, либо с помощью вспомогательного скрипта.
+The user needs to configure the hostapd for the LAN zone (in our case wlan0 interface). This can be done via standart hostapd or with helper script.
 
-Рассмотрим пример:
+Let's check an example:
 
 `johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a arm -i wlan0 -n my_access_point -p mysuperpassword -d nl80211`
 
-Опции, которые используются в команде:
+Options, used in this command:
 
-* -a arm — использовать архитектуру arm. Это подходит для Orange PI, RP2 и выше. Для RPI первой версии нужно указать armvl6, а для настольных компьютеров x86 или x86_64. Для Orange Pi PC2 — aarch64.
+* -a arm — use arm architecture. This is suitable for Orange PI, RP2 and above. For the RPI of the first version, you need to specify armvl6, and for desktop computers x86 or x86_64. For Orange Pi PC2 — aarch64.
 
-* -i wlan0 — интерфейс
+* -i wlan0 — interface
 
-* -n — имя точки доступа (вашей будущей wifi сети)
+* -n — access point name (your future WiFi network)
 
-* -p — пароль для сети
+* -p — password for network
 
-* -d — драйвер. В версии устанавливаемой скриптом есть как драйвер **nl80211 **(стандартный), так и **rtl871xdrv **для беспроводных адаптеров Realtek. Соответственно, если используется адаптер Realtek, нужно использовать его.
+* -d — driver. In the version installed by the script there is both a driver **nl80211** (standard) and **rtl871xdrv** for Realtek wireless adapters. So in case one have Realtek WiFi, appropriate driver must be used.
 
-Вообще, использование скрипта для новичка путь более предпочтительный — все настройки делаются автоматически, бинарный файл статический, поддержаны все популярные архитектуры.
+In general, using a script for a beginner is the preferred way — all settings are done automatically, the binary file is static, all popular architectures are supported.
 
-После установки проверить работу точки доступа можно командой (если использовался скрипт):
+After installation, you can check the operation of the access point with a command (if one used a script):
 
 `johndoe@linuxbox:~$ sudo systemctl restart hostapd-tbng`
 
-Если же использовался hostapd из пакетов:
+If one used standard hostapd:
 
 `johndoe@linuxbox:~$ sudo systemctl restart hostapd`
 
-Если точка доступа видна — установка выполнена успешно. Конечно бывает так, что сеть видна, но соединения нет, но это уже вопрос к работе оборудования.
+If the access point is visible, the installation was successful. Of course it happens that the network is visible, but there is no connection, but this is already a question to the operation of the equipment.
 
-При пользовании скрипта бинарый файл можно найти в папке **_tbng/bin_**, а конфигурацию в **_tbng/config_**. В случае возникновения проблем можно запустить бинарник из командной строки и посмотреть, что происходит.
+When using the script, the binary file can be found in the folder **_tbng/bin_**, and the configuration in **_tbng/config_**. In case of problems, you can run the binary from the command line and see what happens:
 
 `johndoe@linuxbox:~$ sudo tbng/bin/hostapd-tbng tbng/config/hostapd-tbng.conf`
 
-## Подготовка конфигурационных файлов
+## Configuration files preparation
 
-Перед началом работы *необходимо* подготовить конфигурационные файлы.  TBNG поставляется только с примерами файлов, из них нужно создать реальные конфигурационные файлы. Делается это простым копированием из файлов configfile.json.example в configfile.json.
+One *must* prepare configuration files. TBNG is supplied only with sample files, from which you need to create real configuration files. This is done by simply copying from configfile.json.example files in configfile.json.
 
 ```
 johndoe@linuxbox:~$ cp tbng/config/tbng.json.example tbng/config/tbng.json
@@ -244,15 +244,15 @@ johndoe@linuxbox:~$ cp tbng/config/user.json.example tbng/config/user.json
 johndoe@linuxbox:~$ cp tbng/config/torcountry.json.example tbng/config/torcountry.json
 ```
 
-Далее необходимо отредактировать файлы, по крайней мере tbng.json, так как там содержится ключевая информация, необходимая для работы.
+Next, you need to edit the files, at least tbng.json, because it contains the key information necessary to work.
 
-### Формат конфигурационных файлов
+### Configuration files format
 
-Формат файлов — [JSON (Javascript Object Notation)](http://json.org/example.html). Их можно редактировать в обычном текстовом редакторе. Самое главное — строго соблюдать синтаксис JSON. К сожалению, формат JSON не предусматривает комментарии.
+The format used for configuration files is [JSON (Javascript Object Notation)](http://json.org/example.html). They can be edited in a regular text editor. The most important thing is to strictly follow the syntax of JSON. Unfortunately, the JSON format does not provide comments.
 
 ##### tbng.json
 
-Самый главный конфигурационный файл. Его, как минимум, необходимо привести в соответствие с конфигурацией сетевых интерфейсов на устройстве с TBNG. Рассмотрим пример:
+The most important configuration file. At least it must be aligned with network interface configuration on device with TBNG. Let's take an example:
 ```
 {
   "cputemp": "default",
@@ -276,7 +276,7 @@ johndoe@linuxbox:~$ cp tbng/config/torcountry.json.example tbng/config/torcountr
 }
 ```
 
-Тут перечислены основные обязательные поля. 
+Below mandatory fields are listed.
 
 ###### cputemp
 
