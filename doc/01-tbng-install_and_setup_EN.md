@@ -1,6 +1,6 @@
 # TorBOX Next Generation
 
-##### Install and setup guide
+##### Install and Setup Guide
 
 ## Introduction
 
@@ -97,7 +97,7 @@ drwxr-xr-x  2 johndoe johndoe 4096 Aug  4 14:05 views
 
 ## Installation of required packages
 
-Before configuration, installation of several packages is require. Also one will need **_Java_** for I2P and (and this is very importan) — **_node.js_** и **_npm_*** to get web-interface functionality.
+Before configuration, installation of several packages is require. Also one will need **_Java_** for I2P and (and this is very importan) — **_node.js_** и **_npm_** to get web-interface functionality.
 
 Node.js version — not earlier than 4.2.1.
 
