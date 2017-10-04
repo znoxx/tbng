@@ -32,7 +32,7 @@ by _SystemD_, having _Network Manager_ and _Python3_. Full list of system requir
 
 ### Quick start
 
-Clone this repository, get familiar with docs in following order:
+Clone this repository, get familiar with documentation (doc folder) in following order:
 
 * Overview
 * Install and setup guide
