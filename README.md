@@ -25,6 +25,15 @@ make
 
 Установите TBNG согласно документации, перезагрузите устройство и начинайте использовать!
 
+Вы получите возмоность:
+
+* "Прозрачно" использовать TOR на любом подключенном устройстве.
+* Получать доступ к сети I2P.
+* Блокировать нежелательный трафик (баннеры).
+* Работать как через проводной канал, так  и беспроводной (зависит от используемого оборудования).
+* Управлять системой через web-интерфейс.
+
+
 ## EN
 TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and almost effortless creation of [TOR](https://torproject.org) and [I2P](https://geti2p.com) Access Point (wireless and wired).
 
@@ -48,4 +57,12 @@ make
 Or get familiar with it [here](http://tbng.ml) — snapshots are published regularily.
 
 Install TBNG according to documentation, reboot the device and start using it!
+
+You will be able to:
+
+* "Transparently" use TOR on any connected device.
+* Access the I2P network.
+* Block unwanted traffic (banners).
+* Work both through a wired channel, and wireless (depends on the equipment used).
+* Manage the system through the web-interface.
 
