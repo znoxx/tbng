@@ -3,67 +3,67 @@
 ##### Troubleshooting And FAQ
 
 
-В зависимости от конфигурации оборудования, версии ядра и компонент пользователь может столкнуться с некоторыми трудностями при работе с TorBOX Next Generation (TBNG). Здесь будут собираться различные рецепты устранения проблем и ответы на часто задаваемые вопросы. Помните, что файлы журнала системы (логи) очень часто облегчают задачу и помогают устранить причину.
+Depending on the hardware configuration, the kernel version and the component, the user may encounter some difficulties when working with TorBOX Next Generation (TBNG). Here, various recipes for problem solving and answers to frequently asked questions will be collected. Remember that system log files (logs) very often facilitate the task and help to eliminate the cause.
 
-## Причины проблем
+## Causes of problems
 
-Существует несколько причин, из-за которых TBNG не работает или работает неправильно:
+There are several reasons why TBNG does not work or works incorrectly:
 
-* Проблемы с драйверами устройств
+* Driver problems
 
-* Неправильный конфигурационный файл
+* Wrong configuration file
 
-* Нецелевое использование TBNG
+* Misuse of TBNG
 
-* Конфликт в правилах Firewall (iptables)
+* Conflict in Firewall rules (iptables)
 
-* Особенности работы используемых компонентов проекта
+* Features of the project components used
 
-## Устранение проблем
+## Problem resolution
 
-### Решение проблем с драйверами
+### Driver problem resolution
 
-На момент написания этого документа ОС Linux обзавелась достаточным количеством драйверов устройств, в том числе и беспроводных сетевых адаптеров, чтобы обеспечить работу почти любого устройства из присутствующих на рынке.
+At the time of this writing, Linux has acquired a sufficient number of device drivers, including wireless network adapters, to ensure the operation of almost any device on the market.
 
-Тем не менее, перед установкой TBNG рекомендуется проверить, работает ли ваше сетевое оборудование, в частности, поддерживает ли беспроводной адаптер режим "точки доступа". 
+However, before installing TBNG, it is recommended to check if your network equipment is working, in particular, whether the wireless adapter supports the "access point" mode.
 
-Так, например, беспроводные сетевые карты Realtek в большинстве своём умеют работать в этом режиме, но сервис **_hostapd _**в "дефолтных" репозитариях пакетов как правило собран без поддержки режима для Realtek. Тут можно пойти тремя путями — поискать нужную версию в альтернативных репозитариях, либо установить с помощью утилиты **_configure_hostapd.py_**, входящей в комплект TBNG, ну и наконец — собрать самому.
+For example, Realtek wireless network cards are mostly able to work in this mode, but the service **_hostapd_** in "default" package repositories is usually compiled without support for Realtek mode. Here you can go in three ways — to search for the desired version in alternative repositories, or install it using the utility **_configure_hostapd.py_**, which is bundled with TBNG, and finally —  to build yourself.
 
-По этой [ссылке](https://github.com/pritambaral/hostapd-rtl871xdrv) вполне достаточно информации по этой проблеме. 
+On this [link](https://github.com/pritambaral/hostapd-rtl871xdrv) there is enough information on this problem.
 
-### Исправление ошибок в конфигурационном файле
+### Correcting errors in the configuration file
 
-Конфигурационный файл TBNG расположен в директории config и называется tbng.conf. 
+The TBNG configuration file is located in the config directory and is called tbng.json. 
 
-Формат файла — [JSON](https://ru.wikipedia.org/wiki/JSON) (JavaScript Object Notation). Синтаксис файла довольно строгий, так что ни одна команда не сможет быть выполнена, если файл содержит ошибку. Проверить синтаксис довольно просто — достаточно дать команду:
+File format — [JSON](https://ru.wikipedia.org/wiki/JSON) (JavaScript Object Notation). The syntax of the file is quite strict, so that no command can be executed. Check the syntax is quite simple — just give the command:
 
 `sudo ./tbng/engine/tbng.py chkconfig`
 
-Она проверит файл на валидность. 
+It will validate the file.
 
-Бывает так, что при установке файл забывают создать, точнее — скопировать из примера и отредактировать под свои нужды. Файл необходим для работы, так что создавать его нужно обязательно.
+Sometimes during installation, the file is forgotten to create. Just copy it from the example and edit to your own needs. The file is required for work, so it is necessary to create it.
 
-### Нецелевое использование TBNG
+### Misuse of  TBNG
 
-Проект всё-таки рассчитан на пользователя, который понимает, что делает. Некоторые факты:
+The project is still designed for the user who understands what one is doing. Some facts:
 
-* TBNG довольно агрессивно и часто меняет правила firewall (iptables), в частности, при переключении режимов работы.
+* TBNG is quite aggressive and often changes firewall rules (iptables), in particular when switching modes of operation.
 
-* Ваше устройство приобретает функциональность роутера/точки доступа, что вносит некоторые ограничения в привычный стиль работы.
+* Your device acquires the functionality of the router/access point, which introduces some limitations to the familiar style of work.
 
-* TBNG, как и любой другой программный продукт не дает стопроцентной защиты от слежки, сокрытия "виртуальной личности" и прочих рисков.
+* TBNG, like any other software product does not give one hundred percent protection from surveillance, hiding the "virtual personality" and other risks.
 
-Если что-то перестало работать — перечитайте документацию, особенно раздел "Общее описание" для понимания принципов работы.
+If something does not work, read the documentation, especially the "General Description" section for understanding the principles of work.
 
-### Конфликт в правилах Firewall
+### Conflict in Firewall rules
 
-Брандмауэр iptables, который используется в TBNG служит не только для блокировки соединений, но и для маршрутизации. Точка доступа, которая организуется средствами TBNG использует Network Address Translation.
+The iptables firewall, which is used in TBNG, serves not only for blocking connections, but also for routing. The access point, which is organized by means of TBNG, uses Network Address Translation.
 
-Например, ваша домашняя сеть использует диапазон 192.168.1.x. В этом случае допустимо назначить диапазон адресов вида 192.168.2.x для TBNG. В этом случае первый диапазон будет "виден" из второго в случае использования режима "Direct". В режиме "TOR" или "Privoxy" первый диапазон уже недоступен, ибо TCP-пакеты "заворачиваются" в TOR, а он понятия не имеет о том, что такое ваш принтер, имеющий адрес, допустим 192.168.1.55.
+For example, your home network uses the 192.168.1.x range. In this case, it is possible to assign an address range of the form 192.168.2.x for TBNG. In this case, the first range will be "visible" from the second when using the "Direct" mode. In the "TOR" or "Privoxy" mode, the first band is no longer available, because TCP packets are "wrapped" in TOR, and it has no idea what your printer with an address is, let's say 192.168.1.55.
 
-Никто не запрещает включить дополнительные сервисы на устройстве, где установлен TBNG, но они должны быть правильно сконфигурированы. Самый простой путь — в конфигурационном файле tbng.conf "открыть" соответствующие порты для сетей LAN и WAN.
+No one forbids the inclusion of additional services on the device where TBNG is installed, but they must be properly configured. The easiest way is to "open" the corresponding ports for LAN and WAN in the tbng.conf configuration file.
 
-Вот пример конфигурации, когда TBNG установлена на арендованном сервере (VPS), который используется как VPN-сервер.
+Here is an example of a configuration where TBNG is installed on a leased server (VPS), which is used as a VPN server.
 
 ```
 {
@@ -80,149 +80,148 @@
   ],
   "allowed_ports_tcp" : [6022,3000,7657,9050,8118,4200],
   "allowed_ports_udp" : [53],
-  "allowed_ports_wan_tcp" :[22,6022,443,**992,1194,5555**],
-  "allowed_ports_wan_udp" :[**500,4500**],
+  "allowed_ports_wan_tcp" :[22,6022,443,992,1194,5555],
+  "allowed_ports_wan_udp" :[500,4500],
    "lock_firewall": true
 }
 ```
 
-Во "внешней сети" дополнительно разрешены порты UDP 500,4500, а также TCP 1194 и 5555, что соответствует разрешенным портам для VPN L2TP.
+In the "external network", UDP ports 500, 4500, as well as TCP 1194 and 5555 are additionally allowed, which corresponds to the authorized ports for VPN L2TP.
 
-Никто не запрещает "открыть" эти порты напрямую через iptables, но нужно помнить во-первых о порядке применения правил, а во-вторых то, что TBNG часто переписывает правила firewall для обеспечения функциональности. Так что самый безопасный способ "открыть порт"  — добавить его в конфигурационный файл.
+Nobody forbids "opening" these ports directly through iptables, but you need to remember first about the order of application rules, and secondly, that TBNG often rewrites the firewall rules to ensure functionality. So the safest way to "open a port" is to add it to the configuration file.
 
-### Особенности работы используемых компонентов проекта
+### Features of the project components used
 
-TBNG использует большое количество компонент — это и Network Manager, и TOR ,и Privoxy. 
+TBNG uses a large number of components — it's Network Manager, TOR, and Privoxy. 
 
-Поскольку нет привязки к конкретной версии (главное — не пользоваться откровенно старыми) — эти самые компоненты могут в некоторых случаях работать неправильно "из коробки". Все случаи "подобного поведения" выносятся в FAQ, так что имеет смысл заглянуть туда в первую очередь.
+Since there is no binding to a particular version (the main thing is not to use frankly old ones) — these same components can in some cases work incorrectly out of the box. All cases of "similar behavior" are taken to the FAQ, so it makes sense to look there first.
 
-Второй момент, на который стоит обратить внимание — это функционал по подмене MAC-адресов на адаптерах. Кратко — это работает не всегда и не везде. Именно поэтому функционал вынесен в механизм плагинов и является опциональным. Препятствия для работы чинят как драйвера устройств, так и ядро и Network Manager. Другими  словами то, что работает на Debian Jessie может на заработать на Ubuntu. Или потребуется дополнительная настройка в Debian Stretch. 
+The second point, which is worth paying attention to is the functionality for replacing MAC-addresses on adapters. Briefly — it does not always work and not everywhere. That is why the functional is put into the plug-in mechanism and is optional. Obstacles to the job are repaired as device drivers, and kernel and Network Manager. In other words, what works on Debian Jessie can earn on Ubuntu. Or, you need an additional configuration in Debian Stretch.
 
-Для беспроводных модулей Realtek, например, требуется перегрузка модуля ядра. В Ubuntu это приводит к переименованию интерфейса, а это, в свою очередь полностью "рушит" конфигурационный файл. Каждый случай должен рассматриваться отдельно и общего рецепта просто нет. Возможно написание собственных плагинов по подмене адреса, опять-таки, если пользователь уверен в своих силах.
+For Realtek wireless modules, for example, kernel module reload is required. In Ubuntu, this causes the interface to be renamed, which in turn completely destroys the configuration file. Each case should be treated separately and there is simply no general recipe. It is possible to write your own plugins by changing the address, again, if the user is confident in their abilities.
 
-## FAQ — Часто Задаваемые Вопросы
+## FAQ — Frequently Asked Questions
 
-##### Не работает TOR. Что делать ?
+##### TOR is not working! What to do?
 
-Сервис TOR иногда отказывается стартовать в системе или постоянно перезапускается. Причина во взаимодействии с systemd.  Такое может быть при "слишком новом ядре", или наоборот — при "слишком старом".
+Service TOR sometimes refuses to start in the system or constantly restarts. The reason is in interaction with systemd. This may be the case with a "too new kernel", or vice versa - with "too old".
 
-Встречалось 2 проблемы с TOR. 
+There were 2 problems with TOR.
 
-Диагностика производится с помощью syslog (/var/log/syslog).
+Diagnostics is performed using syslog (/var/log/syslog).
 
-Первая — "падение" с ошибкой NO_NEW_PRIVILEGES. Исправляется довольно просто — создаем файл:
+The first one is a fail with NO_NEW_PRIVILEGES error. The fix is quite simple — create a file:
 
 `/etc/systemd/system/tor@.service.d/10-no-new-privileges.conf`
 
-С содержимым:
+With contents:
 
 ```
 [Service]
 NoNewPrivileges=no
 ```
 
-Теперь перезапускаем TOR — падать должно перестать.
+Now your should restart TOR — it should run normally.
 
-Вторая проблема — ошибки, связанные с APPARMOR, например:
-
+Second problem — errors, related to APPARMOR, e.g.:
 
 `tor@default.service: Failed at step APPARMOR spawning /usr/bin/tor: No such file or directory`
 
-Как утверждает [эта ссылка](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808296), проблема решается редактированием файла
+As written [here](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808296), problem is solved with editing file:
 
 `/lib/systemd/system/tor.service`
 
-И заменой ExecStart=/bin/true на ExecStart=/usr/bin/tor (ну или где расположен бинарный файл в вашей системе). В частности, проявляется в Debian Stretch
+And replacing ExecStart=/bin/true to ExecStart=/usr/bin/tor (or wherever TOR is located in your system). Actually it shows up in Debian Stretch on Raspberry Pi.
 
-#### Невозможно соединиться с WiFi сетью (внешняя сеть)
+#### Unable to connect to WiFi network (external network)
 
-Симптомы следующие — список WiFi виден, но при попытке соединения, даже если пароль введен правильно — система либо не отвечает, либо выдает ошибку соединения.
+The symptoms are as follows — the list of WiFi is visible, but when trying to connect, even if the password is entered correctly — the system either does not respond, or gives a connection error.
 
-Для начала нужно проверить права на файл nmcli. У него должен быть установлен suid-бит. То есть файл должен всегда запускаться с привилегиями root. Да, это не безопасно, но в противном случае придётся настраивать массу конфигурационных файлов, причём без особой надежды на успех.
+First, you need to check the permissions on the nmcli file. It must have a suid bit set. That is, the file should always be run with root privileges. Yes, it's not safe, but otherwise you'll have to configure a lot of configuration files, and without much hope for success.
 
-Итак, файл должен иметь маску прав:
+File should have mask like this:
 
 ```
 $ ls -la /usr/bin/nmcli
 -r-sr-xr-x 1 root root 600816 Feb 22 2017 /usr/bin/nmcli
 ```
 
-Если нет "s", то, скорее всего система претерпела обновление и файл был заменен новой версией. 
+If there is no "s", then most likely the system has undergone an update and the file has been replaced with a new version.
 
-Выполняем команду:
+Run following command:
 
 `sudo chmod u+s,a-w /usr/bin/nmcli`
 
-Либо, "починить" nmcli можно с помощью команды tbng:
+Or you can fix this with TBNG command:
 
 `sudo tbng/engine/tbng.py patch_nmcli`
 
-Если данный способ не помог, попробуйте внести в файл:
+If this method does not help, try adding to the file:
 
 `/etc/NetworkManager/NetworkManager.conf`
 
-Строчки:
+Following lines:
 
 ```
 [device]
 wifi.scan-rand-mac-address=no
 ```
 
-Более подробную информацию можно получить по [этой ссылке](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=842422).
+More info [here](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=842422).
 
-#### Невозможно соединиться с устройством, где установлена TBNG
+#### Unable to connect to the device where TBNG is installed
 
-Тут причин несколько:
+There could be several reasons:
 
-* Не сконфигурирован сетевой интерфейс
+* Network interface is not configured
 
-* Не работает точка доступа
+* Access point is not working
 
-* Не раздаются адреса по dhcp
+* DHCP does not assign addresses
 
-Всё это не имеет отношения к TBNG, так как connectivity — забота пользователя. Лучший способ — подключиться через консоль (монитор, последовательный порт) и посмотреть на конфигурацию. На всякий случай:
+All this has nothing to do with TBNG, since connectivity is user care. The best way is to connect via the console (monitor, serial port) and look at the configuration. Just in case:
 
-* Сетевые адреса LAN должны быть статическими
+* LAN addresses on TBNG must be static
 
-* Они не должны управляться Network Manager
+* They must be unmanaged in Network Manager
 
-* **_dnsmasq_** должен раздавать адреса с этих интерфейсов
+* **_dnsmasq_** should use those adresses to assign DHCP
 
-#### Не работает Mac Spoof
+#### MAC Spoof does not work.
 
-Вообще, то что он работает — большая удача. Тут мало что можно сделать, хотя иногда помогает рецепт "ремонта" Network Manager из вопроса "Невозможно соединиться с WiFi сетью "внешняя сеть"" — добавление строчки в конфигурацию Network Manager. 
+Actually it is kind of expected behaviour. Not much can be done here, but sometimes recipe from  "Unable to connect to WiFi network (external network)" may help (adding line to NM config). 
 
-Статистика такая — в Ubuntu 16.04 mac spoof не работал из-за Network Manager вообще, в Debian Jessie — работал прекрасно в любом режиме spoof'a, в Debian Stretch — заработал после редактирования конфигурации Network Manager. 
+Statistics — in Ubuntu 16.04 mac spoof does not work due to Network Manager, in Debian Jessie — worked fine, in Debian Stretch — worked with NM config changes. 
 
-#### Скорость канала TOR очень маленькая
+#### Speed of TOR is so low
 
-Во время тестирования мы не видели скорости через TOR быстрее, чем 0.5мбит/c. TOR не предназначен для постоянного использования by-design.
+Speed faster than 0.5Mbit/s was not observed at all. TOR is not intended for constant usage by-design.
 
-#### Ваши настройки точки доступа для hostapd-tbng не правильные. У меня лучше.
+#### Your Access Point settings are not optimal. Mine is better!
 
-Настройки выбраны для *большинства* адаптеров. Отредактируйте файл :
+Settings are chosen to cover *majority* of devices. One can edit file (in case hostapd-tbng is used):
 
 `tbng/config/hostapd-tbng.conf`
 
-на свой вкус, если пользуетесь hostapd-tbng и внесите ваши собственные.
+and introduce changes of choice. 
 
-#### Можно ли запускать tbng из под root ?
+#### Can TBNG run from root account ?
 
-Сам "движок" работает только с sudo. Но web-интерфейс запускать от root точно не надо. Это НЕ безопасно.
+Engine itself runs with sudo only. But web-interface should NOT run under root. It is not safe..
 
-#### У меня сервер, арендованный у провайдеа. Физически у него 1 интерфейс, но есть еще виртуальный — tun0 для VPN. Будет ли работать TBNG ?
+#### I have a server leased from the provider. Physically, it has 1 interface, but there is also a virtual interface — tun0 for VPN. Will TBNG work?
 
-Да будет. В конфигурации нужно указать, что WAN интерфейс "смотрит в Интернет", а tun0 это LAN. Так, клиенты VPN будут видеть интерфейс точки доступа и получать интернет-траффик с возможностью использования TOR.
+It should. In the configuration, you need to specify that the WAN interface "looks on the Internet", and tun0 is the LAN. So, VPN clients will see the access point's interface and receive Internet traffic with the possibility of using TOR.
 
-Правда тут есть несколько подводных камней. Некоторые VPN не присваивают адреса интерфейсу, или вообще стартуют поздно, так что TBNG может стартовать раньше. Тут уже придется либо менять очередность старта, либо перестартовать **_tbng helper_** в самом конце, чтобы он увидел все сетевые интерфейсы.
+But, there are several pitfalls. Some VPNs do not assign addresses to the interface, or generally start late, so TBNG can start earlier. Here you will either have to change the order of the start, or restart **_tbng helper_** at the very end to see all the network interfaces.
 
-#### Я пытаюсь переключить интерфейс WAN на другой, а всё зависает.
+#### I'm trying to switch the WAN interface to another, and everything hangs.
 
-Скорее всего интерфейс не сконфигурирован или отсутствует сетевой кабель/подключение. Не нужно переключаться на заведомо неработающие интерфейсы. Если они не используются — уберите их из конфигурационного файла, чтобы не запутаться.
+Most likely the interface is not configured or there is no network cable/connection. Do not switch to deliberately broken interfaces. If they are not used — remove them from the configuration file, so as not to get confused.
 
-#### Какой USB WiFi выбрать ?
+#### What USB WiFi should I buy?
 
-Общий ответ — тот, что будет работать с вашим ядром. 
+General answer — one which will work with your kernel. 
 
-Более развернутый — Ralink 2800 не доставлял никаких хлопот, работал во всех режимах, переживал подмену mac-адреса (везде, кроме Ubuntu 16.04 из-за её Network Manager). Однако, копеечный Realtek 8192CU, 8188CUS позволил обойтись одним адаптером, ибо работал в [Concurrent Mode](http://znoxx.me/2017/09/09/dvukhgholovyi-realtek/). Всё зависит от ваших целей и задач.
+Little bit more details — Ralink 2800 worked in all modes, survived MAC spoofing (everywhere except Ubuntu 16.04 due to Network Manager). On the other hand dirt-cheap Realtek 8192CU, 8188CUS allowed to use only one NIC in system, since it utilized [Concurrent Mode](http://znoxx.me/2017/09/09/dvukhgholovyi-realtek/). It all depends on your goals.
 
