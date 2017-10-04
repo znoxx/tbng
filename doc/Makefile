@@ -19,10 +19,10 @@ all: 00_RU 00_EN 01_RU 01_EN 02_RU 02_EN
 	$(PANDOC) $(PANDOC_OPTIONS) 01-tbng-install_and_setup_EN.md 01_EN_metadata.yaml  -o 01-tbng-install_and_setup_EN.html 
 
 02_RU : 
-	$(PANDOC) $(PANDOC_OPTIONS) 02-tbng-user_guide_RU.md 01_RU_metadata.yaml  -o 02-tbng-user_guide_RU.html 
+	$(PANDOC) $(PANDOC_OPTIONS) 02-tbng-user_guide_RU.md 02_RU_metadata.yaml  -o 02-tbng-user_guide_RU.html 
 
 02_EN: 
-	$(PANDOC) $(PANDOC_OPTIONS) 02-tbng-user_guide_EN.md 01_EN_metadata.yaml  -o 02-tbng-user_guide_EN.html 
+	$(PANDOC) $(PANDOC_OPTIONS) 02-tbng-user_guide_EN.md 02_EN_metadata.yaml  -o 02-tbng-user_guide_EN.html 
 
 
 

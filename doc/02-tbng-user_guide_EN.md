@@ -1,213 +1,214 @@
 # TorBOX Next Generation
 
-##### Руководство Пользователя
+##### User Guide
 
-## Введение
+## Introduction
 
-В этом документе описаны основные команды web-интерфейса TBNG, а также использование командной строки из терминала. Отдельным разделом описано использование TBNG, как proxy и доступ к I2P.
+This document describes the basic commands of the TBNG web interface, as well as the use of the command line from the terminal. A separate section describes the use of TBNG, as a proxy and access to I2P.
 
-Подразумевается, что пользователь:
+It is assumed, that user:
 
-* Ознакомлен с общим описанием проекта
+* Is familiar with TBNG overview
 
-* Успешно провёл установку и первичную настройку
+* Successfully finished installation and setup
 
-* Не имеет проблем с оборудованием
+* Does not have any issues with hardware
 
-### Общие положения
+### Terms and assumptions
 
-Будем считать, что устройство с TBNG доступно по адресу 192.168.222.1 для определенности. Соотвественно, web-интерфейс открывается по адресу [http://192.168.222.1:3000](http://192.168.222.1:3000), а для терминального доступа пользователь может соединиться по SSH с адресом 192.168.222.1 (порт 22 по умолчанию).
+It is assumed, that TBNG device is available on address 192.168.222.1 just for easier understanding. Interface can be opened via [http://192.168.222.1:3000](http://192.168.222.1:3000), and for terminal access user can connect via SSH to 192.168.222.1 (port 22 by default).
 
-## Web-интерфейс
+## Web-interface
 
-Web-интейрфес TBNG минималистичен, однако позволяет выполнить все базовые команды. Общий вид интерфейса показан на скриншоте:
+The Web-based TBNG is minimal, but it allows you to perform all basic commands. The general view of the interface is shown in the screenshot:
 
-![Главное меню web-интерфейса TBNG](images/image_3.png)
+![Web-interface main menu in TBNG](images/image_3.png)
 
-Это главная страница. Из неё можно попасть в разделы:
+This is the main page. From it you can get into sections:
 
-Выбор режимов работы (Mode selection)
+* Mode selection
 
-* Управление сервисами (Services)
+* Services
 
-* Настройки доступа в Интернет (WAN settings)
+* WAN settings
 
-* Настройки системы (System settings)
+* System settings
 
 ### Mode selection
 
-Здесь можно переключить TBNG в один из трёх предусмотренных режимов работы:
+Here you can switch TBNG to one of three modes of operation:
 
-* TOR — весь TCP трафик направляется через сеть The Onion Router
+* TOR — All TCP traffic is routed through the network The Onion Router
 
-* Privoxy — весь TCP трафик через TOR, http-трафик (сайты) через принудительный прокси-сервер с возможностью фильтрации — [Privoxy](http://privoxy.org)
+* Privoxy — all TCP traffic through TOR, http-traffic (sites) through a forced proxy server with the ability to filter — [Privoxy](http://privoxy.org)
 
-* Direct — Весь трафик идёт "на прямую" без использования TOR и Privoxy. Самый быстрый режим
+* Direct — All traffic goes "direct" without the use of TOR and Privoxy. Fastest mode
 
-![Переключение режимов TBNG](images/image_4.png)
+![Mode switching in TBNG](images/image_4.png)
 
-Выберите нужный режим и завершите переключение с помощью кнопки "Select". Помните, что при *любом *переключении сервис TOR будет перезапущен на устройстве с TBNG.
+Select the desired mode and complete the switching with the "Select" button. Remember that with *any* switching, the TOR service will be restarted on the TBNG device.
 
-Конфигурация сохраняется после перезагрузки. Будьте внимательны, при смене провайдера лучше включить режим Direct и убедиться, что "Интернет есть".
+The configuration is saved between reboos. Be careful, when changing the provider, it's better to turn on Direct mode and make sure that Internet connection is still available.
 
 ### Services
 
-Из этого меню можно получить доступ к сервисам, работающим на устройстве.
+From this menu, you can access services running on your device.
 
-![Сервисы TBNG](images/image_5.png)
+![Services on TBNG](images/image_5.png)
 
-Первая часть меню (Open Service console) — это просто ярлыки для доступа к сервисам. Для их корректного функционирования нужен работающий JavaScript. В частности при открытии нового окна происходит перезапись URL с новым портом, соответствующем сервису (например, 7657 для I2P Console).
+The first part of the menu (Open Service console) is just a shortcut for accessing services. For their proper functioning, you need a working JavaScript. In particular, when you open a new window, the URL is overwritten with the new port corresponding to the service (for example, 7657 for the I2P Console).
 
 #### Privoxy config 
 
-В новом окне откроется служебный сайт [http://config.privoxy.org](http://config.privoxy.org),  где можно внести изменения в работу Privoxy. На самом деле он работает прямо на устройстве. Прежде чем вносить изменения, необходимо почитать [документацию на ](https://www.privoxy.org/user-manual/)[Privoxy](https://www.privoxy.org/user-manual/).
+A special site [http://config.privoxy.org](http://config.privoxy.org) will be opened in new window. Here you can make changes to Privoxy configuration. In fact, it works right on the device. Before making changes, you need to read the documentation for (https://www.privoxy.org/user-manual/)[Privoxy](https://www.privoxy.org/user-manual/).
 
 #### I2P Console
 
-В новом окне откроется консоль управления сервисом I2P, если он конечно запущен.
+In the new window, the I2P service management console opens, if it is of course started.
 
 #### Shell-In-A-Box
 
-В новом откроется веб-версия командной строки Linux. То есть команды можно вводить прямо в окне браузера. Внимание! Соединение будет по протоколу HTTPS, и скорее всего браузер выдаст ошибку о том, что не может проверить сертификат. Это поведение по-умолчанию. У пользователя есть выбор — либо игнорировать ошибку и продолжить, либо каким-то образом сгенерировать новый сертификат. Подробности можно узнать в документации Shell-In-A-Box.
+A new version of the Linux command line will be opened in the new window. That is, you can enter commands directly in the browser window. Attention! The connection will be over HTTPS, and most likely the browser will give an error that it can not verify the certificate. This is the default behavior. The user has a choice — either to ignore the error and continue, or somehow generate a new certificate. See the Shell-In-A-Box documentation for details.
 
-Вторая часть  (Choose service to configure) отвечает за конфигурацию сервисов. Здесь можно остановить/перезапустить демона I2P, TOR, а также внести изменения в конфигурацию TOR — настроить использование TOR Bridges и заблокировать выходные узлы по странам.
+The second part (Choose service to configure) is responsible for the configuration of the services. Here you can stop/restart the I2P daemon, TOR, and make changes to the TOR configuration — configure the use of TOR Bridges and block the exit nodes by country.
 
 #### I2P Settings 
 
-![Настройки I2P в TBNG](images/image_6.png)
+![I2P settings in TBNG](images/image_6.png)
 
-Выберите действие и завершите выбор нажатием кнопки "Select". 
+Select the action and end the selection by pressing the "Select" button.
 
-При перезагрузке демон I2P не стартует автоматически. Его нужно запускать вручную.
+When you restart, the I2P daemon does not start automatically. It must be started manually.
 
 #### TOR Configuration
 
-![Конфигурация TOR в TBNG](images/image_7.png)
+![TOR Configuration in TBNG](images/image_7.png)
 
 ##### Stop/Restart TOR
 
-Меню, аналогичное I2P — отсюда можно остановить или перезапустить TOR выбрав действие и подтвердив его.
+A menu similar to I2P — from here you can stop or restart TOR by selecting the action and confirming it.
 
 ##### Reset configuration to default
 
-Довольно важный пункт меню — если он выбран и подтвержден, то из файла конфигурации TOR будут удалены секции, добавленные ранее с помощью TBNG — настройка Bridges, а также настройка блокировки выходных узлов. Внимание! Речь идёт *только *о настройках, сделанных через TBNG. Если настройки внесены в ручном режиме — они останутся без изменений (если, конечно вы не внесли их внутрь секции TBNG_autogenerated, хотя это и нечестно :)) 
+Quite an important menu item — if it is selected and confirmed, the sections added earlier with TBNG - Bridges configuration, as well as the blocking of the output nodes - will be deleted from the TOR configuration file. Attention! This is *only* about the settings made through TBNG. If the settings are made in manual mode, they will remain unchanged (unless, of course, you have inserted them into the TBNG_autogenerated section, although it's not fair :))
 
-TBNG вносит изменения в файлы конфигураций, помечая эти места специальными маркерами-комментариями и удаляет их, когда необходимо. То есть при сбросе удалится вся секция между этими маркерами.
+TBNG makes changes to configuration files by marking these places with special comment markers and deletes them when necessary. That is, when resetting, the entire section between these markers will be deleted.
 
 ##### Configure bridge usage
 
-![Настройка мостов TOR в TBNG](images/image_8.png)
+![TOR Bridges setting in TBNG](images/image_8.png)
 
-TOR  позволяет соединяться не только с опубликованными узлами, но и с так называемыми "мостами". Это требуется, если провайдер или компания блокируют использование TOR.
+TOR allows you to connect not only to published nodes, but also to so-called "bridges". This is required if the provider or company blocks the use of TOR.
 
-TBNG поддерживает установки мостов по протоколу **obfs3** и **obfs4**. Если вдруг какого-то из пунктов в меню не хватает — это значит, что на устройстве на найден компонент и установить ошибочную конфигурацию будет несколько сложнее.
+TBNG supports bridge installations using the protocol **obfs3** and **obfs4**. If suddenly one of the items in the menu is missing — it means that on the device the component is found and the erroneous configuration will be slightly more complicated.
 
-Перед установкой режима моста исходные данные нужно получить. Есть несколько способов — через сайт [https://bridges.torproject.org](https://bridges.torproject.org) или через посылание пустого письма (подсказка есть на экране). Поддержаны популярные сервисы — gmail, yahoo и raise up.
+Before setting up the bridge mode, the source data must be obtained. There are several ways — through the site [https://bridges.torproject.org](https://bridges.torproject.org) or by sending an empty mail (there is a hint on the screen). Popular services are supported — gmail, yahoo and raise up.
 
-Данные о мосте нужно вставить в поле, предварительно указав тип моста.
+Data about the bridge should be inserted in the field, having previously indicated the type of the bridge.
 
-Выбор типа **none** приводит к сбросу настроек мостов.
+Selecting a type **none** causes the bridges to be reset.
 
-Конфигурация сохраняется после перезагрузки.
+Configuration is saved between reboots.
 
 ##### Exclude exit nodes by country
 
-TOR можно настроить для "обхода" нежелательных стран. Это делается двумя способами — либо настроить список "желательных" стран и тогда он будет работать ТОЛЬКО через эти выходные узлы, либо пометить некоторые страны, как нежелательные, и тогда выходные узлы, расположенные в них использоваться не будут. Местонахождение выходного узла не всегда очевидно, так что правилам подчиняются только узлы, имеющие чёткую географическую принадлежность.
+TOR can be configured to "bypass" unwanted countries. This is done in two ways — either set up a list of "desirable" countries and then it will work ONLY through these output nodes, or mark some countries as unwanted, and then the output nodes located in them will not be used. The location of the exit node is not always obvious, so that only nodes that have a clear geographic identity are subject to the rules.
 
-![Конфигурация выходных узлов по странам для TOR в TBNG](images/image_9.png)
+![TOR Exit nodes config by country in TBNG](images/image_9.png)
 
-Просто выберите "нежелательные" страны и подтвердите выбор кнопкой в конце списка. (Не поместилась на  скриншот).
+Just select the "unwanted" countries and confirm the selection with the button at the end of the list. (Not fit in the screenshot).
 
-Список стран можно уменьшить в файле**_ torcountry.json_**, например удалив оттуда те страны, о существовании которых вы не подозревали. Это немного уменьшит список и ориентироваться в нём будет легче. 
+The list of countries can be reduced in the file **_torcountry.json_**, for example, removing those countries from the existence of which you did not suspect. This will slightly reduce the list and one can manage it more comfortably.
 
-Конфигурация сохраняется после перезагрузки.
+Configuration is saved between reboots.
 
 ### WAN settings
 
-В этом разделе можно настроить подключение к WiFi (в случае, если используется беспроводной интерфейс), переключиться на другой интернет-канал, а также подменить mac-адрес сетевой карты для доступа в Интернет, если, конечно система поддерживает такую возможность.
+In this section, you can set up a connection to WiFi (if you are using a wireless interface), switch to another Internet channel, and also spoof the MAC-address of the network card for Internet access, if, of course, the system supports this option.
 
-![Настройки доступа WAN в TBNG](images/image_10.png)
+![WAN settings in TBNG](images/image_10.png)
 
 #### Select interface
 
-Выбор интерфейса WAN. 
+WAN interface selection in TBNG.
 
-![Выбор интерфейса WAN в TBNG](images/image_11.png)
+![WAN interface selection in TBNG](images/image_11.png)
 
-Если TBNG настроена с поддержкой двух и более сетевых интерфейсов для доступа "во внешний мир", то в этом пункте можно во-первых посмотреть, через какой интерфейс мы работаем в данный момент, а во-вторых переключиться на другой.
+If TBNG is configured with support for two or more network interfaces for accessing the "outside world", then at this point you can firstly see through which interface we are working at the moment, and secondly switch to the other.
 
-Внимание! Не стоит переключаться на неработающий интерфейс. В частности на проводной, если кабель не подключен.
+Attention! Do not switch to the non-working interface. In particular, on wired, if the cable is not connected.
 
-Выбранный интерфейс не запоминается и при перезагрузке дефолтным будет тот, который выберет сама система (как правило, последний из "поднявшихся").
+Selected interface is not saved during reboots. Usually, the default one will be chosen by OS (last up ?).
 
 #### WiFi Settings
 
-Если внешний интерфейс беспроводной, то именно этот пункт нужно использовать для соединения с сетью WiFi.
+If the WAN interface is wireless, then this item should be used to connect to the WiFi network.
 
-При выборе будет показан статус соединения, использованный интерфейс. Отсюда же можно выбрать доступную сеть или сбросить WiFi.
+When selected, the connection status, the interface used, will be displayed. From here you can select an available network or reset WiFi.
 
-Набор команд, реализуемый здесь передается не TBNG, а Network Manager напрямую, поэтому если что-то не работает, нужно смотреть, функционирует ли Network Manager (для начала).
+The command set implemented here is not transmitted to TBNG, but to the Network Manager directly, so if something does not work, you need to see if Network Manager is functioning (as a starting point).
 
-![Настройки WiFi в TBNG](images/image_12.png)
+![WiFi settings in TBNG](images/image_12.png)
 
 ##### Reset WiFi
 
-Сбрасывает WiFi адаптер в начальное состояние через Network Manager. После выбора этого пункта действие нужно будет подтвердить.
+Resets the WiFi adapter to its initial state via Network Manager. After selecting this item, the action will need to be confirmed.
 
 ##### Select Network
 
-Позволяет выбрать сеть для соединения.
+Allows you to select a network for the connection.
 
-![Выбор WiFi сети в TBNG](images/image_13.png)
+![Select WiFi network in TBNG](images/image_13.png)
 
-Выводит список доступных сетей WiFi, а также показывает уровень сигнала, канал и тип шифрования. Сети "дедуплицируются", то есть если установлено несколько базовых станций с одной и той же сетью, будет показана одна. Скрытые WiFi сети НЕ показываются и соединяться с ними нужно с использованием Network Manager из командной строки.
+Displays a list of available WiFi networks, and also shows the signal strength, channel and type of encryption. Networks are "deduplicated", that is, if several base stations with the same network are installed, one will be displayed. Hidden WiFi networks are NOT shown and connected to them using Network Manager from the command line.
 
-Поддержаны открытые сети, а также сети "с паролем" — WEP, WPA1/WPA2. Опять-таки, сети использующие сертификат для соединения, механизм WPS — используйте командную строку или утилиту **_nmtui_**.
+Open networks, as well as networks "with a password" — WEP, WPA1/WPA2 are supported. Again, for the networks using the certificate for the connection, or for ones with the WPS engine — use the command line or the utility **_nmtui_**.
 
-По клику на имя сети возникает диалог, где нужно ввести пароль (если требуется) и завершить соединение.
+By clicking on the network name, a dialog appears where you need to enter the password (if required) and finish the connection.
 
-![Соединение с сетью WiFi в TBNG](images/image_14.png)
+![WiFi connection in TBNG](images/image_14.png)
 
-Network Manager по умолчанию запоминает соединение и при перезагрузке устройства оно должно быть восстановлено автоматически.
+Network Manager remembers the connection by default and when device is rebooted it must be restored automatically.
 
 #### Spoof WAN Mac
 
-Пожалуй, самый проблемный пункт из всех. Позволяет сменить mac-адрес сетевой карты для доступа к Интернет на случайный, НО работает не везде и не всегда.
+Perhaps the most problematic point of all. Allows you to spoof the MAC-address of the network card to access the Internet at random value, __but__ it does not work everywhere and not always.
 
-![MAC Spoof в TBNG](images/image_15.png)
+![MAC Spoof in TBNG](images/image_15.png)
 
-Выбираем интерфейс и жмём кнопку "Spoof". Подмена произойдет только в указанных случаях:
+Select interface and press "Spoof" button. Spoof may work in case:
 
-* В конфигурационном файле описана возможность этого действия
+* The configuration file describes the possibility of this action
 
-* Плагин для подмены есть и работает
+* Plugin for spoofing exists and works
 
-* Система/Ядро/Network Manager  не возражают
+* System/Kernel/Network Manager does not block this action
 
-Более подробно о плагинах можно почитать в "Руководстве по установке и настройке TBNG".
+More details about plug-ins can be found in the "Installation and Setup Guide for TBNG".
 
-В случае, если интерфейс в конфигурации не имеет опции spoof, появится такая ошибка:
+In the event that the interface in the configuration does not have a spoof option, the following error will appear:
 
-![Пример ошибки при MAC Spoof в TBNG](images/image_16.png)
+![MAC Spoof error example in TBNG](images/image_16.png)
 
-При перезагрузке устройства MAC-адрес восстанавливается в обычное значение.
+When the device is rebooted, the MAC address is restored to the normal value.
 
 ### System settings
 
-![Информация и настройки системы в TBNG](images/image_17.png)
+![System settings and information in TBNG](images/image_17.png)
 
-Тут всё довольно очевидно — можно посмотреть информацию о системе, изменить пароль для web-интерфейса, перезагрузить устройство и выключть.
+Here everything is pretty obvious — you can see information about the system, change the password for the web interface, reboot the device and turn it off.
 
-Подробнее о выключении — если используется одноплатный компьютер Raspberry Pi, Orange Pi, Cubieboard — систему лучше выключать корректно, чтобы не испортить носитель (SD-карту). Также вместо отключения питания в разделе Shutdown можно выбрать "halt" — остановка системы. Это введено из-за того, что некоторые одноплатные компьютеры из-за особенностей ядра не могут выключиться и уходят в перезагрузку.
+More about shutdown — if you are using a Raspberry Pi, Orange Pi, Cubieboard single-board computer, it's better to turn off the system correctly so as not to damage the media (SD card). Also, instead of shutting down the power in the Shutdown section, you can select "halt" — stop the system. This is introduced due to the fact that some single-board computers because of the core features can not shut down and go into reboot.
 
-## Интерфейс командной строки
+## Command line interface
 
-Управлять TBNG можно не только из web-интерфейса, но и с помощью командной строки. Более того, всё, что происходит в web-интерфейсе в конечном итоге "транслируется" в вызов командной строки за исключением команд работы с WiFi.
+You can manage TBNG not only from the web interface, but also from the command line. Moreover, everything that happens in the web interface is ultimately "broadcast" into the command line call, except for the commands for working with WiFi.
 
-Запуск TBNG из командной строки возможен только при наличии sudo. Не следует запускать TBNG из-под root, так как во многих случаях проверяется переменная SUDO_USER и действия выполняются под пользователем, указанном в этой переменной. 
+Running TBNG from the command line is possible only if you have sudo. Do not run TBNG from root, since in many cases the SUDO_USER variable is checked and the actions are performed under the user specified in this variable.
 
-### Вызов TBNG
+### Running TBNG 
 
+```
 $ sudo ./engine/tbng.py --help
 
 usage: tbng.py [-h] [-v] command [options [options ...]]
@@ -227,184 +228,183 @@ optional arguments:
   -h, --help 	show this help message and exit
 
   -v, --verbose  increase output verbosity
+```
 
-При вызове нужно указать либо -h, либо команду и её обязательные аргументы, если есть.
+When running TBNG from command line it is necessary to specify "-h", or a command and its mandatory arguments if any.
 
-Опция -h выдаст подсказку, опция -v — покажет отладочную информацию.
+Option "-h" shows some help, option "-v" — show some debug information.
 
-В случае ошибки выполнения возникает exception и ненулевой код ошибки — так что можно смело использовать команду в своих скриптах.
+In case of a run-time error, an exception arises and a non-zero error code — so you can safely use the command in your scripts.
 
-### Команды TBNG
+### TBNG commands
 
-#### Сервисные команды
+#### Service commands
 
 ##### help
 
-$ sudo ./engine/tbng.py help
+`$ sudo ./engine/tbng.py help`
 
-Показывает список доступных команд.
-
+Shows available command list.
  
-
 ##### chkconfig
 
-$ sudo ./engine/tbng.py chkconfig
+`$ sudo ./engine/tbng.py chkconfig`
 
-Проверяет целостность конфигурационного файла**_ tbng.conf. _**Полезная команда для проверки валидности конфигурации. Нужно использовать после внесения изменений, чтобы не привести систему в нерабочее состояние.
+Checks the integrity of the configuration file **_tbng.conf ._** A useful command to verify the validity of the configuration. It should be used after making changes to prevent system malfunction.
 
 ##### patch_nmcli
 
-$ sudo ./engine/tbng.py patch_nmcli
+`$ sudo ./engine/tbng.py patch_nmcli`
 
-Управление WiFi-сетями, а также вызов некоторых команд требует обращения к Network Manager. Для того, чтобы исключить проблемы с доступом к NM, на утилиту nmcli выставляется SUID bit, и она выполняется из-под root в любом случае. Запускать эту команду нужно, если вдруг перестало работать соединение с WiFi, а также пришло обновление на Network Manager (которое заменило нам бинарный файл nmcli).
+Managing WiFi networks, as well as calling certain commands, requires access to Network Manager. In order to avoid problems with access to the NM, the utility nmcli is set to SUID bit, and it is executed from under root in any case. You need to run this command if the connection with WiFi has suddenly stopped working, and an update to Network Manager (which replaced the binary file nmcli) has arrived.
 
 ##### reboot, shutdown, halt
 
-$ sudo ./engine/tbng.py reboot
+`$ sudo ./engine/tbng.py reboot`
 
-$ sudo ./engine/tbng.py shutdown
+`$ sudo ./engine/tbng.py shutdown`
 
-$ sudo ./engine/tbng.py halt
+`$ sudo ./engine/tbng.py halt`
 
-Перегружает, выключает или останавливает устройство соответственно.
+Reboots, shutdowns or halts the device.
 
 ##### version
 
-$ sudo ./engine/tbng.py version
+`$ sudo ./engine/tbng.py version`
 
-Показывает информацию о версии **_tbng.py_**.
+Shows version information about **_tbng.py_**.
 
  get_cpu_temp
 
-$ sudo ./engine/tbng.py get_cpu_temp
+`$ sudo ./engine/tbng.py get_cpu_temp`
 
-Показывает температуру процессора, если:
+Shows CPU temperature, if
 
-* Плагин для чтения температуры процессора указан в конфигурации
+* The plug-in for reading the CPU temperature is specified in the configuration
 
-* Он есть и работает
+* It exists and works
 
-#### Работа с сетью
+#### Networking
 
 ##### get_default_interface
 
-$ sudo ./engine/tbng.py get_default_interface
+`$ sudo ./engine/tbng.py get_default_interface`
 
-Показывает текущий сетевой интерфейс, используемый для доступа к Интернет.
+Shows current network interface, used for Internet access.
 
 ##### set_default_interface
 
-$ sudo ./engine/tbng.py set_default_interface INTERFACE_NAME
+`$ sudo ./engine/tbng.py set_default_interface INTERFACE_NAME`
 
-Устанавливает сетевой интерфейс для доступа к Интернет. Аргумент команды — имя интерфейса. В процессе выполнения будут остановлены все интерфейсы и запущен только один указанный.
+Sets a network interface for accessing the Internet. The command argument is the name of the interface. During execution, all interfaces will be stopped and only one specified will be started.
 
 ##### clean_firewall
 
-$ sudo ./engine/tbng.py clean_firewall
+`$ sudo ./engine/tbng.py clean_firewall`
 
-Очищает правила iptables. Команда используется нечасто, но бывает нужна для диагностики и проверки. Внимание! При вызове какого либо из режимов — TOR, Privoxy, Direct --правила iptables опять будут применены.
+Clears iptables rules. The command is used infrequently, but is sometimes needed for diagnosis and verification. Attention! When you call any of the modes — TOR, Privoxy, Direct — iptables rules will be applied again.
 
 ##### masquerade
 
-$ sudo ./engine/tbng.py masquerade
+`$ sudo ./engine/tbng.py masquerade`
 
-Включает IP Masquerade, также известный как NAT на сетевых интерфейcах, описанных в конфигурации. Команда нужна опять-таки для отладки и обычно используется совместно с clean_firewall. Т.е. чистим iptables, включаем masquerading. Если интерфейсы описаны правильно, то клиенты, подключенные к TBNG получают доступ в Интернет.
+Enables IP Masquerade, also known as NAT on the network interfaces described in the configuration. The command is again needed for debugging and is usually used in conjunction with __clean_firewall__. E.g clean iptables, enable masquerading. If the interfaces are described correctly, then the clients connected to TBNG get access to the Internet.
 
 ##### macspoof_wan
 
-$ sudo ./engine/tbng.py macspoof_wan INTERFACE_NAME
+`$ sudo ./engine/tbng.py macspoof_wan INTERFACE_NAME`
 
-Пытается подменить mac-адрес указанной сетевой карты. Делает это через плагин и только в том случае, если в конфигурационном файле разрешено это действие.
+Tries to spoof the MAC-address of the specified network card. It does this via the plugin and only if this action is allowed in the configuration file.
 
-#### Работа с сервисами
+#### Services
 
 ##### tor_restart, tor_stop
 
-$ sudo ./engine/tbng.py tor_restart
+`$ sudo ./engine/tbng.py tor_restart`
 
-$ sudo ./engine/tbng.py tor_stop
+`$ sudo ./engine/tbng.py tor_stop`
 
-Перезапускает или останавливает TOR.
+Restarts or stops TOR.
 
 ##### i2p_restart, i2p_stop
 
-$ sudo ./engine/tbng.py i2p_restart
+`$ sudo ./engine/tbng.py i2p_restart`
 
-$ sudo ./engine/tbng.py i2p_stop
+`$ sudo ./engine/tbng.py i2p_stop`
 
-Перезапускает или останавливает I2P.
+Restarts or stops I2P.
 
 ##### tor_reset
 
-$ sudo ./engine/tbng.py tor_reset
+`$ sudo ./engine/tbng.py tor_reset`
 
-Убирает настройки TOR, сделанные через TBNG для bridges и исключенных exit nodes. 
+Removes TOR settings made through TBNG for bridges and excluded exit nodes.
 
 ##### probe_obfs
 
-$ sudo ./engine/tbng.py probe_obfs
+`$ sudo ./engine/tbng.py probe_obfs`
 
-Ищет в системе бинарные файлы, нужные для обеспечения работы obfs proxy — obfs4 и obfs3. Возвращает JSON-строку, где перечислены возможные опции. Используется в основном из web-интерфейса для выдачи пользователю возможных вариантов.
+Searches for binary files in the system, necessary for obfs proxy operation — obfs4 and obfs3. Returns a JSON string, which lists the possible options. It is used mainly from the web interface to give the user the options.
 
 ##### tor_bridge
 
-$ sudo ./engine/tbng.py tor_bridge '{....}'
+`$ sudo ./engine/tbng.py tor_bridge '{....}'`
 
-Устанавливает режим использования TOR Bridges. В качестве параметра нужно передавать строку JSON с информацией о мостах. Это довольно трудоемкое дело, и подразумевается, что команда будет выполняться из web-интерфейса, где формируется программно.
+Sets the mode of using TOR Bridges. As a parameter, you need to pass a JSON string with information about bridges. This is quite a laborious task, and it is implied that the command will be executed from the web-interface, where it is generated programmatically.
 
-Пример с искаженными значениями мостов — JSON-объект из двух полей — режим и массив строк с данными мостов:
+An example with distorted bridge values is a JSON object of two fields — a mode and an array of strings with data from bridges:
 
-$ sudo tbng/engine/tbng.py tor_bridge '{"mode": "obfs4", "bridges": ["obfs4 34.34.34.34:9443 4AA73BBBB1903E2311BE8D8C91470656F52D63F8 cert=TIsFNHYKUkkzj+LGhv8NtR/4OSMFz9RBtcu6/zeWddlReQqYsBd3QssVQB35muHkMtelQw iat-mode=0", "obfs4 52.53.54.55:9443 358BE10583048D80D0229B31ADF1A36B0AAAAAA cert=IVBWeCfe9f9jpqN9i9BTo6Aq/+l+56HEwF/YUvRuAAADdJXfGDNjHWvpjRwOlLPLdbbYYw iat-mode=0", "obfs4 231.231.231.231:80 B687A4B74920A7842B676C0C300D7119FB5F7E24 cert=zFJYOZ3hYHN9i9CcYAkbUt1bHG2ZFahEppklUNpP04NSmiGY1IlrUiIMYK3N28Xmn5G7UA iat-mode=0"]}'
+`$ sudo tbng/engine/tbng.py tor_bridge '{"mode": "obfs4", "bridges": ["obfs4 34.34.34.34:9443 4AA73BBBB1903E2311BE8D8C91470656F52D63F8 cert=TIsFNHYKUkkzj+LGhv8NtR/4OSMFz9RBtcu6/zeWddlReQqYsBd3QssVQB35muHkMtelQw iat-mode=0", "obfs4 52.53.54.55:9443 358BE10583048D80D0229B31ADF1A36B0AAAAAA cert=IVBWeCfe9f9jpqN9i9BTo6Aq/+l+56HEwF/YUvRuAAADdJXfGDNjHWvpjRwOlLPLdbbYYw iat-mode=0", "obfs4 231.231.231.231:80 B687A4B74920A7842B676C0C300D7119FB5F7E24 cert=zFJYOZ3hYHN9i9CcYAkbUt1bHG2ZFahEppklUNpP04NSmiGY1IlrUiIMYK3N28Xmn5G7UA iat-mode=0"]}'`
 
 ##### tor_exclude_exit
 
-$ sudo ./engine/tbng.py tor_exclude_exit '["code1","code2"]'
+`$ sudo ./engine/tbng.py tor_exclude_exit '["code1","code2"]'`
 
-Блокирует TOR exit nodes в указанных странах . В качестве параметра нужно передавать строку JSON с информацией странах (массив). Опять-таки это довольно трудоемкое дело, и подразумевается, что команда будет выполняться из web-интерфейса, где формируется программно.
+Blocks TOR exit nodes in the specified countries. As a parameter, you need to pass the JSON string with the information countries (array). Again, this is quite a laborious task, and it is implied that the command will be executed from the web interface, where it is generated programmatically.
 
-Работающий пример:
+Working example:
 
-$ sudo ./engine/tbng.py tor_exclude_exit '["ac","af"]'
+`$ sudo ./engine/tbng.py tor_exclude_exit '["ac","af"]'`
 
-Блокирует страны с кодами "ac" и "af".
+Blocks countries with codes "ac" and "af".
 
-#### Переключение режимов
+#### Mode switching
 
 ##### mode
 
-$ sudo ./engine/tbng.py tor
+`$ sudo ./engine/tbng.py tor`
 
-$ sudo ./engine/tbng.py privoxy
+`$ sudo ./engine/tbng.py privoxy`
 
-$ sudo ./engine/tbng.py direct
+`$ sudo ./engine/tbng.py direct`
 
-$ sudo ./engine/tbng.py restore
+`$ sudo ./engine/tbng.py restore`
 
-Собственно, переключение режима. Первые три варианта выставляют режим, а вот последний — восстанавливает режим из файла runtime.json и обычно выполняется на старте системы при восстановлении параметров.
+Actually, switching mode. The first three options set the mode, but the last one restores the mode from the runtime.json file and is usually executed at system startup when parameters are restored.
 
-## Использование сервисов TBNG
+## Using TBNG services
 
-TBNG позволяет использовать не только TOR и Privoxy, но и получать доступ к сайтам, расположенным в сети I2P. 
+TBNG allows you to use not only TOR and Privoxy, but also access sites located on the I2P network.
 
-Правда, для I2P есть ограничения — открывать их можно только из браузера у которого настроен proxy-сервер, указывающий на адрес TBNG.
+However, for I2P there are restrictions — you can open them only from the browser that has a proxy server that points to the TBNG address.
 
-### Доступ к сети I2P
+### I2P Access
 
-Для того, чтобы получить доступ к сети I2P через TBNG, нужно настроить браузер для использования http proxy, который, в свою очередь работает на устройстве с TBNG.
+In order to access the I2P network via TBNG, you need to configure the browser to use the http proxy — set the address of device with TBNG.
 
-Вот пример настройки Mozilla Firefox:
+Mozilla Firefox example:
 
-![Настройка Proxy в Mozilla Firefox ](images/image_18.png)
+![Proxy setting in Mozilla Firefox ](images/image_18.png)
 
-При открытии I2P сайта запрос уйдет на Privoxy, работающий на устройстве с TBNG. Privoxy определит, что запрос нужно перенаправить I2P-демону. Внимание! I2P должен быть запущен и готов к работе (это, как правило, занимает некоторое время).
+When opening an I2P site, the request will go to Privoxy, running on the device with TBNG. Privoxy determines that the request should be forwarded to the I2P daemon. Attention! I2P must be up and running (this usually takes some time to start and settle).
 
-### Работа с Proxy server в режиме Direct
+### Working with Proxy server in Direct mode
 
-Также можно находясь в режиме Direct использовать TOR/Privoxy только в отдельных приложениях.
+Also, you can use TOR / Privoxy in Direct mode only in separate applications.
 
-Для использования HTTP Proxy используйте значение **_aa.bb.cc.dd:8118_** (например 192.168.222.1:8118).
+To use HTTP Proxy, use the value **_aa.bb.cc.dd:8118_** (e.g. 192.168.222.1:8118).
 
-Для использования Socks5 Proxy используйте значение **_aa.bb.cc.dd:9050_** (например 192.168.222.1:9050).
+To use Socks5 Proxy, use the value **_aa.bb.cc.dd:9050_** (e.g. 192.168.222.1:9050).
 
-В первом случае роль HTTP Proxy  выполняет Privoxy, работающий на устройстве с TBNG, во втором случае роль Socks5 Proxy — сам TOR.
+In the first case, the role of HTTP Proxy is performed by Privoxy running on the device with TBNG, in the second case the role of Socks5 Proxy is TOR itself.
 
