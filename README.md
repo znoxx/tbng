@@ -17,7 +17,6 @@ TBNG является продолжением проекта [Orange TorBOX](ht
 * Устранене Проблем и Часто Задаваемые вопросы
 
 Для удобства чтения вы можете сконвертировать документацию в формат html (потребуется pandoc и make):
-
 ```
 cd doc
 make
@@ -35,12 +34,11 @@ by _SystemD_, having _Network Manager_ and _Python3_. Full list of system requir
 Clone this repository, get familiar with documentation (doc folder) in following order:
 
 * Overview
-* Install and setup guide
-* User manual
+* Install and Setup Guide
+* User Manual
 * Troubleshooting & FAQ
 
 For your convinience documentation can be converted to  html (you will need pandoc and make):
-
 ```
 cd doc
 make
