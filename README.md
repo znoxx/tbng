@@ -26,8 +26,8 @@ make
 ## EN
 TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and almost effortless creation of [TOR](https://torproject.org) Access Point (wireless and wired).
 
-TBNG is a sequel of [Orange TorBOX](https://github.com/znoxx/torbox) project, but now it can be run not only on limited set of Orange Pi devices, but on virtually any Linux, driven  
-by _SystemD_, having _Network Manager_ and _Python3_. Full list of system requiremets is described in project documentation.
+TBNG is a sequel of [Orange TorBOX](https://github.com/znoxx/torbox) project, but now it can be run not only on limited set of Orange Pi devices, but on virtually any Linux, 
+driven by _SystemD_, having _Network Manager_ and _Python3_. Full list of system requiremets is described in project documentation.
 
 ### Quick start
 
