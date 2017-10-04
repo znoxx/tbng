@@ -280,75 +280,75 @@ Below mandatory fields are listed.
 
 ###### cputemp
 
-Поле показывает, какой плагин использовать для чтения температуры. В данный момент используется значение "default", можно поменять на желаемый (см. папку engine/plugins).
+The field shows which plug-in is used to read the temperature. At the moment, the value "default" is used, you can change it to the desired one (see the engine/plugins folder).
 
 ###### wan_interface
 
-Массив сетевых интерфейсов зоны WAN. Если указан больше, чем один интерфейс — между интерфейсами можно будет переключаться.
+An array of network interfaces for the WAN zone. If more than one interface is specified, you can switch between interfaces.
 
-Признак "wireless" объявляет интерфейс беспроводным. В списке WAN может быть только один беспроводной интерфейс — это связано с особенностью работы web-интерфейса. В будущем это ограничение, возможно, будет снято.
+The "wireless" attribute declares the interface as wireless. There can be only one wireless interface in the WAN list — this is due to the peculiarity of the web-interface. In the future, this restriction may be lifted.
 
-Поле "macspoof" описывает метод, по которому будет производится подмена mac-адреса, точнее указывается плагин для выполнения операции "Mac spoof". Если интерфейс не поддерживает такой функционал — поле можно полностью убрать из описания и даже лучше это сделать.
+The "macspoof" field describes the method by which the mac-address will be replaced, in other words here one sets plugin for "Mac spoof" operation. If the interface does not support such functionality  it is better to completely remove it.
 
 ###### lan_interface
 
-Массив сетевых интерфейсов зоны LAN. Основное требование — массив не должен пересекаться с wan_interfaces. То есть, нельзя использовать wlan0 и в WAN и в LAN одновременно. Тип интерфейса (wireless=true) можно не указывать, он не используется.
+An array of network interfaces for the LAN zone. The main requirement is that the array should not intersect wan_interfaces. That is, you can not use wlan0 in both WAN and LAN simultaneously. The type of interface (wireless = true) can be omitted, it is not used.
 
-Секция не должна быть пустой — имена интерфейсов используются при настройке IP Masquerading (NAT).
+Section must not be empty, since interface names are used for with IP Masquerading (NAT).
 
 ###### allowed_ports_udp,allowed_ports_tcp
 
-Массивы портов, открытых в firewall для зоны LAN. Скажем, пользователь поставил какой-то новый сервис на устройство с TBNG, и хочет им пользоваться в локальной сети. Тогда порт, используемый этим сервисом нужно внести в список (в зависимости от типа tcp или udp соответствующий массив должен быть дополнен).
+Arrays of ports opened in the firewall for the LAN zone. For example, the user has put some new service on the device with TBNG, and wants to use it on the local network. Then the port used by this service needs to be added to the list (depending on the type of tcp or udp the corresponding array should be added).
 
-Конечно, порты можно "сократить", правда порты 22 и 3000 всегда открываются — специально для того, чтобы пользователь не смог потерять доступ к ssh и web-интерфейсу. Если и это нужно исключить — редактируем "движок" tbng/engine/tbng.py. Но уже на свой страх и риск (как и всё остальное, впрочем)
+Of course, the ports can be "reduced", although ports 22 and 3000 are always opened - specifically to ensure that the user can not lose access to the ssh and web-interface. If this should be excluded, we also edit the "engine" tbng/engine/tbng.py. But already at your own peril and risk (like everything else, however).
 
 ###### lock_firewal
 
-Признак того, что firewall закрыт. Когда выставлено в true, файрволл блокирует соединения из WAN. Включать нужно в последнюю очередь, когда всё проверено.
+A sign that the firewall is closed. When set to true, the firewall blocks connections from the WAN. Set it only when everything is checked and working.
 
 ###### allowed_ports_wan_udp,allowed_ports_wan_tcp
 
-Массивы портов, открытых в firewall для зоны WAN. Почти тоже самое, что и предыдущая аналогичная опция для LAN. Порты доступны даже, если lock_firewall установлен в true. В дефолтной конфигурации этой настройки нет (т.е. "всё закрыто"), но если TBNG устанавливается на арендованный сервер (VPS) — настройку нужно описывать для открытия портов VPN, SSH, и других сервисов.
+Arrays of ports opened in the firewall for the WAN zone. Almost the same as the previous similar option for LAN. Ports are available even if lock_firewall is set to true. In the default configuration settings is not used (WAN is "all closed"), but if TBNG is installed on a leased server (VPS), the configuration should be described for opening VPN, SSH, and other services.
 
 ##### user.json
 
-Содержит имя и пароль для доступа к web-интерфейсу. По умолчанию —  webui/webui. Можно заменить на желаемые значения.
+Contains a name and password for accessing the web-interface. The default is webui/webui. Can be replaced with the desired values.
 
 ##### torcountry.json
 
-Содержит список стран для TOR. Требуется для отображения в web-интерфейсе. При желании можно его немного сократить, скажем, оставив только те страны, которые планируется исключать при работе через TOR.
+Contains a list of countries for TOR. Required for display in the web interface. If desired, you can slightly reduce it, say, leaving only those countries that are planned to be excluded when working through TOR.
 
 ##### runtime.json
 
-Этот файл появляется только после первого старта TBNG и используется для хранения настроек и их восстановления. Он не предназначен для самостоятельного редактирования, однако его можно удалить, если "что-то пошло нет так", и перезагрузить систему, либо выполнить команду:
+This file appears only after the first start TBNG and is used to store settings and restore them. It is not intended for self-editing, but you can delete it if "something went wrong", and reboot the system, or execute the command:
 
 `johndoe@linuxbox:~$ sudo tbng/engine/tbng.py mode restore`
 
-Это привёдет систему в первоначальное состояние.
+This will bring the system to its original state.
 
 ## Первичная настройка TBNG
 
-Итак, настройки сформированы, сетевые интерфейсы проверены — время применить финальную конфигурацию и пользоваться. Для запуска настройки делаем следующее:
+So, the settings are formed, the network interfaces are checked — the time to apply the final configuration and use. To start the configuration, do the following:
 
 `johndoe@linuxbox:~$ sudo tbng/setup/configure_componetns.py -u johndoe`
 
-Эта команда сделает следующее:
+This command does the follwing:
 
-* Проверит целостность конфигурации
+* Validates configuration.
 
-* Установить беспарольный доступ через sudo для пользователя johndoe к tbng/engine/tbng.py
+* Sets passwordless sudo for user johndoe for tbng/engine/tbng.py
 
-* Установит автозапуск tbng.py при запуске системы (будет вызываться восстановление настроек)
+* Sets tbng.py for autostart (settings are restored on autostart)
 
-* Установит web-интерфейс и настроит его автозапуск
+* Sets up web-interface and configures it autostart
 
-* Установит I2P, запустит, остановит, выполнит настройки для доступа к консоли
+* Sets up I2P, runs, stops, then configure settings to allow console access
 
-После успешной отработки система будет готова к использованию, рекомендуется провести powercycle (т.е. выключить и включить).
+After successful run the system will be ready for use, it is recommended to conduct a power cycle (ie turn off and on).
 
-Если по каким-то причинам файлы настроек tor и privoxy находятся где-то в другом месте, то нужно будет их указать в ключах командной строки — используйте опцию "--help".
+If, for some reason, the tor and privoxy configuration files are somewhere else, you will need to specify them in the command line options — use the "--help" option).
 
-После успешной установки в системе появятся ещё три новых сервиса:
+After successful installation, three new services will appear in the system:
 
 * tbng-helper — восстановление настроек при загрузке
 
@@ -356,51 +356,52 @@ Below mandatory fields are listed.
 
 * i2p-tbng — демон i2p
 
-Поздравляем, система настроена и работает!
+Congratulations, the system is configured and working !
 
-## Плагины и их использование
+## Plugins 
 
-TBNG написана на языке Python, и почти все действия формализованы. То есть вызов iptables, старт и стоп демонов, работа с Network Manager будут одинаковы практически везде, но вот процедуры по чтению температуры процессора, или подмена mac-адреса будут отличаться не только от ядра к ядру, но даже от системы к системе. В связи с этим был введен механизм плагинов — подключаемых модулей, которые реализуют небольшой и необязательный функционал.
+TBNG is written in Python, and almost all actions are formalized. That is, calling iptables, starting and stopping daemons, working with Network Manager will be the same almost everywhere, but here are the procedures for reading the processor's temperature, or spoofing mac-addresses will differ not only from core to kernel, but even from system to system. In connection with this, a plug-in mechanism was introduced — plug-ins that implement a small and optional functionality
 
-Плагины расположены в папке tbng/engine/plugins и именуются по принципу family_name.py, где family — семейство (например cputemp), а name — имя, характеризующее плагин. Например cputemp_default.py — читает температуру процессора "обычным" способом из сенсора процессора cpu0.
+Plugins are located in the folder tbng/engine/plugins and are named according to the principle family_name.py, where family is a family (for example cputemp), and name is the name that characterizes the plugin. For example, cputemp_default.py reads the CPU temperature in the "normal" way from the cpu0 processor sensor.
 
-На момент написания документа существуют только два семейства — cputemp и macspoof. Первое, как было сказано реализует механизм чтения температуры процессора, второе — подмену mac-адреса сетевой карты.
+At the time of writing, there are only two families — cputemp and macspoof. The first, as it was said, realizes the mechanism of reading the temperature of the processor, the second is the substitution of the mac-address of the network card.
 
-Семейство "example" — это просто тестовые плагины для разработки.
+The "example" family is just test plug-ins for development.
 
-В файле конфигурации tbng.json указывается только действие — "cputemp: default", "macspoof: ifconfig". 
+The tbng.json configuration file specifies only the action — "cputemp: default", "macspoof: ifconfig".
 
-###   Плагины для чтения информации о температуре процессора
+### Plugins for reading CPU temperature information
 
-Самый простой тип плагинов. Считывают данные о температуре, формируют строку, и передают её на стандартный вывод.
+The simplest type of plugins. Read the temperature data, form a string, and transmit it to the standard output.
 
-Файл имеет название cputemp_action.py. Проверить функциональность можно просто:
+The file is named cputemp_action.py. Check functionality is simple:
 
 `johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py cputemp default`
 
-Если плагин вывел температуру, проверка прошла успешно. А вот на Raspberry Pi 1 процесс чтения температуры отличается и нужно использовать плагин cputemip_rpi1.py, то есть:
+If the plug-in brought out the temperature, the test was successful. But on the Raspberry Pi 1 process of reading the temperature is different and you need to use the plugin cputemip_rpi1.py, that is:
 
 `johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py cputemp rpi1`
 
-###   Плагины  для mac spoof
+### Plugins for mac spoof
 
-MAC spoof позволяет подменять адрес интерфейса зоны WAN. Скорее всего пользователь знает, зачем это нужно.
+MAC spoof allows you to replace the interface address of the WAN zone. Most likely the user knows the purpose for this action.
 
-Основная проблема в том, что mac spoofing работает по-разному на разных ядрах, модулях ядра, и на разном "железе".
+The main problem is that mac spoofing works differently on different kernels, kernel modules, and on different hardware.
 
-Например, если адаптеры Ralink 2800 прекрасно меняют MAC адрес через команду ifconfig (правда только в Debian Jessie и Debian Stretch, но не в Ubuntu — там "мешает" Network Manager определенной версии), то для смены MAC на адаптерах Realtek нужно выгрузить текущий модуль ядра, выполнить modprobe c параметром (новый mac). И выходит, что если у вас 2 одинаковых сетевых адаптера Realtek, действие будет выполнено для обоих (модуль-то один). А это определенно введёт систему в нерабочее состояние. Что уж говорить о всяких экспериментальных модулях, где нужно где-то "подождать", где-то проверить условие.
+For example, if the Ralink 2800 adapters perfectly change the MAC address through the ifconfig command (although only in Debian Jessie and Debian Stretch, but not in Ubuntu - there "hinders" Network Manager of a certain version), then to change the MAC on Realtek adapters, you need to unload the current kernel module , execute modprobe with the parameter (new mac). And it turns out that if you have 2 identical Realtek network adapters, the action will be performed for both (since they share one kernel module). And this will definitely put the system into an inoperative state. Experimental or buggy modules for example has even more obstacles.
 
-В отличие от "температурных" плагинов для macspoof нужно передавать параметры, как минимум имя интерфейса, который нужно "спуфить". 
+Unlike the "temperature" plug-ins for macspoof, you need to pass parameters, at least the name of the interface that you need to "spoof".
 
-Вот примеры использования плагинов в файле конфигурации tbng.conf и в утилите plugin_tester.py
+Here are examples of using plugins in the tbng.conf configuration file and in the plugin_tester.py utility.
 
 #### ifconfig
 
-Выполняет подмену мак-адреса через команду ifconfig — наиболее простой вариант. Не работает в Ubuntu (однако, работает в Debian Jessie и Stretch).
+Performs the substitution of MAC addresses through the command ifconfig — the most simple option. Does not work in Ubuntu (however, it works in Debian Jessie and Stretch).
 
-##### Запись в конфигурационном файле
+##### Configuration file record
 
-Формат записи довольно простой:
+Format is almost straightforward:
+
 ```
 {
      "name": "wlan1",
@@ -411,21 +412,21 @@ MAC spoof позволяет подменять адрес интерфейса 
 }
 ```
 
-Разрешаем spoof на интерфейсе с именем wlan1.
+Enabling spoof on wlan1 interface.
 
-##### Вызов через plugin_tester
+##### Call via plugin_tester
 
-В командную строку нужно передать JSON-строку с именем интерфейса:
+On the command line, you need to pass a JSON string with the interface name:
 
 `johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py macspoof ifconfig '{"name":"wlan1"}'`
 
 #### modrealtek
 
-Выполняет подмену мак-адреса через выгрузку модуля и загрузку заново с параметром. Нельзя использовать, если есть более чем один интерфейс одного типа (например и wlan0 и wlan1 используют один и тот же модуль 8192cu). Также не будет работать в тех системах, где имя интерфейса содержит mac-адрес. 
+Performs a substitution of the mac address by unloading the module and reloading it again with the parameter. Can not be used if there is more than one interface of the same type (for example, both wlan0 and wlan1 use the same 8192cu module). Also will not work on systems where the interface name contains a mac-address.
 
-##### Запись в конфигурационном файле
+##### Configuration file record
 
-Формат записи немного сложнее предыдущего:
+Format is slightly more complicated:
 
 ```
  {
@@ -440,16 +441,17 @@ MAC spoof позволяет подменять адрес интерфейса 
 }
 ```
 
-Разрешаем spoof на интерфейсе с именем wlan1 и указываем имя модуля, который надо перегружать.
+Enable spoof on wlan1 interface __and__ point to kernel module name which must be reloaded.
 
-##### Вызов через plugin_tester
+##### Call via plugin_tester
 
-В командную строку нужно передать JSON-строку с именем интерфейса и именем модуля для перегрузки:
+On the command line, you need to pass a JSON string with the interface name __and__ kernel module name for reloading:
 
 `johndoe@linuxbox:~$ sudo tbng/engine/plugin_tester.py macspoof modrealtek '{"name":"wlan1","module_name":"8192cu"}'`
 
-### Написание собственных плагинов
+### Creating your own plugin
 
-Для написания собственных плагинов нужно владеть Python третьей версии. 
+To write your own plug-ins you need Python 3.x.
 
-Запуск плагина выполняется через вызов функции _*plugin_main*_. Для ознакомления поставляется несколько плагинов в том числе элементарные семейства "example", для тестирования же можно использовать утилиту _*tbng/engine/plugin_tester.py*_. Использование достаточно "прозрачное" и не вызовет вопросов даже у новичка в Python, тем более что все исходные тексты доступны. 
+The plugin is started by calling the _*plugin_main*_ function. To get started, several plug-ins are delivered including elementary families "example", for testing you can use the utility _*tbng/engine/plugin_tester.py*_. The use is fairly strtaightforward and will not raise questions even for a beginner in Python, especially since all source code is available.
+
