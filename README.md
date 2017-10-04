@@ -1,6 +1,6 @@
 # TorBOX Next Generation #
 
-## RU:
+## RU
 TorBOX Next Generation (TBNG) — это набор скриптов, позволяющий быстро и без особых усилий создать точку доступа к сети [TOR](https://torproject.org) — как проводную, так и беспроводную. 
 
 TBNG является продолжением проекта [Orange TorBOX](https://github.com/znoxx/torbox), но при этом никак не привязан к аппаратной части, то есть его можно запустить не только 
@@ -24,7 +24,7 @@ make
 ```
 Установите TBNG согласно документации, перезагрузите устройство и начинайте использовать!
 
-## EN:
+## EN
 TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and almost effortless creation of [TOR](https://torproject.org) Access Point (wireless and wired).
 
 TBNG is a sequel of [Orange TorBOX](https://github.com/znoxx/torbox) project, but now it can be run not only on limited set of Orange Pi devices, but on virtually any Linux, driven  
