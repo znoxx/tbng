@@ -21,6 +21,8 @@ TBNG является продолжением проекта [Orange TorBOX](ht
 cd doc
 make
 ```
+Или ознакомиться с документацией [здесь](http://tbng.ml) — снапшоты публикуются на регулярной основе. 
+
 Установите TBNG согласно документации, перезагрузите устройство и начинайте использовать!
 
 ## EN
@@ -43,5 +45,7 @@ For your convinience documentation can be converted to  html (you will need pand
 cd doc
 make
 ```
+Or get familiar with it [here](http://tbng.ml) — snapshots are published regularily.
+
 Install TBNG according to documentation, reboot the device and start using it!
 
