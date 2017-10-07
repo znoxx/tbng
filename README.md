@@ -3,8 +3,12 @@
 ## RU
 TorBOX Next Generation (TBNG) — это набор скриптов, позволяющий быстро и без особых усилий создать точку доступа к сети [TOR](https://torproject.org) и [I2P](https://geti2p.com) — как проводную, так и беспроводную. 
 
-TBNG является продолжением проекта [Orange TorBOX](https://github.com/znoxx/torbox), но при этом никак не привязан к аппаратной части, то есть его можно запустить не только 
-на ограниченном наборе плат OrangePi, а практически на любом Linux, управляемом через _SystemD_, имеющим возможность запускать _Network Manager_ и _Python3_. Полный список 
+TBNG является продолжением проекта [Orange TorBOX](https://github.com/znoxx/torbox). 
+
+Однако, нет никакой не привязки к аппаратной части, то есть его можно запустить не только на ограниченном наборе плат Orange Pi/Raspberry Pi,
+а практически на любом Linux.
+
+Базовые системные требования просты -- _SystemD_, наличие _Network Manager_ и _Python3_. Полный список 
 системных требований вы найдёте в документации.
 
 ### Быстрый старт
@@ -37,8 +41,12 @@ make
 ## EN
 TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and almost effortless creation of [TOR](https://torproject.org) and [I2P](https://geti2p.com) Access Point (wireless and wired).
 
-TBNG is a sequel of [Orange TorBOX](https://github.com/znoxx/torbox) project, but now it can be run not only on limited set of Orange Pi devices, but on virtually any Linux, 
-driven by _SystemD_, having _Network Manager_ and _Python3_. Full list of system requiremets is described in project documentation.
+TBNG is a sequel of [Orange TorBOX](https://github.com/znoxx/torbox) project.
+
+But it can be run not only on limited set of Orange Pi/Raspberry Pi devices, but on virtually any Linux.
+
+Basic requirements are _SystemD_, _Network Manager_ and _Python3_. 
+Full list of system requiremets is described in project documentation.
 
 ### Quick start
 
