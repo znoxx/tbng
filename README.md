@@ -29,7 +29,7 @@ make
 
 Установите TBNG согласно документации, перезагрузите устройство и начинайте использовать!
 
-Вы получите возможность:
+Возможности:
 
 * "Прозрачно" использовать TOR на любом подключенном устройстве.
 * Получать доступ к сети I2P.
@@ -66,7 +66,7 @@ Or get familiar with it [here](http://tbng.ml) — snapshots are published regul
 
 Install TBNG according to documentation, reboot the device and start using it!
 
-You will be able to:
+Features:
 
 * "Transparently" use TOR on any connected device.
 * Access the I2P network.
