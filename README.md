@@ -5,8 +5,8 @@ TorBOX Next Generation (TBNG) — это набор скриптов, позво
 
 TBNG является продолжением проекта [Orange TorBOX](https://github.com/znoxx/torbox). 
 
-Однако, нет никакой не привязки к аппаратной части, то есть его можно запустить не только на ограниченном наборе плат Orange Pi/Raspberry Pi,
-а практически на любом Linux.
+ТруЪ кроссплатформенность -- проект можно запустить ___не только___  на ограниченном наборе плат Orange Pi/Raspberry Pi,
+а практически на __любом Linux__.
 
 Базовые системные требования просты -- _SystemD_, наличие _Network Manager_ и _Python3_. Полный список 
 системных требований вы найдёте в документации.
@@ -43,7 +43,7 @@ TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and alm
 
 TBNG is a sequel of [Orange TorBOX](https://github.com/znoxx/torbox) project.
 
-But it can be run not only on limited set of Orange Pi/Raspberry Pi devices, but on virtually any Linux.
+Totally hardware-agnostic — can be run ___not only___ on limited set of Orange Pi/Raspberry Pi devices, but on __virtually any Linux__.
 
 Basic requirements are _SystemD_, _Network Manager_ and _Python3_. 
 Full list of system requiremets is described in project documentation.
