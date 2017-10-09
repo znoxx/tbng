@@ -350,11 +350,11 @@ If, for some reason, the tor and privoxy configuration files are somewhere else,
 
 After successful installation, three new services will appear in the system:
 
-* tbng-helper — восстановление настроек при загрузке
+* tbng — loading TBNG settings on system start or creating/applying default settings  (consider this as TBNG "autostart")
 
-* webui-tbng — web-интерфейс
+* webui-tbng — web-interface
 
-* i2p-tbng — демон i2p
+* i2p-tbng — i2p daemon
 
 Congratulations, the system is configured and working !
 
