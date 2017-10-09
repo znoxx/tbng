@@ -350,7 +350,7 @@ johndoe@linuxbox:~$ cp tbng/config/torcountry.json.example tbng/config/torcountr
 
 После успешной установки в системе появятся ещё три новых сервиса:
 
-* tbng-helper — восстановление настроек при загрузке
+* tbng — восстановление настроек при загрузке или установок TBNG по умолчанию (можно считать это "автостартом" TBNG)
 
 * webui-tbng — web-интерфейс
 
