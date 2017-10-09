@@ -37,7 +37,7 @@ make
 * Работать как через проводной канал, так  и беспроводной (зависит от используемого оборудования).
 * Управлять системой через web-интерфейс.
 
-___Если вы нашли проект полезным, пожертвования принимаются [здесь](http://tbng.ml).___
+___Если вы сочли проект нужным и полезным — пожертвования принимаются [здесь](http://tbng.ml).___
 
 ## EN
 TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and almost effortless creation of [TOR](https://torproject.org) and [I2P](https://geti2p.com) Access Point (wireless and wired).
