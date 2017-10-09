@@ -326,7 +326,7 @@ This file appears only after the first start TBNG and is used to store settings 
 
 This will bring the system to its original state.
 
-## Первичная настройка TBNG
+## Primary TBNG setup
 
 So, the settings are formed, the network interfaces are checked — the time to apply the final configuration and use. To start the configuration, do the following:
 
