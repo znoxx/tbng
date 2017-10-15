@@ -204,11 +204,11 @@ The user needs to configure the hostapd for the LAN zone (in our case wlan0 inte
 
 Let's check an example:
 
-`johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a arm -i wlan0 -n my_access_point -p mysuperpassword -d nl80211`
+`johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a armhf -i wlan0 -n my_access_point -p mysuperpassword -d nl80211`
 
 Options, used in this command:
 
-* -a arm — use arm architecture. This is suitable for Orange PI, RP2 and above. For the RPI of the first version, you need to specify armvl6, and for desktop computers x86 or x86_64. For Orange Pi PC2 — aarch64.
+* -a armhf — use arm architecture. This is suitable for Orange PI, RP2 and above. For the RPI of the first version, you need to specify armvl6, and for desktop computers x86 or x86_64. For Orange Pi PC2 — aarch64.
 
 * -i wlan0 — interface
 
