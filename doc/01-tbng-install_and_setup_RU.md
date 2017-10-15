@@ -204,11 +204,11 @@ dnsmasq можно установить самостоятельно и наст
 
 Рассмотрим пример:
 
-`johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a arm -i wlan0 -n my_access_point -p mysuperpassword -d nl80211`
+`johndoe@linuxbox:~$ sudo tbng/setup/configure_hostapd.py -a armhf -i wlan0 -n my_access_point -p mysuperpassword -d nl80211`
 
 Опции, которые используются в команде:
 
-* -a arm — использовать архитектуру arm. Это подходит для Orange PI, RP2 и выше. Для RPI первой версии нужно указать armvl6, а для настольных компьютеров x86 или x86_64. Для Orange Pi PC2 — aarch64.
+* -a armhf — использовать архитектуру arm. Это подходит для Orange PI, RP2 и выше. Для RPI первой версии нужно указать armvl6, а для настольных компьютеров x86 или x86_64. Для Orange Pi PC2 — aarch64.
 
 * -i wlan0 — интерфейс
 
