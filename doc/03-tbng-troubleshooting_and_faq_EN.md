@@ -102,7 +102,7 @@ For Realtek wireless modules, for example, kernel module reload is required. In 
 
 ## FAQ — Frequently Asked Questions
 
-##### TOR is not working! What to do?
+#### TOR is not working! What to do?
 
 Service TOR sometimes refuses to start in the system or constantly restarts. The reason is in interaction with systemd. This may be the case with a "too new kernel", or vice versa - with "too old".
 
@@ -123,15 +123,34 @@ NoNewPrivileges=no
 
 Now your should restart TOR — it should run normally.
 
-Second problem — errors, related to APPARMOR, e.g.:
+Another problem — **tor** process is absent in system, but package is installed in normal way and does not even have TBNG customizations in config:
 
-`tor@default.service: Failed at step APPARMOR spawning /usr/bin/tor: No such file or directory`
+##### For Ubuntu 16.04
 
-As written [here](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808296), problem is solved with editing file:
+Suggestion [described here](https://askubuntu.com/questions/882527/tor-process-will-not-start-automatically-on-ubuntu-16-04).
+You can try to delete /lib/systemd/system/tor.service and run:
 
-`/lib/systemd/system/tor.service`
+`systemctl daemon reload`
 
-And replacing ExecStart=/bin/true to ExecStart=/usr/bin/tor (or wherever TOR is located in your system). Actually it shows up in Debian Stretch on Raspberry Pi.
+This will run tor from /etc/init.d/tor, but not via systemd.
+
+Reddit users suggest following option, which works in Debian Stretch:
+
+##### Для Debian Stretch
+
+Original post [here](https://www.reddit.com/r/debian/comments/6kiqce/help_tor_doesnt_start_after_boot_in_debian_stretch/).
+
+In general, you should run:
+
+`systemctl enable tor@default`
+
+Then reboot system. This will allow commands like `systemctl start tor`, `systemctl restart tor` to run.
+
+##### If nothing helps
+
+One can try to install TOR from original torproject.org repository (manual can be found there) or even build tor from source.
+
+Google is your friend here. TBNG does not affect working state of tor or tor autostart, it just add some options into /etc/tor/torrc.
 
 #### Unable to connect to WiFi network (external network)
 
