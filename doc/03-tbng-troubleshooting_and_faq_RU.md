@@ -102,7 +102,7 @@ TBNG использует большое количество компонент
 
 ## FAQ — Часто Задаваемые Вопросы
 
-##### Не работает TOR. Что делать ?
+#### Не работает TOR. Что делать ?
 
 Сервис TOR иногда отказывается стартовать в системе или постоянно перезапускается. Причина во взаимодействии с systemd.  Такое может быть при "слишком новом ядре", или наоборот — при "слишком старом".
 
@@ -123,16 +123,34 @@ NoNewPrivileges=no
 
 Теперь перезапускаем TOR — падать должно перестать.
 
-Вторая проблема — ошибки, связанные с APPARMOR, например:
+Вторая проблема — процесс **tor** отсутствует в системе, несмотря на то, что он установлен (даже без дополнительной конфигурации для tbng):
 
+##### Для Ubuntu 16.04
 
-`tor@default.service: Failed at step APPARMOR spawning /usr/bin/tor: No such file or directory`
+Тут предлагается [следующее решение](https://askubuntu.com/questions/882527/tor-process-will-not-start-automatically-on-ubuntu-16-04).
+В частности, предлагается удалить файл /lib/systemd/system/tor.service и выполниеть команду:
 
-Как утверждает [эта ссылка](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808296), проблема решается редактированием файла
+`systemctl daemon reload`
 
-`/lib/systemd/system/tor.service`
+Это позволит запускать tor из /etc/init.d/tor, а не через systemd.
 
-И заменой ExecStart=/bin/true на ExecStart=/usr/bin/tor (ну или где расположен бинарный файл в вашей системе). В частности, проявляется в Debian Stretch
+Пользователи Reddit предлагают также решение, работающее в Debian Stretch:
+
+##### Для Debian Stretch
+
+Оригинал смотрим [тут](https://www.reddit.com/r/debian/comments/6kiqce/help_tor_doesnt_start_after_boot_in_debian_stretch/).
+
+Если кратко, то выполняем:
+
+`systemctl enable tor@default`
+
+Перегружаем систему. Это позволит управлять сервисом через обычные команды `systemctl start tor`, `systemctl restart tor`
+
+##### Если ничего не помогло
+
+Можно попробовать поставить TOR из репозитарием проекта torproject.org. Там есть инструкция, ну или собрать из исходников. Хотя два предыдущих приёма должны помочь.
+
+Google is your friend here. TBNG никак не влияет на работоспособность или авто-старт tor, а лишь добавляет необходимые опции в /etc/tor/torrc.
 
 #### Невозможно соединиться с WiFi сетью (внешняя сеть)
 
