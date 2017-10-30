@@ -1,5 +1,9 @@
 # Version history
 
+## 30-Oct-2017
+
+TOR troubleshooting section updated in documentation, thanks to user feedback.
+
 ## 26-Oct-2017
 
 I2P Installer URL fix
