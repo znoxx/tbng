@@ -32,7 +32,10 @@ def main(args, loglevel):
 
   logging.info("Configuring dnsmasq")
   settings = """interface={0}
-server=8.8.8.8 #Change this to your favourite public dns server, if needed
+#Configuration of DNS
+server=#
+server=8.8.8.8
+#Configuration of DNS end
 dhcp-option={0},option:dns-server,0.0.0.0
 dhcp-option={0},option:router,{4}
 dhcp-range={0},{1},{2},{3},12h""".format(args.interface,args.dhcpbegin,args.dhcpend,args.dhcpmask,ip_address)
