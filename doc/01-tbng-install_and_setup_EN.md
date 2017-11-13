@@ -137,7 +137,7 @@ Generally those steps are sufficient to continue.
 
 Packages are named as in Debian / Ubuntu. Perhaps some names do not match, you may also need to install the python3 modules via pip. However, this list should be sufficient to find all required packages.
 
-**_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface._**
+**_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface, dnsutils_**
 
 As it mentioned before,  **_Java_** and **_npm_** must be installed also.
 
