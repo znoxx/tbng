@@ -376,6 +376,12 @@ Working example:
 
 Blocks countries with codes "ac" and "af".
 
+##### dnsmasq_restart
+
+Restarts dnsmasq. Needed, when WAN is switched to another network and sometimes on first start. Cleans DNS cache.
+
+`$ sudo ./engine/tbng.py dnsmasq_restart`
+
 #### Mode switching
 
 ##### mode
