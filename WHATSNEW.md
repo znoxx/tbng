@@ -6,6 +6,8 @@ Added functionality to reset DNS cache. Needed when switchig between WAN network
 
 Changed settings for dnsmasq: expected effect is to have google dns and fallback to local provider dns on resolution failure (e.g. captive portals with local names).
 
+Added "dnsutils" package to installation script, doc updated.
+
 Upgrade path:
 
 In tbng folder: git pull, then reconfigure dnsmasq with option "-s none", but same interface and parameters of IP. It will update config file.
