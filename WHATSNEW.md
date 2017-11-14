@@ -1,5 +1,28 @@
 # Version history
 
+## 14-Nov-2017
+
+Added functionality to reset DNS cache. Needed when switchig between WAN networks.
+
+Changed settings for dnsmasq: expected effect is to have google dns and fallback to local provider dns on resolution failure (e.g. captive portals with local names).
+
+Upgrade path:
+
+In tbng folder: git pull, then reconfigure dnsmasq with option "-s none", but same interface and parameters of IP. It will update config file.
+
+Manual update of dnsmasq.conf:
+
+Replace string (including comment):
+
+```
+server=8.8.8.8 #Change this to your favourite public dns server, if needed
+```
+to:
+```
+server=#
+server=8.8.8.8
+```
+
 ## 30-Oct-2017
 
 TOR troubleshooting section updated in documentation, thanks to user feedback.

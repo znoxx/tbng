@@ -244,3 +244,10 @@ General answer — one which will work with your kernel.
 
 Little bit more details — Ralink 2800 worked in all modes, survived MAC spoofing (everywhere except Ubuntu 16.04 due to Network Manager). On the other hand dirt-cheap Realtek 8192CU, 8188CUS allowed to use only one NIC in system, since it utilized [Concurrent Mode](http://znoxx.me/2017/09/09/dvukhgholovyi-realtek/). It all depends on your goals.
 
+#### Cannot open  captive portal after WiFi connection — server not found.
+
+Reset DNS cache in WAN settings  (restart dnsmasq).
+
+This may happen, if you connect to network, where captive portal is opened by name, but not an address, for example "supercoffeshop.local". Name is not available in global DNS, so dnsmasq restart required to renew DNS data from local service.
+
+

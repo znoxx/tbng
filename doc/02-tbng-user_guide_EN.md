@@ -125,6 +125,7 @@ Configuration is saved between reboots.
 ### WAN settings
 
 In this section, you can set up a connection to WiFi (if you are using a wireless interface), switch to another Internet channel, and also spoof the MAC-address of the network card for Internet access, if, of course, the system supports this option.
+An option to restart DNS service is available — sometimes it is required to allow correct DNS functionality after network switch/connect.
 
 ![WAN settings in TBNG](images/image_10.png)
 
@@ -169,6 +170,13 @@ By clicking on the network name, a dialog appears where you need to enter the pa
 ![WiFi connection in TBNG](images/image_14.png)
 
 Network Manager remembers the connection by default and when device is rebooted it must be restored automatically.
+
+#### Restart dnsmasq service
+
+Restarts dnsmasq service on device. Required to reset DNS cache. Let's consider an example — one connected to a network with a  captive portal with a hostname, which is note available in global DNS (for example, "supercofeshop.local").
+After restart name should be resolved normally. It is recommended to reset cache after network switch or on initial connect after device start.
+
+![Restart dnsmasq](images/image_19.png)
 
 #### Spoof WAN Mac
 
