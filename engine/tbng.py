@@ -8,7 +8,7 @@ import netifaces as ni
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
-__version_info__ = ('0', '9', '3')
+__version_info__ = ('0', '9', '4')
 __version__ = '.'.join(__version_info__)
 
 #Getting path for config usage
@@ -78,6 +78,7 @@ def main(args, loglevel):
    'patch_nmcli': [patch_nmcli, "Set sticky bit and readonly to nmcli binary for easy patching after system update" ],
    'help': [help, "Prints list of available commands"],
    'version': [version, "Show version info"],
+   'dnsmasq_restart': [dnsmasq_restart, "Restart DNSMasq service"],
    'unknown': [unknown, "This is a stub for unknown options"]
   }
   
@@ -513,6 +514,10 @@ def version(options):
   check_options(options,0)
   print(__version__)
 
+def dnsmasq_restart(options):
+  check_options(options,0)
+  logging.debug(utility.run_shell_command("systemctl restart dnsmasq").decode("utf-8"))
+  logging.info("DNSMasq restart called")
 
 def is_managed(interface):
   command="nmcli dev show {0}|grep unmanaged||true".format(interface)

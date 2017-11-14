@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  if message
+   h2= message
+  form(name="dnsmasq", action="/wan/dnsmasq", method="post")
+    input(type="submit", value="Restart dnsmasq")
+  br
+  a(href="/wan") Back                                           

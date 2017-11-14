@@ -379,7 +379,13 @@ this.setExitNodes = function(countries)
 this.spoofInterface = function(interface)
 {
   var execSync = require('child_process').execSync;
-  var execSync = require('child_process').execSync;
   res = execSync(engineRun+" macspoof_wan "+interface).toString().split("\n")[0];
   console.log(res);
+}
+
+this.restartDNSMasq = function()
+{
+  var execSync = require('child_process').execSync;
+  execSync(engineRun+" dnsmasq_restart").toString().split("\n")[0];
+  return "Command successfully passed to system";
 }
