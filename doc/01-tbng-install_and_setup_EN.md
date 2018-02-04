@@ -212,9 +212,9 @@ Options, used in this command:
 
 * -i wlan0 — interface
 
-* -n — access point name (your future WiFi network)
+* -n — access point name (your future WiFi network). Will pick random value, if omitted.
 
-* -p — password for network
+* -p — password for network. Will pick random value, if omitted.
 
 * -d — driver. In the version installed by the script there is both a driver **nl80211** (standard) and **rtl871xdrv** for Realtek wireless adapters. So in case one have Realtek WiFi, appropriate driver must be used.
 
