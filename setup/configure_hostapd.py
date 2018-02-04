@@ -7,10 +7,51 @@ import argparse,json
 import urllib.request
 import tempfile
 import gzip
+import random
 
 import netifaces as ni
 
 from libtbngsetup import *
+
+#Dictionary for random name/password geneation
+
+Adjectives=[
+'perfect','soft','hurt','zonked',
+'spiritual','nondescript','ragged',
+'unadvised','overconfident','ambitious','idiotic',
+'bashful','guarded','elite','waggish','typical','bouncy',
+'labored','placid','drab','moldy','highfalutin','maddening','imported','selfish',
+'mighty','lackadaisical','redundant','parsimonious','fallacious','simplistic',
+'brawny','dysfunctional','complex','stupendous','responsible','disgusting','solid',
+'chemical','painful','many',
+'curious','elfin','godly','rustic','classy','tidy','nappy','furtive',
+'bumpy','depressed','spiky','somber','satisfying','halting','befitting',
+'aloof','hateful','hot','snotty','freezing','blue-eyed','ceaseless','early'
+]
+
+Nouns=[
+'statement','group','bite','school','walk','shop','toe','limit',
+'gold','sort','back','lunchroom','care','view','dust','question','queen','start',
+'art','ship','pencil','sugar','feeling','fruit','twig','desire','knee','elbow',
+'month','jewel','toes','pocket','glass','night','cattle','place','cap','fish',
+'trucks','fact','sack','rake','jail','bed','sweater','teeth','uncle','representative','sister',
+'note','quill','force','board','jam',
+'quarter','mouth','hate','boat','waste','coat','hat','event','chance','soup'
+]
+
+def generate_name():
+  logging.debug("Generating random name")
+  secure_random = random.SystemRandom()
+  adjective=secure_random.choice(Adjectives)
+  secure_random = random.SystemRandom()
+  noun=secure_random.choice(Nouns)
+  return adjective.title()+noun.title()
+  
+
+def generate_password(name):
+  logging.debug("Generating random password")
+  secure_random = random.SystemRandom()
+  return name+str(secure_random.randint(100000, 999999))
 
 # Gather our code in a main() function
 def main(args, loglevel):
@@ -18,20 +59,33 @@ def main(args, loglevel):
   logging.basicConfig(format="%(levelname)s: %(message)s", level=loglevel)
   logging.debug("Arguments passed: {0}".format(args))
 
+  stubName=generate_name()
+  stubPassword=generate_password(stubName)
   parameters={}
   parameters['project']=project_dir
   parameters['interface']=args.interface
-  parameters['apname']=args.apname
-  parameters['appassword']=args.appassword
+ 
+  if args.apname is not None:
+    parameters['apname']=args.apname
+  else:
+    parameters['apname']=stubName
+
+  if args.appassword is not None:
+    parameters['appassword']=args.appassword
+  else:
+    parameters['appassword']=stubPassword
+
+
+
   parameters['driver']=args.driver
 
   logging.info("Checking arguments")
-  if len(args.appassword) < 8:
+  if len(parameters['appassword']) < 8:
     raise Exception("Access point password must be 8 symbols or more")
 
-  logging.info("Checking {0} is configured manually".format(args.interface))
-  logging.info("Trying to get address of interface {0}".format(args.interface))
-  ip_address = check_interface(args.interface)
+  logging.info("Checking {0} is configured manually".format(parameters['interface']))
+  logging.info("Trying to get address of interface {0}".format(parameters['interface']))
+  ip_address = check_interface(parameters['interface'])
 
   if not ip_address:
     raise Exception("Cannot determine interface {0} address. Run ifup {0} and restart the script".format(args.interface))
@@ -72,8 +126,16 @@ def main(args, loglevel):
 
   result="""Static version of hostapd binary installed to {0}/bin/hostapd-tbng.
 Configuration located at {0}/config/hostapd-tbng.conf.
+Your AP name: {3}
+Your password: {4}
 SystemD service hostapd-tbng is registered and enabled by default.
-Don' forget to confgure dhcp service for {1} or use static IPs. Current IP of {1} is {2}""".format(project_dir,args.interface,ip_address)
+Don' forget to confgure dhcp service for {1} or use static IPs. Current IP of {1} is {2}""".format(
+  project_dir,
+  parameters['interface'],
+  ip_address,
+  parameters['apname'],
+  parameters['appassword']
+  )
   logging.info(result)
 
 
@@ -101,11 +163,11 @@ if __name__ == '__main__':
 
   parser.add_argument('-n',
                       '--apname',
-                       type=str, help="Access point name",required=True)
+                       type=str, help="Access point name - will be chosen randomly, if omitted",required=False)
 
   parser.add_argument('-p',
                       '--appassword',
-                       type=str, help="Access point password (must be 8+ symbols)",required=True)
+                       type=str, help="Access point password (must be 8+ symbols) - will be chosen randomly if ommitted",required=False)
   
   parser.add_argument('-d',
                       '--driver',
