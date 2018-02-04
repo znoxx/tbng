@@ -1,5 +1,9 @@
 # Version history
 
+## 04-Feb-208
+
+Added autogeneration of AP name and password. Useful for mass production.
+
 ## 14-Nov-2017
 
 Added functionality to reset DNS cache. Needed when switchig between WAN networks.
