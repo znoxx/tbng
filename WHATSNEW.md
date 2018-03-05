@@ -1,6 +1,10 @@
 # Version history
 
-## 04-Feb-208
+## 05-Mar-2018
+
+Updated tor config to align with current recommendations. Removed obsolete directives.
+
+## 04-Feb-2018
 
 Added autogeneration of AP name and password. Useful for mass production.
 
