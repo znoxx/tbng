@@ -17,8 +17,8 @@ def configure_tor(torrc):
   settings="""Log notice syslog
 VirtualAddrNetworkIPv4 10.192.0.0/10
 AutomapHostsOnResolve 1
-TransPort 9040
-DNSPort 9053
+TransPort 0.0.0.0:9040
+DNSPort 0.0.0.0:9053
 CircuitBuildTimeout 30
 KeepAlivePeriod 60
 NewCircuitPeriod 15
@@ -26,8 +26,6 @@ NumEntryGuards 8
 ConstrainedSockets 1
 ConstrainedSockSize 8192
 AvoidDiskWrites 1
-DNSListenAddress 0.0.0.0
-TransListenAddress 0.0.0.0
 SocksPort 0.0.0.0:9050"""
   utility.removeFileData(torrc,prefix,token)
   utility.appendFileData(torrc,prefix,token,settings)
