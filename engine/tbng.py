@@ -8,7 +8,7 @@ import netifaces as ni
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
-__version_info__ = ('0', '9', '4')
+__version_info__ = ('0', '9', '5')
 __version__ = '.'.join(__version_info__)
 
 #Getting path for config usage
@@ -194,9 +194,7 @@ def mode(options):
     
     iface_data=ni.ifaddresses(interface['name'])
     destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else ""
-    if destination_address:    
-      commandMode += "iptables -t nat -D PREROUTING -i {0} -d {1} -p udp --dport 53 -j REDIRECT --to-port 53\n".format(interface['name'],destination_address)
-    commandMode += "iptables -t nat -A PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
+    commandMode += "iptables -t nat -I PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
     commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
 
 
