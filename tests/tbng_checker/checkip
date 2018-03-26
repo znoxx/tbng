@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "From https:"
+curl -ss https://ipinfo.io/ip
+echo "From http:"
+curl -ss http://ipinfo.io/ip
+
+
