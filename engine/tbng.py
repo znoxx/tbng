@@ -153,12 +153,12 @@ def masquerade(options):
   # Making list of wan interfaces
 
   for interface in configuration['wan_interface']:
-    Script = Script + "iptables --table nat --append POSTROUTING --out-interface {0} -j MASQUERADE\n".format(interface['name']) 
+    Script = Script + "iptables --table nat --append POSTROUTING --out-interface {0} -j MASQUERADE -m comment --comment TBNG\n".format(interface['name']) 
   
   for interface in configuration['lan_interface']:
-    Script = Script + "iptables --append FORWARD --in-interface {0} -j ACCEPT\n".format(interface['name']) 
+    Script = Script + "iptables --append FORWARD --in-interface {0} -j ACCEPT -m comment --comment TBNG\n".format(interface['name']) 
 
-  Script = Script + "iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n" 
+  Script = Script + "iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment TBNG\n" 
   Script = Script + "sysctl -w net.ipv4.ip_forward=1\n"
 
   logging.debug(utility.run_multi_shell_command(Script).decode("utf-8"))
@@ -166,17 +166,8 @@ def masquerade(options):
 
 def clean_fw(options):
   check_options(options,0)
-  logging.debug(utility.run_multi_shell_command("""iptables -F
-  iptables -X
-  iptables -t nat -F
-  iptables -t nat -X
-  iptables -t mangle -F
-  iptables -t mangle -X
-  iptables -t raw -F
-  iptables -t raw -X
-  iptables -P INPUT ACCEPT
-  iptables -P FORWARD ACCEPT
-  iptables -P OUTPUT ACCEPT""").decode("utf-8"))
+  logging.debug(utility.run_multi_shell_command("""iptables-save |grep TBNG|sed -r 's/-A/iptables -D/e'
+  iptables-save |grep TBNG|sed -r 's/-A/iptables -t nat -D/e'""").decode("utf-8"))
   logging.info("Clean firewall called")
 
 def mode(options):
@@ -190,12 +181,12 @@ def mode(options):
   commandMode=""
   for interface in configuration['lan_interface']:
     if options[0] == 'privoxy':
-      commandMode  += "iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118\n".format(interface['name'])
+      commandMode  += "iptables -t nat -A PREROUTING -i {0} -p tcp --dport 80 -j REDIRECT --to-port 8118 -m comment --comment TBNG\n".format(interface['name'])
     
     iface_data=ni.ifaddresses(interface['name'])
     destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else ""
-    commandMode += "iptables -t nat -I PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053\n".format(interface['name'])  
-    commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040\n".format(interface['name'])
+    commandMode += "iptables -t nat -I PREROUTING -i {0} -p udp --dport 53 -j REDIRECT --to-ports 9053 -m comment --comment TBNG\n".format(interface['name'])  
+    commandMode += "iptables -t nat -A PREROUTING -i {0} -p tcp --syn -j REDIRECT --to-ports 9040 -m comment --comment TBNG\n".format(interface['name'])
 
 
   clean_fw([])
@@ -216,10 +207,10 @@ def mode(options):
     destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else "" 
     for port in allowed_ports_tcp:
       if destination_address:
-        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -d {2} -p tcp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port,destination_address)
+        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -d {2} -p tcp --dport {1} -j REDIRECT --to-port {1} -m comment --comment TBNG\n".format(interface['name'],port,destination_address)
     for port in allowed_ports_udp:
       if destination_address:
-        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -d {2} -p udp --dport {1} -j REDIRECT --to-port {1}\n".format(interface['name'],port,destination_address)
+        commandAllow = commandAllow + "iptables -t nat -A PREROUTING -i {0} -d {2} -p udp --dport {1} -j REDIRECT --to-port {1} -m comment --comment TBNG\n".format(interface['name'],port,destination_address)
       
   logging.debug("Allowed LAN service ports: \n{0}\n".format(commandAllow))
   logging.debug(utility.run_multi_shell_command(commandAllow).decode("utf-8"))
@@ -231,7 +222,7 @@ def mode(options):
     masquerade([])
 
   #Locking firewall if needed
-  commandLock = "iptables  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\n"
+  commandLock = "iptables  -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment TBNG\n"
   allowed_ports_wan_tcp=[]
   if ('allowed_ports_wan_tcp' in configuration.keys()):
     allowed_ports_wan_tcp = list(set([]+configuration['allowed_ports_wan_tcp']))
@@ -246,14 +237,14 @@ def mode(options):
     destination_address= iface_data[ni.AF_INET][0]['addr'] if ni.AF_INET in iface_data else ""
     for port in allowed_ports_wan_tcp:
       if destination_address:
-        commandLock = commandLock + "iptables -A INPUT -i {0} -d {2} -p tcp --dport {1} -j ACCEPT\n".format(interface['name'],port,destination_address)
+        commandLock = commandLock + "iptables -A INPUT -i {0} -d {2} -p tcp --dport {1} -j ACCEPT -m comment --comment TBNG\n".format(interface['name'],port,destination_address)
 
     for port in allowed_ports_wan_udp:
       if destination_address:
-        commandLock = commandLock + "iptables -A INPUT -i {0} -d {2} -p udp --dport {1} -j ACCEPT\n".format(interface['name'],port,destination_address)
+        commandLock = commandLock + "iptables -A INPUT -i {0} -d {2} -p udp --dport {1} -j ACCEPT -m comment --comment TBNG\n".format(interface['name'],port,destination_address)
      
   for interface in configuration['wan_interface']:
-   commandLock = commandLock + "iptables -A INPUT -i {0} -j DROP\n".format(interface['name'])
+   commandLock = commandLock + "iptables -A INPUT -i {0} -j DROP -m comment --comment TBNG\n".format(interface['name'])
   
   if configuration['lock_firewall']:
     logging.debug("Locking WAN with exceptions:\n{0}\n".format(commandLock))
