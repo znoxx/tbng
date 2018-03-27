@@ -137,7 +137,7 @@ johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs
 
 Пакеты именованы так, как принято в Debian/Ubuntu. Возможно, некоторые имена не совпадают, также возможно потребуется установка модулей  python3 через pip. Тем не менее, этого списка должно быть достаточно для  подготовки пакетов.
 
-**_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface, dnsutils._**
+**_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface, dnsutils, sed._**
 
 Как уже упоминалось, нужно установить **_Java_** и **_npm_**.
 
