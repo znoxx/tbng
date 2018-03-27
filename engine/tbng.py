@@ -8,7 +8,7 @@ import netifaces as ni
 from libraries import utility
 from libraries.plugin_loader import run_plugin
 
-__version_info__ = ('0', '9', '5')
+__version_info__ = ('0', '9', '6')
 __version__ = '.'.join(__version_info__)
 
 #Getting path for config usage
