@@ -1,5 +1,9 @@
 # Version history
 
+## 28-Mar-2018
+
+Docker/LXC compatibility introduced, firewall rules deletion rework, documentation update.
+
 ## 05-Mar-2018
 
 Updated tor config to align with current recommendations. Removed obsolete directives.

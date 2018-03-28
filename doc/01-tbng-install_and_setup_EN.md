@@ -358,6 +358,67 @@ After successful installation, three new services will appear in the system:
 
 Congratulations, the system is configured and working !
 
+## Using TBNG with docker Docker and LXC
+
+TBNG can be used together and along with the container systems - Docker and LXC.
+Packaging TBNG in Docker is not feasible, since the system consists of a set of components, and best practices for Docker imply the separation of the solution into components. However, TBNG can ensure the functioning of containers through TOR / Privoxy.
+
+For LXC, there are no such restrictions, and TBNG fully works inside a separate LXC container. The case will be considered below.
+
+### Interaction with Docker
+
+To correctly interact with the Docker, you need to take a few additional steps.
+
+The docker0 interface should already be in the system at the time of setting up and then starting tbng. That is, it makes sense to install the Docker _before_ installing TBNG.
+
+The tbng service for systemd (see /lib/systemd/system/tbng.service) needs to be modified with a dependency on the Docker daemon. On a Debian / Ubuntu line like:
+
+```
+After=network.target
+```
+must be changed to:
+
+```
+After=network.target docker.service
+```
+It is also recommended to add docker0 interface to the dnsmasq configuration file (/etc/dnsmasq.conf) and disable dynamic IP on it, because Docker assigns addresses to containers. In the configuration file, add the following lines:
+
+```
+no-dhcp-interface=docker0
+```
+The last step is to add the docker0 interface to the lan_interface section. After these manipulations, each Docker container will be able to use the TBNG functionality as if it were devices on a local network serviced by TBNG.
+
+To test the functionality, you can use Docker images `znoxx/tbng_ip_checker_x86_64`, `znoxx/tbng_ip_checker_arm64`, `znoxx/tbng_ip_checker_armhf` by simply launching an image that matches the architecture with the `docker run` command. Alternatively, you can build the image yourself by running the `docker build .` command in the tbng/tests/tbng_checker directory.
+
+### Installing TBNG into LXC container
+
+TBNG can be installed in the LXC 2.x container. During the testing it was possible to get a fully functioning version of TBNG, installed in the container Ubuntu Xenial with the wireless interface  attached to the container exclusively. That is, the WAN interface was eth0 of the container, LAN was wlan0 (the second network interface of the container), the access point worked inside the container and successfully distributed addresses via DHCP.
+
+Brief install scenario:
+
+* Setup LXC container with Ubuntu Xenial (network, user).
+* Attach wlan0 interface into container and setup it inside container.
+* Install TBNG inside container
+* Update dnsmasq start sequence.
+
+#### Attaching physican network interface to container 
+```
+#!/bin/sh
+lxc-wait -n tbng -s RUNNING
+lxc-device -n tbng add wlan0
+```
+This script should be run in the background. After that, you can run the container: `lxc-start -n tbng`. We wait, that the container "tbng" started, we attach the device. It should be noted that this makes it difficult to autorun the container at system startup, but you can refer to the LXC documentation and enter the device's forwarding directly into the container configuration.
+
+#### Start dnsmasq
+Since in our case wlan0 is connected late, there is a possibility that dnsmasq will not start normally, without finding wlan0. There are two ways to solve this problem:
+
+* Refer to a systemd documentation and modify dnsmasq.service to be started _after_ appearing wlan0 in system.
+* Or, just add dnsmasq restart in /etc/rc.local
+
+The first way is much more elegant, but there is a possibility of changing dnsmasq.service when updating the system with the loss of changes.
+
+Finally, installation of TBNG inside the LXC container has no differences with installing on a regular computer.
+
 ## Plugins 
 
 TBNG is written in Python, and almost all actions are formalized. That is, calling iptables, starting and stopping daemons, working with Network Manager will be the same almost everywhere, but here are the procedures for reading the processor's temperature, or spoofing mac-addresses will differ not only from core to kernel, but even from system to system. In connection with this, a plug-in mechanism was introduced — plug-ins that implement a small and optional functionality
