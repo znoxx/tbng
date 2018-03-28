@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update curl
+RUN apk update && apk add --update curl
 
 COPY ./checkip /
 ENTRYPOINT ["./checkip"]
