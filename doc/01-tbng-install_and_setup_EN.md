@@ -381,11 +381,15 @@ must be changed to:
 ```
 After=network.target docker.service
 ```
-It is also recommended to add docker0 interface to the dnsmasq configuration file (/etc/dnsmasq.conf) and disable dynamic IP on it, because Docker assigns addresses to containers. In the configuration file, add the following lines:
+It is also recomended to update /etc/docker/daemon.json with next settings:
 
 ```
-no-dhcp-interface=docker0
+{
+    "dns": ["ip.of.your.lan.interface","ip.of.your.router","8.8.8.8"]
+}
 ```
+First IP — the one from your LAN interfaces (one of those from tbng.conf LAN section). Next one is your router IP, and finally — Google dns.
+
 The last step is to add the docker0 interface to the lan_interface section. After these manipulations, each Docker container will be able to use the TBNG functionality as if it were devices on a local network serviced by TBNG.
 
 To test the functionality, you can use Docker images `znoxx/tbng_ip_checker_x86_64`, `znoxx/tbng_ip_checker_arm64`, `znoxx/tbng_ip_checker_armhf` by simply launching an image that matches the architecture with the `docker run` command. Alternatively, you can build the image yourself by running the `docker build .` command in the tbng/tests/tbng_checker directory.
