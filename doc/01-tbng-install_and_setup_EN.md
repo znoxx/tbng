@@ -367,7 +367,15 @@ For LXC, there are no such restrictions, and TBNG fully works inside a separate 
 
 ### Interaction with Docker
 
-To correctly interact with the Docker, you need to take a few additional steps.
+The use of TBNG in conjunction with the Docker is possible in two, unfortunately, mutually exclusive modes. This is due to the conflict / incompatibility of iptables rules. Perhaps, it will be solved in future versions.
+
+* TBNG works "as usual", sending the traffic of network clients through TOR, while the containers work without _ transparent_ support for TOR.
+* TBNG ensures the operation of the Docker containers via TOR on the device _without_ the possibility of servicing other clients over the network.
+
+For the first mode, no additional settings are required. Moreover, if the application in the container is capable to work through socks5 or http proxy, those settings can be utilized.
+As a server, you need to use LAN ip, as port use 9050 for socks5 or 8118 for http proxy.
+
+For the second mode of interaction with Docker, you need to make several additional steps.
 
 The docker0 interface should already be in the system at the time of setting up and then starting tbng. That is, it makes sense to install the Docker _before_ installing TBNG.
 
