@@ -37,6 +37,8 @@ make
 * Работать как через проводной канал, так  и беспроводной (зависит от используемого оборудования).
 * Управлять системой через web-интерфейс.
 
+[Пошаговый пример установки и настройки для Orange Pi Zero (RUS)](http://znoxx.me/2018/04/06/poshaghovaia-installiatsiia-tbng-na-orangepi-zero/)
+
 ___Если вы сочли проект нужным и полезным — пожертвования принимаются [здесь](http://tbng.ml).___
 
 ## EN
@@ -74,5 +76,7 @@ Features:
 * Block unwanted traffic (banners).
 * Work both through a wired channel, and wireless (depends on the equipment used).
 * Manage the system through the web-interface.
+
+[Step-by-step setup guide for Orange Pi Zero (RUS, use online translator)](http://znoxx.me/2018/04/06/poshaghovaia-installiatsiia-tbng-na-orangepi-zero/)
 
 ___If you found project useful, do not hesitate to send any donation [here](http://tbng.ml)___
