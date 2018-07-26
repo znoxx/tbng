@@ -5,8 +5,8 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-JAVA_REPO=trusty
-NODE_VERSION=6.x
+JAVA_REPO=xenial
+NODE_VERSION=8.x
 
 echo "Pre-config..."
 
