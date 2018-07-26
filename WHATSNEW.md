@@ -1,5 +1,9 @@
 # Version history
 
+## 26-Jul-2018
+
+Java8 repository update, NodeJS version change (now 8), NPM components updated to latest version from npmjs.org 
+
 ## 28-Mar-2018
 
 Docker/LXC compatibility introduced, firewall rules deletion rework, documentation update.
