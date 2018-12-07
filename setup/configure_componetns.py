@@ -57,7 +57,7 @@ def download_i2p():
 
   version_url = tree.xpath('//div[@id="unix"]/div[@class="details"]/div[@class="file"]/a[@class="default"]/@href')[0]
 
-  version = re.search('i2pinstall_(.+?).\jar', version_url).group(1)
+  version = re.search('i2pinstall_(.+?).jar', version_url).group(1)
 
   filename = "{0}_i2pinstall_{1}.jar".format(tempfile.mktemp(),version)
   url="http://download.i2p2.de/releases/{0}/i2pinstall_{0}.jar".format(version)

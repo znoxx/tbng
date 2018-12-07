@@ -1,5 +1,8 @@
 # Version history
 
+## 07-Dec-2018
+Installer tool fix. Bionic Beaver compatibility update.
+
 ## 26-Jul-2018
 
 Java8 repository update, NodeJS version change (now 8), NPM components updated to latest version from npmjs.org 

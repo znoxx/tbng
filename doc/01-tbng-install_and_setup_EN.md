@@ -168,6 +168,46 @@ In this case:
 
 If WAN interface is wired, one must take care to configure it. It can be done via Network Manager, or via /etc/network/interfaces.
 
+### Special note on  Ubuntu 18.04 (Bionic Beaver)
+
+Bionic Beaver introduced an innovation in the form of netplan utility, which allows you to configure network interfaces much easier. Unfortunately, both for maintaining compatibility with Debian and previous Ubuntu, and because of the peculiarities of netplan, the network is configured via the ifupdown mechanism.
+
+So, if you use Bionic Beaver, you need to use the good old /etc/network/interfaces. Here is an example of its content for **wlan0**, which, as stated above, we use as LAN:
+
+```
+auto wlan0
+iface wlan0 inet static
+  address 192.168.223.1
+  netmask 255.255.255.0
+```
+The next step is to disable the Network Manager from managing our adapters, for which a static address is set. Here is an example of running NetworkManager.conf:
+
+```
+[main]
+dns=default
+rc-manager=file
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=false
+
+[keyfile]
+unamaged-devices=name:wlan0
+
+[device]
+wifi.scan-rand-mac-address=no
+```
+Important sections  — **ifupdown** и **keyfile**. They are both responsible for *correct* management of interfaces from /etc/network/interfaces via ifupdown.
+
+Also systemd-resolved was introduced in  Bionic Beaver along with netplan. It *also* must be disable to allow dnsmasq operation. Done in this way:
+
+```
+sudo systemctl stop systemd-resolved
+sudo systemctl disable systemd-resolved
+```
+
+After this you can continue installation in Bionic Beaver.
+
 ## Setting up hostapd and dnsmasq
 
 ### dnsmasq

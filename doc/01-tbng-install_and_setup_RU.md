@@ -137,7 +137,7 @@ johndoe@linuxbox:~$ ln -s /usr/local/bin/node /usr/bin/nodejs
 
 Пакеты именованы так, как принято в Debian/Ubuntu. Возможно, некоторые имена не совпадают, также возможно потребуется установка модулей  python3 через pip. Тем не менее, этого списка должно быть достаточно для  подготовки пакетов.
 
-**_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface, dnsutils, sed._**
+**_curl, sudo, network-manager, iptables, nodejs, python3, tor, tor-geoipdb, obfsproxy, obfs4proxy, privoxy, haveged, shellinabox, links, python3-pexpect, python3-requests, python3-lxml, python3-netiface, dnsutils, ifupdown, sed._**
 
 Как уже упоминалось, нужно установить **_Java_** и **_npm_**.
 
@@ -167,6 +167,46 @@ LAN — это клиенты TBNG, WAN — "внешний мир". Для оп
 * **wlan1** в нашем случае *должен быть MANAGED* для Network Manager. В этом случае возможно управление через web-интерфейс — соединение с беспроводными сетями и сброс.
 
 Если интерфейс WAN — проводной, то нужно позаботиться о том, что он настроен. Это можно сделать либо с помощью Network Manager, либо через /etc/network/interfaces.
+
+### Особенности Ubuntu 18.04 (Bionic Beaver)
+
+В Bionic Beaver ввели инновацию в виде утилиты netplan, которая позволяет конфигурировать сетевые интерфейсы гораздо проще. К сожалению, как для сохранения совместимости с Debian и предыдущими Ubuntu да и из-за особенностей netplan сеть конфигурируется через механизм ifupdown.
+
+Итак, если используется  Bionic Beaver, нужно использовать старый добрый /etc/network/interfaces. Вот пример его содержания для **wlan0**, который, как сказано выше у нас LAN:
+
+```
+auto wlan0
+iface wlan0 inet static
+  address 192.168.223.1
+  netmask 255.255.255.0
+```
+Следующий шаг — нужно "отучить" Network Manager управлять нашими адаптерами, для которых выставлен статический адрес. Вот пример работающего NetworkManager.conf:
+
+```
+[main]
+dns=default
+rc-manager=file
+plugins=ifupdown,keyfile
+
+[ifupdown]
+managed=false
+
+[keyfile]
+unamaged-devices=name:wlan0
+
+[device]
+wifi.scan-rand-mac-address=no
+```
+Важные секции здесь — **ifupdown** и **keyfile**. Они обе отвечают за то, чтобы интерфейсы в /etc/network/interfaces *действительно* управлялись через ifupdown.
+
+Помимо инноваций с netplan в Bionic Beaver работает systemd-resolved. Его *нужно* отключить, чтобы работал dnsmasq. Делается так:
+
+```
+sudo systemctl stop systemd-resolved
+sudo systemctl disable systemd-resolved
+```
+
+После этих манипуляций в Bionic Beaver можно продолжать установку.
 
 ## Установка hostapd и dnsmasq
 
