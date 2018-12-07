@@ -180,6 +180,16 @@ iface wlan0 inet static
   address 192.168.223.1
   netmask 255.255.255.0
 ```
+
+Так же убедимся, что netplan "замкнут" на использование network manager. Вот пример конфигурации от Armbian, и она работает.
+
+```
+$ cat /etc/netplan/armbian-default.yaml 
+network:
+  version: 2
+  renderer: NetworkManager
+```
+
 Следующий шаг — нужно "отучить" Network Manager управлять нашими адаптерами, для которых выставлен статический адрес. Вот пример работающего NetworkManager.conf:
 
 ```
