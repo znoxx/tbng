@@ -203,7 +203,7 @@ plugins=ifupdown,keyfile
 managed=false
 
 [keyfile]
-unamaged-devices=name:wlan0
+unmanaged-devices=name:wlan0
 
 [device]
 wifi.scan-rand-mac-address=no
