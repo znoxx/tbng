@@ -159,6 +159,7 @@ def masquerade(options):
     Script = Script + "iptables --append FORWARD --in-interface {0} -j ACCEPT -m comment --comment TBNG\n".format(interface['name']) 
 
   Script = Script + "iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment TBNG\n" 
+  Script = Script + "iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment TBNG\n"
   Script = Script + "sysctl -w net.ipv4.ip_forward=1\n"
 
   logging.debug(utility.run_multi_shell_command(Script).decode("utf-8"))
