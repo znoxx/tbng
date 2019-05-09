@@ -1,5 +1,8 @@
 # Version history
 
+## 09-May-2019
+Firewall rules fix to be VPN (pppX) friednly. Mac spoof realtek plugin updated to perform delay allowing kernel module to settle. Documentation fixes.
+
 ## 07-Dec-2018
 Installer tool fix. Bionic Beaver compatibility update.
 
