@@ -1,5 +1,10 @@
 # Version history
 
+## 10-Jun-2019
+Oracle Java -> OpnJDK8
+Node.js to version 12
+npm packages upgraded to actual versions
+
 ## 09-May-2019
 Firewall rules fix to be VPN (pppX) friednly. Mac spoof realtek plugin updated to perform delay allowing kernel module to settle. Documentation fixes.
 
