@@ -5,8 +5,7 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-JAVA_REPO=xenial
-NODE_VERSION=8.x
+NODE_VERSION=12.x
 
 echo "Pre-config..."
 
@@ -14,19 +13,6 @@ apt-get update >/dev/null
 
 apt-get -y install dirmngr >/dev/null
 apt-get -y install curl >/dev/null
-
-echo "Adding Java 8 repo"
-
-echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu ${JAVA_REPO} main" | tee /etc/apt/sources.list.d/webupd8team-java.list
-
-echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu ${JAVA_REPO} main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list
-
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 >/dev/null
-
-apt-get update >/dev/null
-
-echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
 echo "Adding NodeJS ${NODE_VERSION} repo"
 curl --silent --location https://deb.nodesource.com/setup_${NODE_VERSION} | bash -
