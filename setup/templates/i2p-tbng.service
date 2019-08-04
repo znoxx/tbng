@@ -1,9 +1,9 @@
 [Unit]
 Description=I2P for TBNG
 [Service]
-ExecStart=$project/i2p/runplain.sh
+ExecStart=$project/i2p/router start
+ExecStop=$project/i2p/router stop
 User=$user
 Type=forking
-PIDFile=/tmp/router.pid
 [Install]
 WantedBy=multi-user.target
