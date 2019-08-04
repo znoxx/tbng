@@ -83,7 +83,7 @@ rm -rf ~{0}/.i2p""".format(project_dir)
 
   logging.debug(utility.run_multi_shell_command(killer).decode("utf-8"))
   logging.debug("Installing from {0}".format(filename))
-  command_line = "su - {0} java -jar {1} -console".format(args.user,filename)
+  command_line = 'su - {0} -c 'java -jar {1} -console"'.format(args.user,filename)
   location = "{0}/i2p".format(project_dir)
   os.mkdir(location)
   logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)).decode("utf-8"))
