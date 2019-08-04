@@ -1,5 +1,8 @@
 # Version history
 
+## 04-Aug-2019
+Massive I2P fix
+
 ## 10-Jun-2019
 Oracle Java -> OpnJDK8
 Node.js to version 12

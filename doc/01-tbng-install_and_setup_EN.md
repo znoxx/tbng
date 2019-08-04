@@ -101,7 +101,7 @@ Before configuration, installation of several packages is require. Also one will
 
 Node.js version — not earlier than 4.2.1.
 
-Tested Java version — 8 for ARM platforms from Oracle website.
+Tested Java version — 8.
 
 If system has alredy **_tor_** и **_privoxy_** installed — it is recommended to purge them with configuration files and re-install with default "factory" settings.
 
@@ -113,7 +113,13 @@ The automatic package installation command is executed with superuser privileges
 
 `johndoe@linuxbox:~$ sudo run-parts tbng/setup/apt`
 
-Auto-install scripts run for a considerable amount of time. The process will remove tor and privoxy, and their configuration will be saved to a backup. There will also be a couple of additional Java repositories and node.js.
+Auto-install scripts run for a considerable amount of time. The process will remove tor and privoxy, and their configuration will be saved to a backup. There will also be a couple of additional repositories for node.js.
+
+##### OpenJDK and Debian Buster
+
+Debian Buster lacks OpenJDK  8 package.
+
+If your are getting OpenJDK install error , manually update version number in **tbng/setup/apt/09-install**.
 
 #### Additional steps for Raspbian (Debian Stretch) on Raspberry PI 1
 
@@ -168,7 +174,7 @@ In this case:
 
 If WAN interface is wired, one must take care to configure it. It can be done via Network Manager, or via /etc/network/interfaces.
 
-### Special note on  Ubuntu 18.04 (Bionic Beaver)
+### Special note on  Ubuntu 18.04 (Bionic Beaver) and other distros, where systemd-resolved is used
 
 Bionic Beaver introduced an innovation in the form of netplan utility, which allows you to configure network interfaces much easier. Unfortunately, both for maintaining compatibility with Debian and previous Ubuntu, and because of the peculiarities of netplan, the network is configured via the ifupdown mechanism.
 
@@ -195,7 +201,7 @@ The next step is to disable the Network Manager from managing our adapters, for 
 
 ```
 [main]
-dns=default
+dns=none
 rc-manager=file
 plugins=ifupdown,keyfile
 
@@ -244,6 +250,23 @@ If command execution succeeds:
 `johndoe@linuxbox:~$ sudo systemctl restart dnsmasq`
 
 Setup is completed successfully. If LAN interface is wired, one can connect client to TBNG immediately and check, that address is assigned. If not — one must configure wireless access point.
+
+To check DNSMasq is really used, run a command below. (Maybe you will need to install nslookup package):
+
+`nslookup github.com`
+
+Output should contain information about local DNS-server. If  it is 127.0.0.1, then you are done. here is an example:
+
+```
+johndoe@linuxbox:~$ nslookup github.com
+Server:		127.0.0.1
+Address:	127.0.0.1#53
+
+Non-authoritative answer:
+Name:	github.com
+Address: 140.82.118.3
+```
+If some other  DNS-server is lister (not a  127.0.0.1#53), then you need additional config steps for your system. Refer to OS documenation.
 
 ### hostapd
 
