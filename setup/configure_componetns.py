@@ -83,9 +83,10 @@ rm -rf ~{0}/.i2p""".format(project_dir)
 
   logging.debug(utility.run_multi_shell_command(killer).decode("utf-8"))
   logging.debug("Installing from {0}".format(filename))
-  command_line = "java -jar {0} -console".format(filename)
+  command_line = "su - {0} java -jar {1} -console".format(args.user,filename)
   location = "{0}/i2p".format(project_dir)
   os.mkdir(location)
+  logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)).decode("utf-8"))
   child = pexpect.spawn(command_line)
   child.expect("Input selection:",timeout=30)
   logging.debug("Got question about language")
@@ -115,7 +116,7 @@ rm -rf ~{0}/.i2p""".format(project_dir)
   logging.debug("End of install")
   child.sendline("")
 
-  logging.debug(utility.run_shell_command("chown -R {0}:$(id {0} -gn) {1}".format(args.user,location)).decode("utf-8"))
+  
 
   try:
     os.remove(filename)
