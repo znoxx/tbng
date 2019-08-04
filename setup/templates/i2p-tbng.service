@@ -1,8 +1,8 @@
 [Unit]
 Description=I2P for TBNG
 [Service]
-ExecStart=$project/i2p/router start
-ExecStop=$project/i2p/router stop
+ExecStart=$project/i2p/i2prouter start
+ExecStop=$project/i2p/i2prouter stop
 User=$user
 Type=forking
 [Install]
