@@ -1,8 +1,7 @@
 [Unit]
 Description=I2P for TBNG
 [Service]
-ExecStart=$project/i2p/i2prouter start
-ExecStop=$project/i2p/i2prouter stop
+ExecStart=$project/i2p/runplain.sh
 User=$user
 Type=forking
 [Install]

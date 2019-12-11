@@ -116,7 +116,8 @@ rm -rf ~{0}/.i2p""".format(project_dir)
   logging.debug("End of install")
   child.sendline("")
 
-  
+  runner = "{0}/runplain.sh".format(location)
+  utility.replace_string_in_file(runner,'I2PTEMP="%SYSTEM_java_io_tmpdir"','I2PTEMP="/tmp"')
 
   try:
     os.remove(filename)
@@ -161,8 +162,8 @@ def main(args, loglevel):
   command="""systemctl start i2p-tbng
 sleep 20
 systemctl stop i2p-tbng
-su -c "sed -i 's/clientApp.0.args=7657\s*::1,127.0.0.1\s*.\/webapps\//clientApp.0.args=7657 0.0.0.0 .\/webapps\//' ~{0}/.i2p/clients.config" {0}
-su -c "sed -i 's/clientApp.4.startOnLoad=true/clientApp.4.startOnLoad=false/'  ~{0}/.i2p/clients.config" {0}"""
+su -c "sed -i 's/clientApp.0.args=7657\s*::1,127.0.0.1\s*.\/webapps\//clientApp.0.args=7657 0.0.0.0 .\/webapps\//' ~{0}/.i2p/clients.config.d/00-net.i2p.router.web.RouterConsoleRunner-clients.config" {0}
+su -c "sed -i 's/clientApp.0.startOnLoad=true/clientApp.0.startOnLoad=false/'  ~{0}/.i2p/clients.config.d/04-net.i2p.apps.systray.UrlLauncher-clients.config" {0}"""
   logging.debug(utility.run_multi_shell_command(command.format(args.user)).decode("utf-8"))
   
    

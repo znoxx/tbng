@@ -1,5 +1,8 @@
 # Version history
 
+## 11-Dec-2019
+Fix of I2P
+
 ## 04-Aug-2019
 Massive I2P fix
 
