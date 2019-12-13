@@ -1,7 +1,10 @@
 # Version history
 
+## 13-Dec-2019
+Migrated from wifi-control npm to node-wifi library to allow work with debian buster+ distributions.
+
 ## 11-Dec-2019
-Fix of I2P
+Fix of I2P install
 
 ## 04-Aug-2019
 Massive I2P fix

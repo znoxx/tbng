@@ -198,14 +198,14 @@ this.wifi = function()
   config.wan_interface.forEach(function(interface){
       if (interface.wireless)
       {
-         var wifi = require('wifi-control');
+         var wifi = require('node-wifi');
      
          var settings = {
            debug: true,
            iface: interface.name,
            connectionTimeout: 20000
          };
-        wifi.configure(settings);
+        //wifi.configure(settings);
         wifi.init(settings); 
         retVal=wifi;
         return; 

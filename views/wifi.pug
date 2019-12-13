@@ -2,11 +2,11 @@ extends layout
 
 block content
   h1= title
-  p WiFi Status - #{state.msg}
+  p WiFi Status - #{connection.msg}
      
-      h3 SSID: #{state.ssid}
-      h3 Connecton: #{state.connection}
-      h3 Power: #{state.power}
+      h3 SSID: #{connection.ssid}
+      h3 Mode: #{connection.mode}
+      h3 Level: #{connection.signal_level}
   p
    ul
      li 

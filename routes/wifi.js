@@ -16,16 +16,30 @@ router.get('/', function(req, res, next) {
 	  }
 	  else
 	  {
-	   
-		var state=wifiInstance.getIfaceState();
-		if (!state.success)
-		{
-			state.ssid = "Unknown";
-			state.power = "Unknown";
-			state.connection = "Unknown";   
-		}
-		console.log(state);
-		res.render('wifi', { title: 'WiFi', state: state });
+            var connection={}
+            connection.ssid="Unknown"
+            connection.msg="Not connected"
+            connection.mode="Unknown"
+            connection.signal_level="Unknown"
+
+            wifiInstance.getCurrentConnections(function(err, currentConnections) {
+             if (err) {
+             console.log(err);
+             }
+             else
+             {
+                if(currentConnections.length)
+                {
+                   connection.msg="Connected"
+                   connection.ssid=currentConnections[0].ssid
+                   connection.mode=currentConnections[0].mode
+                   connection.signal_level=currentConnections[0].signal_level
+                }
+             }
+            res.render('wifi', { title: 'WiFi', connection: connection });
+            console.log(currentConnections);
+           });
+
 	  }
   }
   catch(e)
@@ -47,30 +61,32 @@ router.get('/networks', function(req, res, next) {
 		  throw Error(no_wifi_interface);
 	  }
 	  var querystring = require('querystring');
-	  wifiInstance.scanForWiFi( function(err, response) {
-		if (err)
-		{ 
-		  res.render('xerror', { message: "Error occured", description: error});
-		}
-		else
-		{
-                  response.networks = response.networks.filter((network, index, self) => self.findIndex(t => t.ssid === network.ssid && t.security === network.security) === index);
-		  response.msg=response.msg.replace(/\s\(\d+\sfound\)/g,"");
-                   response.networks.forEach(function(entry) {
-		   var current=entry;
-		   entry.url=querystring.stringify({ssid: current.ssid,encryption: current.security});
-		   //console.log(entry.url);
-		  });
-		  res.render('wifilist', { title: 'WiFi networks in range', scanned: response });
-		}
-	  });
-	}
+
+         wifiInstance
+           .scan()
+           .then(function(networks) {
+             var response={}
+             response.msg="Scan results"
+             response.networks=networks
+             response.networks = response.networks.filter((network, index, self) => self.findIndex(t => t.ssid === network.ssid && t.security === network.security) === index);
+             response.networks.forEach(function(entry) {
+                var current=entry;
+                entry.url=querystring.stringify({ssid: current.ssid,encryption: current.security});
+                });
+                res.render('wifilist', { title: 'WiFi networks in range', scanned: response });
+           })
+           .catch(function(error) {
+            var strError = error.toString();
+            res.render('xerror', { message: "Error occured", description: strError});
+         }); 
+      }
+
   catch(e)
   {
      var strError = e.toString();
      res.render('xerror', { message: "Error occured", description: strError});
-
   } 
+
   });
 
 /* GET connect. */
@@ -117,26 +133,19 @@ router.post('/connect', function(req, res, next) {
     }
     else
     { 
-       credentials = {ssid: ssid};
+       credentials = {ssid: ssid, password: ""};
     }
 
-    var result=wifiInstance.connectToAP(credentials,function(err, response) {
-      if (err) 
-	  {
-        res.render('xerror', { message: "Error occured", description: err});
-      } 
-	  else 
-	  {
-        if (response.success)
-        {
-          res.render('xresult', { title: 'Network connection result', message: response.msg });
+    wifiInstance.connect(credentials, function(err) {
+      if (err) {
+         console.log(err);
+         res.render('xerror', { message: "Error occured", description: err});
+      } else {
+       res.render('xresult', { title: 'Network connection result', message: "Connected" });
+       console.log("Connected");
         }
-        else
-        {
-          res.render('xerror', { message: "Error occured", description: response.msg});
-        }
-      }
-      });
+    });
+
   }
   catch(e)
   {
@@ -174,21 +183,19 @@ router.post('/reset', function(req, res, next) {
 	{
 		  throw Error(no_wifi_interface);
 	} 
+
+       
+       wifiInstance.disconnect(function(err) {
+         if (err) {
+          console.log(err)
+          res.render('xerror', { message: "Error occured", description: err});
+         }
+         else {
+           res.render('xresult', { title: 'Reset WiFi', message: "Disconnected" });
+           console.log("Disconnected") 
+         }
+       });
 	
-    var result=wifiInstance.resetWiFi(function(err, response) {
-      if (err) {
-        res.render('xerror', { message: "Error occured", description: err});
-      } else {
-          if (response.success)
-          {
-            res.render('xresult', { title: 'Reset WiFi', message: response.msg });
-          }
-          else
-          {
-            res.render('xerror', { message: "Error occured", description: response.msg});
-          }
-        }
-      });
   }
   catch(e)
   {
