@@ -25,7 +25,7 @@ TBNG является продолжением проекта [Orange TorBOX](ht
 cd doc
 make
 ```
-Или ознакомиться с документацией [здесь](http://tbng.ml) — снапшоты публикуются на регулярной основе. 
+Или ознакомиться с документацией [здесь](http://tbng.herokuapp.com/index.html) — снапшоты публикуются на регулярной основе. 
 
 Установите TBNG согласно документации, перезагрузите устройство и начинайте использовать!
 
@@ -39,7 +39,7 @@ make
 
 [Пошаговый пример установки и настройки для Orange Pi Zero (RUS)](http://znoxx.me/2018/04/06/poshaghovaia-installiatsiia-tbng-na-orangepi-zero/)
 
-___Если вы сочли проект нужным и полезным — пожертвования принимаются [здесь](http://tbng.ml).___
+___Если вы сочли проект нужным и полезным — пожертвования принимаются [здесь](http://tbng.herokuapp.com/index.html).___
 
 ## EN
 TorBOX Next Generation (TBNG) — is a set of scripts, which allows fast and almost effortless creation of [TOR](https://torproject.org) and [I2P](https://geti2p.com) Access Point (wireless and wired).
@@ -65,7 +65,7 @@ For your convinience documentation can be converted to  html (you will need pand
 cd doc
 make
 ```
-Or get familiar with it [here](http://tbng.ml) — snapshots are published regularily.
+Or get familiar with it [here](http://tbng.herokuapp.com/index.html) — snapshots are published regularily.
 
 Install TBNG according to documentation, reboot the device and start using it!
 
@@ -79,4 +79,4 @@ Features:
 
 [Step-by-step setup guide for Orange Pi Zero (RUS, use online translator)](http://znoxx.me/2018/04/06/poshaghovaia-installiatsiia-tbng-na-orangepi-zero/)
 
-___If you found project useful, do not hesitate to send any donation [here](http://tbng.ml)___
+___If you found project useful, do not hesitate to send any donation [here](http://tbng.herokuapp.com/index.html)___
