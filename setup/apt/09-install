@@ -8,7 +8,7 @@ fi
 echo "Installing packages"
 
 apt-get -y install sudo network-manager iptables nodejs \
-python3 tor tor-geoipdb obfsproxy obfs4proxy privoxy \
+python3 tor tor-geoipdb obfs4proxy privoxy \
 haveged shellinabox links dnsutils sed ifupdown \
 python3-pexpect python3-requests python3-lxml python3-netifaces \
 openjdk-11-jre-headless

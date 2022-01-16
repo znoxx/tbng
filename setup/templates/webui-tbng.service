@@ -3,7 +3,7 @@ Description=WebUI for TBNG
 After=tbng.service
 
 [Service]
-ExecStart=/usr/bin/env nodejs $project/bin/www
+ExecStart=/usr/bin/env node $project/bin/www
 Restart=always
 StandardOutput=syslog
 StandardError=syslog

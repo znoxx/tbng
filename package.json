@@ -6,9 +6,9 @@
     "node": ">=4.2.1"
   },
   "scripts": {
-    "requirements-check": "nodejs check-version.js",
+    "requirements-check": "node check-version.js",
     "postinstall": "npm run requirements-check",
-    "start": "nodejs ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.19.0",
