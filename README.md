@@ -1,5 +1,9 @@
 # TorBOX Next Generation #
 
+Проект больше не поддерживается и не развивается. | Project is not developed anymore.
+
+[Tor Box Next Generation 2](https://github.com/znoxx/tbng2)
+
 ## RU
 TorBOX Next Generation (TBNG) — это набор скриптов, позволяющий быстро и без особых усилий создать точку доступа к сети [TOR](https://torproject.org) и [I2P](https://geti2p.com) — как проводную, так и беспроводную. 
 
